@@ -1,114 +1,46 @@
-import React from 'react';
+import React, {useState, useEffect}  from 'react';
 
 
-// import {
-//   Container,
-//   Navbar,
-//   NavbarBrand,
-//   Row,
-//   Col,
-//   Input,
-//   InputGroup,
-//   FormGroup,
-//   InputGroupAddon,
-//   Button,
-//   Jumbotron
-// } from 'reactstrap';
+import {
+  Container,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Row,
+  Col,
+  Input,
+  InputGroup,
+  FormGroup,
+  InputGroupAddon,
+  Button,
+  Jumbotron,
+  NavItem,
+  NavLink
+} from 'reactstrap';
+
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 // import Weather from './Weather';
-import Restaurant from './restaurant';
-import Menu from './menu';
+import Restaurant from './components/Restaurant';
+import Menu from './components/Menu';
+import Nav from './components/Nav';
 
 function App() {
-  // constructor(props) {
-  //   super(props);
-  
-  //   this.state = {
-  //     weather: null,
-  //     cityList: [],
-  //     newCityName: '',
-  //     restaurantList: [],
-  //     newRestaurantName: ''
-  //  };
-  // }
 
-  // getCityList = () => {
-    // fetch('/api/cities')
-    // .then(res => res.json())
-    // .then(res => {
-    //   var cityList = res.map(r => r.city_name);
-    //   this.setState({ cityList });
-    // });
-  // };
-
-  // getRestaurantList = () => {
-  //   fetch('/api/restaurant')
-  //   .then(res => res.json())
-  //   .then(res => {
-  //     var restaurantList = res.map(r => r.name);
-  //     this.setState({ restaurantList });
-  //   });
-  // };
-
-
-  // handleInputChange = (e) => {
-  //   // this.setState({ newCityName: e.target.value });
-  //   this.setState({ newRestaurantName: e.target.value });
-  // };
-
-  // handleAddCity = () => {
-  //   fetch('/api/cities', {
-  //     method: 'post',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ city: this.state.newCityName })
-  //   })
-  //   .then(res => res.json())
-      
-  //   .then(res => {
-  //     this.getCityList();
-  //     this.setState({ newCityName: '' });
-  //   });
-  // };
-  
-  // handleAddRestaurant = () => {
-  //   fetch('/api/restaurant', {
-  //     method: 'post',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ name: this.state.newRestaurantName })
-  //   })
-  //   .then(res => res.json())
-      
-  //   .then(res => {
-  //     this.getRestaurantList();
-  //     this.setState({ newRestaurantName: '' });
-  //   });
-  // };
-
-
-  // getWeather = (city) => {
-  //   fetch(`/api/weather/${city}`)
-  //   .then(res => res.json())
-  //   .then(weather => {
-  //     console.log(weather);
-  //     this.setState({ weather });
-  //   });
-  // }
-
-  // handleChangeCity = (e) => {
-  //   this.getWeather(e.target.value);
-  // }
-
-  // componentDidMount () {
-  //   // this.getRestaurantList();
-  //   // this.getCityList();
-  // }
-
-   
     return (
-    //   <Container fluid className='centered'>
-    //     <Navbar dark color="dark">
-    //       <NavbarBrand href="/">MyWeather</NavbarBrand>
-    //     </Navbar>
+      <Router>
+      <Container fluid className='centered'>
+        
+        <Jumbotron>
+        <h2>My restaurant</h2>
+            <Nav />
+            <Switch>
+              <Route path='/restaurant' component={Restaurant} />
+              <Route path='/menu' component={Menu} />
+            </Switch>            
+        </Jumbotron>
+    </Container>
+    </Router>
     //     <Row>
     //       <Col>
     //        <Jumbotron>
@@ -127,14 +59,14 @@ function App() {
     //         </InputGroup>
     // 
             // <Restaurant/>
-            <Menu />
-            // <InputGroup>
-    //           <Input   */}
+            // <Menu />
+            // <InputGroup> 
+    //           <Input>
     //             placeholder="New restaurant name..."
     //             value={this.state.newRestaurantName}
     //             onChange={this.handleInputChange}
     //           />
-    //           {/* <Restaurant/> */}
+    //           <Restaurant/>
     //           <InputGroupAddon addonType="append">
     //             <Button color="primary" onClick={this.handleAddRestaurant}>Add restaurant</Button>
     //           </InputGroupAddon>
@@ -156,8 +88,9 @@ function App() {
     //       </FormGroup> 
     //     </Row>
     //     <Weather data={this.state.weather}/>
-    //   </Container>
-    );
+      // </Container>
+    // ); */
+    )
 }
 
 export default App;

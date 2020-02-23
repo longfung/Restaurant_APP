@@ -28,7 +28,7 @@ function Restaurant(props) {
       // .then(res => res.json()), 
       .then(res => {
         // const d = res.data;
-        debugger;
+        // debugger;
         setRestaurantList(res.data)
         console.log(restaurantList)
         // const d = res.data;
