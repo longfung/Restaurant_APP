@@ -19,6 +19,7 @@ app.use(fileUpload());
 // app.use('/api/weather', require('./api/weather'));
 app.use('/api/restaurant', require('./api/restaurant'));
 app.use('/api/menu', require('./api/menu'));
+app.use('/api/category', require('./api/category'));
 // app.use('/api/fileupload', require('./api/fileupload')); 
 app.post('/fileupload', (req, res) => {
     console.log("fileuplaod");
@@ -26,14 +27,18 @@ app.post('/fileupload', (req, res) => {
         return res.status(400).json({'err': 'NO file uploaded'});
     }
     let image = req.files.file;
-    let filepath = __dirname + '\\images\\' + image.name;
+    // let filepath = __dirname + '\\images\\' + image.name
+    let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
     image.mv(filepath, (err) => {
         if (err) {
             return res.status(500).send(err);
         }
-        res.send({filepath: image.name});
+        let imagepath = "\/images\/" + image.name;
+        res.send({filepath: imagepath});
+        // res.send({filename: filepath});
+        console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());    
+
     })
-    console.log("upload file name" + image.name);    
 })
 
 app.listen(PORT, () => {

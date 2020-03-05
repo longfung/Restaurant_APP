@@ -18,29 +18,42 @@ import {
   NavLink
 } from 'reactstrap';
 
+import 'bootstrap/dist/css/bootstrap.css';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+
 
 // import Weather from './Weather';
 import Restaurant from './components/Restaurant';
 import Menu from './components/Menu';
-import Nav from './components/Nav';
+import Category from './components/Category';
+import NavTab from './components/NavTab';
+// import MyProvider from './components/MyProvider';
+// import MyContext from './components/MyProvider';
 
 function App() {
 
     return (
+      <Container fluid >      
       <Router>
-      <Container fluid className='centered'>
-        
+
+    
         <Jumbotron>
-        <h2>My restaurant</h2>
-            <Nav />
+
+            <NavTab />
             <Switch>
               <Route path='/restaurant' component={Restaurant} />
-              <Route path='/menu' component={Menu} />
-            </Switch>            
+              <Route path='/menu' 
+                    render={(props) => <Menu {...props} restaurant_id={45000} />}
+              />
+              <Route path='/category' 
+                    render={(props) => <Category {...props} restaurant_id={45000} />} 
+              />            
+            </Switch>       
+
         </Jumbotron>
-    </Container>
+
     </Router>
+    </Container>          
     //     <Row>
     //       <Col>
     //        <Jumbotron>

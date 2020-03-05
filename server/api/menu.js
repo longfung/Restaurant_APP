@@ -8,7 +8,8 @@ var router = express.Router();
 router.get('/', (req, res) => {
     console.log("in Menu Get");
 
-    Menu.retrieveAll((err, menu) => {
+    var node = req.query.restaurant_id;
+    Menu.retrieveByRestaurant(node, (err, menu) => {
         // console.log(err);
         // console.log(res);
         if (!err)
@@ -34,5 +35,23 @@ router.post('/', (req, res) => {
         return res.json(result);
     });
 });
+
+router.put('/', (req, res) => {
+    const data = req.body;
+    Menu.put(data, (err, result) => {
+        if (err.error)
+            return res.json(err);
+        return res.json(result);
+    });
+});
+
+router.delete('/', (req, res) => {
+    const id = req.query.id;
+    Menu.delete(id, (err, menu) => {
+        if (err.error)
+            return res.json(err);
+        return (res.json(menu));
+    })
+})
 
 module.exports = router; 
