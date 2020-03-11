@@ -8,8 +8,30 @@ var router = express.Router();
 router.get('/', (req, res) => {
     console.log("in Menu Get");
 
+    // var node = req.query;
     var node = req.query.restaurant_id;
+    // var categoryId = req.query.categoryId;
+
+    // var categoryId = req.query.categoryId;
     Menu.retrieveByRestaurant(node, (err, menu) => {
+        // console.log(err);
+        // console.log(res);
+        if (!err)
+            return res.json(err); 
+        // console.log(rest).
+        return (res.json(menu));
+    });
+});
+
+router.get('/category', (req, res) => {
+    console.log("in Menu Get By Category" + JSON.stringify(req.query));
+
+    var node = req.query;
+    // var node = req.query.restaurant_id;
+    // var categoryId = req.query.categoryId;
+
+    // var categoryId = req.query.categoryId;
+    Menu.retrieveByCategory(node, (err, menu) => {
         // console.log(err);
         // console.log(res);
         if (!err)

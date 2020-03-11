@@ -31,12 +31,16 @@ app.post('/fileupload', (req, res) => {
     let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
     image.mv(filepath, (err) => {
         if (err) {
+            console.error(err);
             return res.status(500).send(err);
         }
+        
         let imagepath = "\/images\/" + image.name;
-        res.send({filepath: imagepath});
-        // res.send({filename: filepath});
         console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());    
+        // res.send({filename: imagepath});
+        res.json({filename: imagepath});
+        // res.send({filename: filepath});
+        
 
     })
 })

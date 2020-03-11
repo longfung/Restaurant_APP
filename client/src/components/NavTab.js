@@ -3,26 +3,42 @@ import {Link, withRouter} from 'react-router-dom';
 import {
     Nav,
     NavItem,
-    Navbar
+    Navbar,
+    NavLink,
+    NavbarBrand,
+    Jumbotron
   } from 'reactstrap';
 
 
 function NavTab() {  
     return (
+      <div>
+
         <Navbar color="light" light expand="md">
-          <p color="red">Cheng Restaurant</p>
-            <NavItem >
-              <Link color="primary" to='/Restaurant' >Restaurant</Link>
+          <Jumbotron fluid className='my-0 py-1 bg-info w-100'>
+          <Nav className="mr-auto px-1 bx-1 py-0 my-0" tabs pills> 
+           <NavItem className='mt-0 '>
+            <NavLink className='border-info bg-light text-uppercase text-primary' href='/'>Cheng 3-6-9</NavLink>       
+          </NavItem>    
+           <NavItem className='mt-0'>
+              <NavLink className=' border-info bg-light text-dark text-uppercase' href='/Restaurant'>Restaurant</NavLink>
             </NavItem>
             <NavItem>
-              <Link to='/Menu' >Menu</Link>
+              <NavLink className = ' border-info mb-0 bg-light text-dark text-uppercase' href='/Menu' >Menu</NavLink>
             </NavItem>
             <NavItem>
-              <Link to='/Category' >Category</Link>
+              <NavLink className='border-info mb-0 bg-light text-dark text-uppercase' href='/Category' >Category</NavLink>
             </NavItem>
 
-        </Navbar>      
+            <NavItem>
+              <NavLink className='border-info mb-0 bg-light text-dark text-uppercase' href='/Order' >Order</NavLink>
+            </NavItem>
+            </Nav>
+            </Jumbotron>
 
+        </Navbar>     
+
+      </div>
     )
 }
 

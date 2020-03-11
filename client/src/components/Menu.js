@@ -3,7 +3,7 @@ import Select from 'react-select';
 import axios from 'axios';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
-import {Form, Input, Row, Col, Button, FormGroup, Label} from 'reactstrap';
+import {Form, Input, Row, Col, Button, FormGroup, Label, Card, CardImg} from 'reactstrap';
 function Menu(props) {
     // debugger;
     const restaurantId = props.restaurant_id;
@@ -13,7 +13,7 @@ function Menu(props) {
         name: '',
         price: 0,
         rest_id: 1000,
-        category_id: '', 
+        category_id: '',
         image_path: ''
     })
     const [menuList, setMenuList] = useState([]);
@@ -38,6 +38,7 @@ function Menu(props) {
 
     useEffect( () => {
         // const restaurantId = 45000
+        console.log("in UseEffect");
         getMenuList();
         axios.get('/api/category', {params: {restaurant_id: restaurantId}})
         .then (res =>{
@@ -49,12 +50,47 @@ function Menu(props) {
     }, []);
 
     const handleSelector = e => {
+        e.preventDefault();
         if (e.target.files.length == 0)
             return;
         var image = e.target.files[0];
         setImage(image)
         setImageName(image.name)   
-    }
+
+        var formdata = new FormData();
+        formdata.append('file', image);
+
+        // axios.post('/fileupload', formdata, {
+        //     // headers: {'Content-Type': 'multipart/form-data' }
+        //     headers: { 'Content-Type': 'multipart/form-data' }
+        // } )
+        //        .then(res => {
+       
+        // axios.post('/fileupload', formdata, {headers: {'Content-Type': 'multipart/form-data'}})
+        // .then (res => {
+        //     menu.image_path = res.data.filename; })
+        //     // setMenu(...menu, {image_path: res.data.filepath})})
+        // .catch(err => {
+        //     console.log("Error in file upload")});   
+
+        // use Festch
+        // fetch('/fileupload', {
+        //     method: 'post',
+        //     // headers: { 'Content-Type': 'multipart/form-data' },
+        //     body: formdata,
+        //   })
+        //   .then(res => {
+        //         // menu.image_path = res.data.filename;
+        //         menu.image_path = process.cwd() + 'server/images/img4.jpg';
+        //     // setMenu({...menu, image_path: res.data.filepath})
+        //         // handleCreateOrUpdateMenu()
+        //     })
+        //  .catch( error => {
+        //      console.log(error)}) 
+           
+
+
+    };
 
     const getMenuList = () =>  {
         axios.get('/api/Menu', {params:{restaurant_id: restaurantId}})
@@ -71,15 +107,16 @@ function Menu(props) {
             formdata.append('file', image);
             axios.post('/fileupload', formdata, {headers: {'Content-Type': 'multipart/form-data'}})
             .then(res => {
-                debugger;
-                menu.image_path = res.data.filepath;
+                // debugger;
+                menu.image_path = res.data.filename;
                 // setMenu({...menu, image_path: res.data.filepath})
                 handleCreateOrUpdateMenu()})
+                // console.log(res);})
             .catch(err => {
                 debugger;
                 console.log("Error in file upload")});
         } else { 
-            debugger;
+            // debugger;
             handleCreateOrUpdateMenu();
         }      
     }
@@ -91,6 +128,7 @@ function Menu(props) {
             postCreateMenu();
         };                   
         getMenuList();  
+        initialMenu();
     };
 
     const postCreateMenu = () => {
@@ -109,8 +147,8 @@ function Menu(props) {
               });               
     }
 
-    const postUpdateMenu = () => {
-        debugger;
+    const postUpdateMenu = () => { 
+        // debugger;
         let data = JSON.stringify({ 
             id: menu.id,
             name: menu.name, 
@@ -123,9 +161,9 @@ function Menu(props) {
             } )
         .then(res => {
           // console.log(res.data.json());
-            getMenuList();
+            // getMenuList();
         //   setNode({ ...node, id: '', category_name: '', category_description: '', restaurant_id: restaurantId });          
-            initialMenu();
+            // initialMenu();
        });
     };
   
@@ -186,7 +224,7 @@ function Menu(props) {
         <div>
             <Form>
                 <Row form>
-                    <Col sm={6}>
+                    <Col xs="6" sm="6">
                         <FormGroup>
                             <Label for="name">Dish Name</Label>
                             <Input type='text' 
@@ -194,7 +232,7 @@ function Menu(props) {
                                 id="name"
                                 onChange={e => setMenu({...menu, name: e.target.value})}/>                       </FormGroup>
                     </Col>
-                    <Col sm={6}>
+                    <Col xs="6" sm="6">
                         <FormGroup>
                         <Label for="price">Price</Label>
                         <Input type="text"
@@ -205,7 +243,7 @@ function Menu(props) {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={4}>
+                    <Col xs="6" sm="6">
                         <FormGroup>
                         <Label for="categoryid">category</Label>
                         <Select 
@@ -218,17 +256,29 @@ function Menu(props) {
                         />
                         </FormGroup> 
                     </Col>
-                    <Col sm={6}>
+                    <Col xs="3" sm="3">
                         <FormGroup>
-                        <Label for="path">Upload Picture</Label>    
-                        <Input type='file' onChange={handleSelector} />                       
+                        <Label for="pathId">Upload Picture</Label>    
+                        <Input type='file' id = "pathId" onChange={handleSelector} />                       
                         </FormGroup>
                     </Col>
-                    <Col sm={2}>
+                    <Col xs="3" sm="3">
+                        
+                        <Card className='width: 6rem'>
+                            <CardImg top width="100%" src={menu.image_path}/>
+                        </Card>
+                        </Col>
+    
+                </Row>       
+                <Row>
+
+                    <Col xs="6" sm="6">
                         <Button onClick={handlePostMenu}> Create menu </Button>   
                     </Col>
-                    <img src={menu.image_path} alt="iamge" />
-                </Row>                           
+
+
+
+                    </Row>                    
             </Form>
             <hr></hr>
             <div>
