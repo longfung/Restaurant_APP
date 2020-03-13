@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import Cart from './Cart'
 import Select from 'react-select';
 import axios from 'axios';
 import { MdAddCircle, MdRemoveCircle, MdDone } from 'react-icons/md';
 
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
-import {Form, Input, Row, Col, Button, FormGroup, Label, Card, CardImg, CardBody, CardLink, CardText, CardImgOverlay, CardFooter} from 'reactstrap';
+import {Form, Input, Row, Col, Button, Label, Card, CardImg, CardBody, CardLink, CardText, CardImgOverlay, CardFooter} from 'reactstrap';
 import CategoryNav from './CatagoryNav';
 import { Link } from 'react-router-dom';
 function Order(props) {
@@ -15,6 +16,7 @@ function Order(props) {
     const [menuList, setMenuList] = useState([]);
     const [cartList, setCartList] = useState([]);
     const [cartTotal, setCartTotal] = useState(0);
+    const [isOrder, setIsOrder] = useState(true);
 
     useEffect( () => {
         // const restaurantId = 45000
@@ -28,6 +30,10 @@ function Order(props) {
         })
         .catch( error => console.log(error));
     }, []);
+
+    useEffect( () => {
+        calculateCartTotal();
+    },[cartList])
 
     const fetchMenuList = (categoryId) => {
         debugger;
@@ -73,6 +79,17 @@ function Order(props) {
             };  
         }
         return bResult;
+    }
+
+    const calculateCartTotal = () => {
+        let sum = 0;
+        for (let i = 0; i < cartList.length; i++) {
+            if (cartList[i].quantity !== 0) {
+                sum += cartList[i].quantity * cartList[i].price;
+            };  
+        }
+        sum += sum * 0.1
+        setCartTotal(sum);
     }
 
     const getQuantity = item => {
@@ -149,13 +166,17 @@ function Order(props) {
 
     return (
         <div>
-            <CategoryNav restaurantId = {restaurantId} fetchMenuList = {fetchMenuList}/>  
+            {isOrder ?
+            <div>
+            <CategoryNav restaurantId = {restaurantId} fetchMenuList = {fetchMenuList} cartTotal = {cartTotal} setIsOrder={setIsOrder}/>  
             <Row>
                 {menuList.map(item => 
                     dishCard(item)         
                 )}
             </Row>
-
+            </div>
+            : <Cart addToOrder = {addToOrder} removeFromOrder = {removeFromOrder} cartTotal = {cartTotal} isQuantity = {isQuantity} cartList={cartList} setIsOrder = {setIsOrder}/>
+            }
 
         </div>
     );
