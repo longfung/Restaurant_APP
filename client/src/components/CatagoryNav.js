@@ -7,15 +7,17 @@ import {
     NavLink,
     NavbarBrand,
     Button,
-    Jumbotron
+    Jumbotron,
+    InputGroup
 
   } from 'reactstrap';
   import {     MdShoppingCart} from 'react-icons/md';
   import { Link } from 'react-router-dom';
 
 
+
 function CategoryNav(props) {  
-   debugger;
+  //  debugger;
     const restaurantId = props.restaurantId;
     const fetchMenuList = props.fetchMenuList;
     const isQuantity = props.isQuantity;
@@ -43,17 +45,16 @@ function CategoryNav(props) {
     }
     return (
       <div>
-
           <Jumbotron fluid className='my-0 py-1 bg-info w-100'>
             <Row>
               <Col sm="10">
-            {categoryList && categoryList.map((item, index) => (
-            <Button key={item.id} onClick={() => fetchMenuList(item.id)}>{item.label}</Button>        
-            ))}
-
+                <Button onClick={() => fetchMenuList('')}>All Category</Button> 
+                {categoryList && categoryList.map((item, index) => (
+                  <Button key={item.id} onClick={() => fetchMenuList(item.id)}>{item.label}</Button>        
+                  ))}
               </Col>
               <Col sm="2">
-              <Link onClick={() => setIsOrder(false)} className='font-weight-bold text-Dark'>
+              <Link to='#!' onClick={() => setIsOrder(false)} className='font-weight-bold text-Dark'>
                 <MdShoppingCart color='gold' size = '2.2rem' /> ${cartTotal.toFixed(2)}
                 </Link>
               </Col>

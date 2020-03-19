@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import NavTab from './NavTab';
 import axios from 'axios';
 // import {
 //     Form,
@@ -78,6 +79,7 @@ function Restaurant(props) {
 
     return (
             <div>
+              <NavTab />
                 <form> 
                     <input 
                         type="text" 

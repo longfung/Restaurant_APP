@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import NavTab from './NavTab';
 import { Form, Input, Row, Col, Button, FormGroup, Label } from 'reactstrap';
 // import {MyContext} from './MyContext';
 
@@ -118,6 +119,7 @@ function Category(props) {
 
     return (
       <div>
+          <NavTab />
           <Form>
             <Row form >
               <Col md={1}>

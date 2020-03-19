@@ -12,11 +12,15 @@ class Menu {
     static retrieveByCategory(query, callback) {
         const restaurantId = query.restaurantId;
         const categoryId = query.categoryId;
-        db.query('select * from menu where restaurant_id = $1 and category_id = $2', [restaurantId, categoryId], function (err, res) {
-            if (err.error)
-                return callback(err);
-            callback (err, res);
-        })
+        if (categoryId) {
+            db.query('select * from menu where restaurant_id = $1 and category_id = $2', [restaurantId, categoryId], function (err, res) {
+                if (err.error)
+                    return callback(err);
+                callback (err, res);
+            })}
+        else 
+            Menu.retrieveByRestaurant(restaurantId, callback);
+            
     }
 
     static insert(node, callback) {

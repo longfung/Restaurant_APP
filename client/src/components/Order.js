@@ -6,12 +6,23 @@ import { MdAddCircle, MdRemoveCircle, MdDone } from 'react-icons/md';
 
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
-import {Form, Input, Row, Col, Button, Label, Card, CardImg, CardBody, CardLink, CardText, CardImgOverlay, CardFooter} from 'reactstrap';
+import {Form, Input, Row, Col, Button, Label, Card, CardImg, CardBody, NavLink, CardText, CardImgOverlay, CardFooter} from 'reactstrap';
 import CategoryNav from './CatagoryNav';
 import { Link } from 'react-router-dom';
+import NavTab from './NavTab';
 function Order(props) {
 
     const restaurantId = props.restaurant_id;
+    const userMode = props.userMode;
+ 
+    const urlParams = new URLSearchParams(props.location.search);
+    const restId = props.match.params.id;
+    const tableId = urlParams.get('tableId')
+    const dumpId = urlParams.get('dumpId');
+    debugger;
+    
+
+
     const [categoryList, setCategoryList] = useState([]);
     const [menuList, setMenuList] = useState([]);
     const [cartList, setCartList] = useState([]);
@@ -46,7 +57,13 @@ function Order(props) {
          
     };
 
-    const addToOrder = item => {
+    const addToOrder = (event, item) => {
+        
+        event.preventDefault();
+        event.stopPropagation();
+
+        let bRes = event.isDefaultPrevented();
+        console.log("add to order " + bRes);
         let bFound = false;
         // search dish has been ordered yet
         const nCartList = cartList.filter(elem => {
@@ -68,6 +85,7 @@ function Order(props) {
         } else {
             setCartList([...nCartList]);
         }
+        return false;
     }
  
     const isQuantity = item => {
@@ -109,8 +127,10 @@ function Order(props) {
         }
     }
 
-    const removeFromOrder = item => {
+    const removeFromOrder = (event, item) => {
         // search dish has been ordered yet
+        event.preventDefault();
+        
         const nCartList = cartList.filter(elem => {
             if (elem.id === item.id) {
                 elem.quantity--;
@@ -128,7 +148,7 @@ function Order(props) {
         return (
             <Col sm="4" key={item.id}>
                 <Card> 
-                    <CardImg top width="100%" src={item.image_path} alt="Card image cap" />
+                    <CardImg top width="100%" className="h-100 d-inline-block" src={item.image_path} alt="Card image cap" />
                     <CardBody className='text-left py-0 by-0 pl-0 bl-0'>
                      <Row>
                         <Col sm='4'>
@@ -137,11 +157,11 @@ function Order(props) {
                         </CardText>
                         </Col>
                         <Col>
-                    <Link onClick={() => addToOrder(item)} className='flow-right'> 
+                    <Link to='#!' onClick={ e => addToOrder(e, item)} className='flow-right'> 
                         <MdAddCircle color='Primary' size = '2rem' /> 
                     </Link>
                     {isQuantity(item) ?
-                    <Link onClick={() => removeFromOrder(item)} className=' flow-right'>
+                    <Link to='#!' onClick={ e => removeFromOrder(e, item)} className=' flow-right'>
                         <MdRemoveCircle color='Primary' size = '2rem' />
                     </Link>   
                     : null }
@@ -166,7 +186,10 @@ function Order(props) {
 
     return (
         <div>
-            {isOrder ?
+            {userMode == 2 ?
+             <NavTab />
+            : null }
+            { isOrder ?
             <div>
             <CategoryNav restaurantId = {restaurantId} fetchMenuList = {fetchMenuList} cartTotal = {cartTotal} setIsOrder={setIsOrder}/>  
             <Row>

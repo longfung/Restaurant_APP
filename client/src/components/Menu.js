@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Select from 'react-select';
 import axios from 'axios';
+import NavTab from './NavTab';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
 import {Form, Input, Row, Col, Button, FormGroup, Label, Card, CardImg} from 'reactstrap';
@@ -133,7 +134,7 @@ function Menu(props) {
 
     const postCreateMenu = () => {
         debugger;
-       let data = JSON.stringify({ name: menu.name, price: menu.price, image_path: menu.image_path, restaurant_id: restaurantId, category_id: category.id });
+        let data = JSON.stringify({ name: menu.name, price: menu.price, image_path: menu.image_path, restaurant_id: restaurantId, category_id: category.id });
         axios.post('/api/menu', data, {
             // headers: {'Content-Type': 'multipart/form-data' }
             headers: { 'Content-Type': 'application/json' }
@@ -222,6 +223,7 @@ function Menu(props) {
 
     return (
         <div>
+            <NavTab/>
             <Form>
                 <Row form>
                     <Col xs="6" sm="6">

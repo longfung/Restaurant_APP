@@ -1,6 +1,6 @@
 import React from 'react'
 import { MdAddCircle, MdRemoveCircle, MdArrowBack } from 'react-icons/md';
-import {Row, Col} from 'reactstrap';
+import {Row, Col, NavLink} from 'reactstrap';
 import { Link } from 'react-router-dom';
 function Cart(props) {
     // debugger;
@@ -11,11 +11,12 @@ function Cart(props) {
     const addToOrder = props.addToOrder;
     const removeFromOrder = props.removeFromOrder;
     const setIsOrder = props.setIsOrder;
+    const cartTotal = props.cartTotal;
     
     return (
         <div>
             {cartList && cartList.map(elem => 
-            <div>
+            <div key={elem.name}>
                 <Row>
                            < Col sm="4">
                     {elem.name}
@@ -27,14 +28,14 @@ function Cart(props) {
                     {elem.quantity}
                 </Col>
                 <Col sm="2">
-                    {elem.price * elem.quantity * 1.1}
+                    {(elem.price * elem.quantity * 1.).toFixed(2)}
                 </Col>
                 <Col sm='2'>
-                    <Link onClick={() => addToOrder(elem)} className='flow-right'> 
+                    <Link to='#!' onClick={ e => addToOrder(e, elem)} className='flow-right'> 
                         <MdAddCircle color='Primary' size = '2rem' /> 
                     </Link>
                     {isQuantity(elem) ?
-                    <Link onClick={() => removeFromOrder(elem)} className=' flow-right'>
+                    <Link to='#!' onClick={ e => removeFromOrder(e, elem)} className=' flow-right'>
                         <MdRemoveCircle color='Primary' size = '2rem' />
                     </Link>    
                     : null }
@@ -43,18 +44,23 @@ function Cart(props) {
 
                 </div>
             )} 
-                            <Row>
-
-                    <Col>
-                    <Link onClick={() => setIsOrder(true)} className=' flow-right'>
+            <hr />
+            <Row>
+                <Col sm = '8'>
+                    <p>Total:</p>
+                </Col>
+                <Col sm='4'>
+                    {cartTotal.toFixed(2)}
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Link to='#!' onClick={() => setIsOrder(true)} className=' flow-right'>
                         <MdArrowBack color='Black' size = '3rem' />
-                    </Link>    
-                  
-                    </Col>
-                </Row>
+                    </Link>                   
+                </Col>
+            </Row>
             </div>
-    )
-    
+    )    
 }
-
 export default Cart
