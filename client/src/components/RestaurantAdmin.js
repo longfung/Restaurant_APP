@@ -7,7 +7,7 @@ import axios from 'axios';
 //     InputGroupAddon,
 //     Button
 // } from 'reactstrap';  
-function Restaurant(props) {
+function RestaurantAdmin(props) {
     // console.log("In Restaurant");
     debugger;
     const ownerId = props.location.state.ownerId;
@@ -109,4 +109,4 @@ function Restaurant(props) {
     );
 }
 
-export default Restaurant;
+export default RestaurantAdmin;

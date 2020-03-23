@@ -18,7 +18,7 @@ function Order(props) {
     const urlParams = new URLSearchParams(props.location.search);
     const restId = props.match.params.id;
     const tableId = urlParams.get('tableId')
-    const dumpId = urlParams.get('dumpId');
+    const restaurantId2 = urlParams.get('restaurantId');
     debugger;
     
 

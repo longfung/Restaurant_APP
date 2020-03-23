@@ -16,6 +16,21 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:ownerId', (req, res) => { 
+    const query = req.query;
+    Restaurant.retrieveRestaurantByOwnerId(query, (err, rest) => {
+        // console.log(err);
+        // console.log(res);
+        if (!err)
+            return res.json(err); 
+        // console.log(rest);
+        if (rest.length == 0) {
+            return res.status(404).json({error: "restaurant not found!!"}); 
+        }
+        return (res.json(rest[0]));
+    });
+});
+
 router.post('/', (req, res) => {
     // var name = req.body.name;
     console.log("in Post");

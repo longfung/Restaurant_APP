@@ -12,9 +12,18 @@ class Restaurant {
         });
     }
 
+    static retrieveRestaurantByOwnerId (node, callback) {
+        db.query('select * from restaurant where owner_id = $1', [node.ownerId], 
+        function (err, res) {
+            if (err.error)
+                return callback(err);
+            callback(err, res);    
+        })
+    }
+
     static insert (node, callback) {
         // db.query('insert into cities (city_name values ($1)',function (err, res) {
-        db.query('INSERT INTO restaurant (name, zip_code, state) VALUES ($1, $2, $3)', [node.name, node.zipCode, node.state], (err, res) => {
+        db.query('INSERT INTO restaurant (name, zip_code, state, owner_id) VALUES ($1, $2, $3, $4)', [node.name, node.zipCode, node.state, node.ownerId], (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) { 
             if (err.error)
                 return callback(err);

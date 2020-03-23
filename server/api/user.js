@@ -25,17 +25,19 @@ router.post('/login', (req, res) => {
     User.retrieveByUsername(username, (err, userList) => {
         // console.log(err);s
         // console.log(res);
-        if (!err)
-            return res.json(err);   
+        if (err.error)
+            return res.send(err);   
         // console.log(rest)
+        if (userList.length == 0) {
+            return res.status(404).json({error: "Usernae not found!!"}); 
+        }
         let user = userList[0];
         if (bcrypt.compareSync(password, user.password))
             return (res.json(user));
         else
-            return res.status(400).send("not allowed");
+            return res.status(404).json({error: "password invalid"});
     });
 });
-
 router.delete('/', (req, res) => {
     const id = req.query.id;
     User.delete(id, (err, user) => {

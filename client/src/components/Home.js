@@ -2,7 +2,10 @@ import React from 'react'
 import NavTab from './NavTab';
 import {Card, CardImg, CardText, CardBody, CardTitle,  NavItem, Row, Col, NavLink} from 'reactstrap';
 
-function Home() {
+function Home(props) {
+    debugger;
+    const setUserMode = props.setUserMode;
+    const setOwnerId = props.setUserMode;
     return (
         <div>
         <Card>
@@ -13,7 +16,8 @@ function Home() {
                     <CardTitle> Welcome to my restaurant</CardTitle>
                     <CardText>Login to maintain owner restaurant</CardText>
                     <NavItem className='mt-0'>
-                            <NavLink className='border-info bg-light text-uppercase text-primary' href='/Login'>Login</NavLink>       
+                            <NavLink className='border-info bg-light text-uppercase text-primary' 
+                            href='/Login?userMode=1'>Login</NavLink>       
                     </NavItem> 
                 </CardBody>
                  </Col>
@@ -32,7 +36,7 @@ function Home() {
                         <CardText>run a demo to see how restaurant guest conduct ordering based on dish menu</CardText>
                         <NavItem className='mt-0'>
                             <NavLink className='border-info bg-light text-uppercase text-primary' 
-                                    href='/order/id?tableId=100?dumpId=200'>Demo</NavLink>       
+                                    href='/login?userMode=2'>Demo</NavLink>       
                             </NavItem>     
                     </CardBody>
                 </Col>
