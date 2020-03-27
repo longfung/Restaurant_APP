@@ -37,6 +37,11 @@ function Restaurant(props) {
     useEffect(() => {
       // console.log("get List");
       // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
+      if (shareContext.state.restaurant) {
+        setRestaurant(shareContext.state.restaurant);
+        return;
+      }
+        
       const promise1 = access.fetchRestuarantByOwnerId(userId);
       Promise.resolve(promise1).then( res1  => {
           const rest = res1.data;
@@ -49,12 +54,14 @@ function Restaurant(props) {
             zipCode: rest.zip_code,
             state: rest.state,
             ownerId: userId
-          });
-          shareContext.dispatch({setRestaurant: restaurant});
-
+          })          
       })
       .catch( error => console.log(error))
     },[])
+
+    useEffect(() => {
+      shareContext.dispatch({type: 'setRestaurant', value: restaurant})
+    },[restaurant])
      
     const handlePostRestaurant = () =>
     {

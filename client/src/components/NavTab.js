@@ -19,7 +19,6 @@ function NavTab(props) {
 
     return (
       <div>
-
         <Navbar color="light" light expand="md">
           <Jumbotron fluid className='my-0 py-1 bg-info w-100'>
           <Nav className="mr-auto px-1 bx-1 py-0 my-0" tabs pills> 
