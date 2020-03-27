@@ -21,15 +21,29 @@ class Restaurant {
         })
     }
 
-    static insert (node, callback) {
+    static insert (n, callback) {
         // db.query('insert into cities (city_name values ($1)',function (err, res) {
-        db.query('INSERT INTO restaurant (name, zip_code, state, owner_id) VALUES ($1, $2, $3, $4)', [node.name, node.zipCode, node.state, node.ownerId], (err, res) => {
+        db.query('INSERT INTO restaurant (name, tax_rate, address, city, state, zip_code, owner_id) \
+        VALUES ($1, $2, $3, $4, $5, $6, $7)', [n.name, n.taxRate, n.address, n.city, n.state, n.zipCode, n.ownerId], (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) { 
             if (err.error)
                 return callback(err);
             callback(res);
         });
-    }
+    } 
+ 
+    static put (n, callback) {
+
+                //    db.query('select * from menu where restaurant_id = $1 and category_id = $2', [restaurantId, categoryId], function (err, res) {
+ 
+        // let idInt = parseint(obj.id);
+        db.query('update restaurant set name = $1, tax_rate = $2, address = $3, city = $4, state = $5, zip_code = $6 \
+            where id = $7', [n.name, n.taxRate, n.address, n.city, n.state, n.zipCode, n.id], function(err, res) {
+                if (err.error) 
+                    return callback(err); 
+                return callback(res)
+            }) 
+        }
 }
 
 module.exports = Restaurant; 

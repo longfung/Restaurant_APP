@@ -6,11 +6,17 @@ import {
     Navbar,
     NavLink,
     NavbarBrand,
+    Button,
     Jumbotron
   } from 'reactstrap';
+  import {store} from './Store';
 
 
-function NavTab() {  
+function NavTab(props) {  
+  const goComponent =  (target) => {
+    props.history.push(target)
+  }
+
     return (
       <div>
 
@@ -21,17 +27,17 @@ function NavTab() {
             <NavLink className='border-info bg-light text-uppercase text-primary' href='/'>Home</NavLink>       
           </NavItem>    
            <NavItem className='mt-0'>
-              <NavLink className=' border-info bg-light text-dark text-uppercase' href='/Restaurant'>Restaurant</NavLink>
+              <Button className=' border-info bg-light text-dark text-uppercase' onClick={() => goComponent('/Restaurant')}>Restaurant</Button>
             </NavItem>
             <NavItem>
-              <NavLink className = ' border-info mb-0 bg-light text-dark text-uppercase' href='/Menu' >Menu</NavLink>
+              <Button className = ' border-info mb-0 bg-light text-dark text-uppercase' onClick={() => goComponent('/Menu')}>Menu</Button>
             </NavItem>
             <NavItem>
-              <NavLink className='border-info mb-0 bg-light text-dark text-uppercase' href='/Category' >Category</NavLink>
+              <Button className='border-info mb-0 bg-light text-dark text-uppercase' onClick={() => goComponent('/Category')}>Category</Button>
             </NavItem>
 
             <NavItem>
-              <NavLink className='border-info mb-0 bg-light text-dark text-uppercase' href='/Order' >Order</NavLink>
+              <Button className='border-info mb-0 bg-light text-dark text-uppercase' onClick={() => goComponent('/Order')} >Order</Button>
             </NavItem>
             <NavItem className='mt-0 '>
               <NavLink className='border-info bg-light text-uppercase text-primary' href='/Login'>Login</NavLink>       

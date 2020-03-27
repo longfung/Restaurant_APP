@@ -10,16 +10,18 @@ import {Form, Input, Row, Col, Button, Label, Card, CardImg, CardBody, NavLink, 
 import CategoryNav from './CatagoryNav';
 import { Link } from 'react-router-dom';
 import NavTab from './NavTab';
-function Order(props) {
 
-    const restaurantId = props.restaurant_id;
+function Order(props) {
+    const restaurant = props.restaurant;
+    const restaurantId = restaurant.id;
+    const taxRate = restaurant.tax_rate;
     const userMode = props.userMode;
  
-    const urlParams = new URLSearchParams(props.location.search);
-    const restId = props.match.params.id;
-    const tableId = urlParams.get('tableId')
-    const restaurantId2 = urlParams.get('restaurantId');
-    debugger;
+    // const urlParams = new URLSearchParams(props.location.search);
+    // const restId = props.match.params.id;
+    // const tableId = urlParams.get('tableId')
+    // const restaurantId2 = urlParams.get('restaurantId');
+    // debugger;
     
 
 
@@ -106,7 +108,7 @@ function Order(props) {
                 sum += cartList[i].quantity * cartList[i].price;
             };  
         }
-        sum += sum * 0.1
+        // sum += sum * taxRate / 100;
         setCartTotal(sum);
     }
 
@@ -187,18 +189,18 @@ function Order(props) {
     return (
         <div>
             {userMode == 2 ?
-             <NavTab />
+             <NavTab {...props}/>
             : null }
             { isOrder ?
             <div>
-            <CategoryNav restaurantId = {restaurantId} fetchMenuList = {fetchMenuList} cartTotal = {cartTotal} setIsOrder={setIsOrder}/>  
+            <CategoryNav restaurant = {restaurant} fetchMenuList = {fetchMenuList} cartTotal = {cartTotal} setIsOrder={setIsOrder}/>  
             <Row>
                 {menuList.map(item => 
                     dishCard(item)         
                 )}
             </Row>
             </div>
-            : <Cart addToOrder = {addToOrder} removeFromOrder = {removeFromOrder} cartTotal = {cartTotal} isQuantity = {isQuantity} cartList={cartList} setIsOrder = {setIsOrder}/>
+            : <Cart addToOrder = {addToOrder} removeFromOrder = {removeFromOrder} taxRate = {taxRate} cartTotal = {cartTotal} isQuantity = {isQuantity} cartList={cartList} setIsOrder = {setIsOrder}/>
             }
 
         </div>

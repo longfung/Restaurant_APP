@@ -13,12 +13,15 @@ import {
   } from 'reactstrap';
   import {     MdShoppingCart} from 'react-icons/md';
   import { Link } from 'react-router-dom';
+  import { store} from './Store';
+
 
 
 
 function CategoryNav(props) {  
-  //  debugger;
-    const restaurantId = props.restaurantId;
+   debugger;
+    const restaurant = props.restaurant;
+    const restaurantId = restaurant.id;
     const fetchMenuList = props.fetchMenuList;
     const isQuantity = props.isQuantity;
     const cartTotal = props.cartTotal;
@@ -31,7 +34,7 @@ function CategoryNav(props) {
         // const restaurantId = 45000
         console.log("in UseEffect");
         debugger;
-        axios.get('/api/category', {params: {restaurant_id: props.restaurantId}})
+        axios.get('/api/category', {params: {restaurant_id: 45000}})
         .then (res =>{
             res.data.map(item => ( 
                 setCategoryList(prevState => ([...prevState, {id: item.id, label: item.category_name}]))

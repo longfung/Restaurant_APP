@@ -82,7 +82,7 @@ function RestaurantAdmin(props) {
 
     return (
             <div>
-              <NavTab />
+              <NavTab {...props}/>/>
                 <form> 
                     <input 
                         type="text" 

@@ -6,6 +6,20 @@ async function fetchRestuarantByOwnerId (id) {
     // .catch(err => console.log(err.error));
  }
 
+ async function addRestaurant(rest) { 
+    let data = JSON.stringify(rest)
+    return await axios.post('/api/restaurant', rest, {
+        headers: {"Content-Text": "application/json"}
+    })
+ }
+
+ async function updateRestaurant(rest) { 
+    let data = JSON.stringify(rest)
+    return await axios.put('/api/restaurant', rest, {
+        headers: {"Content-Text": "application/json"}
+    })
+ }
+
  async function performLogin (username, password) {
     let data = JSON.stringify({
         username: username,
@@ -20,5 +34,7 @@ async function fetchRestuarantByOwnerId (id) {
  
  module.exports = {
      fetchRestuarantByOwnerId,
-     performLogin
+     performLogin,
+     addRestaurant,
+     updateRestaurant
  }

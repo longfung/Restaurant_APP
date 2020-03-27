@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Card, CardTitle, Row, Col} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { MdClear } from 'react-icons/md';
@@ -7,8 +7,15 @@ function MessageBar(props) {
     const msg = props.message.msg;
     const status = props.message.status;
     const resetNessageBar = props.resetMessageBar;
+
+    useEffect(() => {
+        setInterval(resetNessageBar, 10000);
+    }, [])
+
+    // 
+
     let barColor = '';
-    status === 2 ? barColor = "text-danger" : barColor = "text-info";
+    status > 299 ? barColor = "text-danger" : barColor = "text-info";
     return (
         <div>
             <Card>

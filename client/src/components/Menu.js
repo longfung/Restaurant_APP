@@ -223,7 +223,7 @@ function Menu(props) {
 
     return (
         <div>
-            <NavTab/>
+            <NavTab {...props}/>
             <Form>
                 <Row form>
                     <Col xs="6" sm="6">

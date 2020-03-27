@@ -12,6 +12,7 @@ function Cart(props) {
     const removeFromOrder = props.removeFromOrder;
     const setIsOrder = props.setIsOrder;
     const cartTotal = props.cartTotal;
+    const taxRate = props.taxRate;
     
     return (
         <div>
@@ -28,7 +29,7 @@ function Cart(props) {
                     {elem.quantity}
                 </Col>
                 <Col sm="2">
-                    {(elem.price * elem.quantity * 1.).toFixed(2)}
+                    {(elem.price * elem.quantity).toFixed(2)}
                 </Col>
                 <Col sm='2'>
                     <Link to='#!' onClick={ e => addToOrder(e, elem)} className='flow-right'> 
@@ -45,14 +46,33 @@ function Cart(props) {
                 </div>
             )} 
             <hr />
+           <Row>
+                <Col sm = '8'>
+                    <p>Sub Total:</p>
+                </Col>
+                <Col sm='4'>
+                    {cartTotal.toFixed(2)}
+                </Col>
+            </Row> 
+             <Row>          
+                <Col sm = '8'>
+                    <p>Tax:</p>
+                </Col>
+                <Col sm='4'>
+                    {(cartTotal*taxRate/100).toFixed(2)}
+                </Col>
+            </Row>
+            <hr />
             <Row>
                 <Col sm = '8'>
                     <p>Total:</p>
                 </Col>
                 <Col sm='4'>
-                    {cartTotal.toFixed(2)}
+                    {(cartTotal+(cartTotal*taxRate/100)).toFixed(2)}
                 </Col>
             </Row>
+
+ 
             <Row>
                 <Col>
                     <Link to='#!' onClick={() => setIsOrder(true)} className=' flow-right'>

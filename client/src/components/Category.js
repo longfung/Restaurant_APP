@@ -119,7 +119,7 @@ function Category(props) {
 
     return (
       <div>
-          <NavTab />
+          <NavTab {...props}/>
           <Form>
             <Row form >
               <Col md={1}>
@@ -154,7 +154,7 @@ function Category(props) {
       <div>
           <h2>Category List</h2>
           <ul> 
-            {categoryList.map((item, idx) => (
+            {categoryList && categoryList.map((item, idx) => (
               <Row key={idx}> 
                 <Col sm={4}>
                   {item.category_name}

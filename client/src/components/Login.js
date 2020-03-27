@@ -1,12 +1,17 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
+import {store} from './Store';
+
 
 import {Form, FormGroup, Input, Label, Row, Col, Button} from 'reactstrap';
 
 const access = require('../util/access.js');
 
 function Login(props) {
+    debugger;
+    const shareContext = useContext(store)
+    const restId = shareContext.state.restaurantId;
     const setOwnerId = props.setOwnerId;
     const setRestaurant = props.setRestaurant;
     const setMessage = props.setMessage;
@@ -112,6 +117,7 @@ function Login(props) {
         // })
         Promise.resolve(promise1).then (res => {
             setOwnerId({ownerId: res.data.id});
+            shareContext.dispatch({type: 'setOwnerId', value:res.data.id})
             props.history.push("/restaurant", {ownerId: res.data.id})
         }).catch(err => {
             console.error(err.response.data.error);
