@@ -29,17 +29,19 @@ app.post('/fileupload', (req, res) => {
     }
     let image = req.files.file;
     // let filepath = __dirname + '\\images\\' + image.name
-    let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
-    image.mv(filepath, (err) => {
+    // let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
+    image.mv(`${process.cwd()}/client/public/images/${image.name}`, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send(err);
         }
-        
+
         let imagepath = "\/images\/" + image.name;
-        console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());    
+        // console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());    
         // res.send({filename: imagepath});
-        res.json({filename: imagepath});
+        // res.json({filename: imagepath});
+        console.log(`${process.cwd()}/client/public/images/${image.name}`)
+        res.json({filename: image.name, filepath: `/images/${image.name}`});
         // res.send({filename: filepath});
         
 

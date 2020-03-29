@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Cart from './Cart'
 import Select from 'react-select';
 import axios from 'axios';
@@ -10,9 +10,11 @@ import {Form, Input, Row, Col, Button, Label, Card, CardImg, CardBody, NavLink, 
 import CategoryNav from './CatagoryNav';
 import { Link } from 'react-router-dom';
 import NavTab from './NavTab';
+import {store} from './Store';
 
 function Order(props) {
-    const restaurant = props.restaurant;
+    const shareContext = useContext(store);
+    const restaurant = shareContext.state.restaurant;
     const restaurantId = restaurant.id;
     const taxRate = restaurant.tax_rate;
     const userMode = props.userMode;

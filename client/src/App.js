@@ -23,6 +23,10 @@ import {StateProvider} from './components/Store';
 export const ShareContext = React.createContext() 
 
 function App(props) {
+//   debugger;  
+//   let lPath = process.cwd();
+//   lPath = __dirname + "dog.png";
+
   const [userMode, setUserMode] = useState(0);
   const [ownerId, setOwnerId] = useState(0);      
   const [restaurantRoot, setRestaurantRoot] = useState({});  // nessage has two items as message and status - 0 nothig, 1 info, 2 error
@@ -50,7 +54,7 @@ function App(props) {
                   render={(props) => <Home {...props} setUserMode = {setUserMode} setOwnerId = {setOwnerId} />}
             />
             <Route path='/restaurant'
-                  render={(props) => <Restaurant {...props} setMessage={setMessage} setRestaurantRoot = {setRestaurantRoot} ownerId = {ownerId} />}
+                  render={(props) => <Restaurant {...props} setMessage={setMessage}/>}
             />
             <Route path='/menu' 
                   render={(props) => <Menu {...props} restaurant_id={restaurantRoot.id} />}
@@ -65,7 +69,7 @@ function App(props) {
                   render={(props) => <Order {...props} restaurant={restaurantRoot} userMode={2} />} 
             />   
             <Route path='/Login'
-                  render={(props) => <Login {...props} setOwnerId={setOwnerId} setUserMode = {setUserMode} setRestaurant = {setRestaurantRoot} setMessage={setMessage} />} 
+                  render={(props) => <Login {...props} setUserMode = {setUserMode} setMessage={setMessage} />} 
             />   
             <Route path='/User'
                   render={(props) => <User {...props} setUserMode = {setUserMode} setOwnerId={setOwnerId} /> }
@@ -76,25 +80,6 @@ function App(props) {
     )
   } 
 
-  const initialState = {
-        ownerId: 0,
-        restaurantId: 0,
-        userMode: 1
-  }
-  const reducer = (state, action) => {
-    switch (action.type) {
-        case 'setOwnerId':
-            return {...state, ownerId: action.value}
-        case 'userMode':
-            return {...state, userMode: action.value};
-        case 'restaurantId':
-            return {...state, restaurantId: action.value}
-        default:
-            return state
-    }
-  }
-
-  const [shareState, shareDispatch] = useReducer(reducer, initialState)
   return (
       <StateProvider>
 

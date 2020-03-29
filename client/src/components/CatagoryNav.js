@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import axios from 'axios';
 import {
     Row,
@@ -20,7 +20,9 @@ import {
 
 function CategoryNav(props) {  
    debugger;
-    const restaurant = props.restaurant;
+    const shareContext =  useContext(store);
+    const restaurant = shareContext.state.restaurant;
+    // const restaurant = props.restaurant;
     const restaurantId = restaurant.id;
     const fetchMenuList = props.fetchMenuList;
     const isQuantity = props.isQuantity;
@@ -34,7 +36,7 @@ function CategoryNav(props) {
         // const restaurantId = 45000
         console.log("in UseEffect");
         debugger;
-        axios.get('/api/category', {params: {restaurant_id: 45000}})
+        axios.get('/api/category', {params: {restaurant_id: restaurantId}})
         .then (res =>{
             res.data.map(item => ( 
                 setCategoryList(prevState => ([...prevState, {id: item.id, label: item.category_name}]))

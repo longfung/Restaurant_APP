@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import NavTab from './NavTab';
 import { Form, Input, Row, Col, Button, FormGroup, Label } from 'reactstrap';
+import {store} from './Store';
+
 // import {MyContext} from './MyContext';
 
 // import {
@@ -12,7 +14,10 @@ import { Form, Input, Row, Col, Button, FormGroup, Label } from 'reactstrap';
 // } from 'reactstrap';  
 function Category(props) {
     // console.log("In Restaurant");
-    const restaurantId = props.restaurant_id  
+    const shareContext = useContext(store);
+    const restaurantId = shareContext.state.restaurant.id;
+    debugger;
+    // const restaurantId = props.restaurant_id  
     // const restId = useContext(MyContext.restaurantId);
     // console.log(restaurantId + " : ");
     // debugger;
@@ -90,7 +95,7 @@ function Category(props) {
       // debugger;
         // console.log("get List action");
         // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-        axios.get('/api/category', {params:{restaurant_id: 45000}})
+        axios.get('/api/category', {params:{restaurant_id: restaurantId}})
         // .then(res => {console.log(res)})
         .then(res => { 
           console.log(res)

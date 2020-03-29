@@ -11,9 +11,9 @@ const access = require('../util/access.js');
 function Login(props) {
     debugger;
     const shareContext = useContext(store)
-    const restId = shareContext.state.restaurantId;
-    const setOwnerId = props.setOwnerId;
-    const setRestaurant = props.setRestaurant;
+    // const restId = shareContext.state.restaurant.Id;
+    // const setOwnerId = props.setOwnerId;
+    // const setRestaurant = props.setRestaurant;
     const setMessage = props.setMessage;
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('');
@@ -79,7 +79,8 @@ function Login(props) {
         Promise.resolve(promise0).then (res0 => {
             const promise1 = access.fetchRestuarantByOwnerId(res0.data.id);
             Promise.resolve(promise1).then( res1  => {
-                    setRestaurant(res1.data);
+                    // setRestaurant(res1.data);
+                    shareContext.dispatch({type: 'setRestaurant', value: res1.data})
                     return (
                         props.history.push("/order/id", {ownerId: res1.data.owner_id}))
                 })
@@ -116,9 +117,9 @@ function Login(props) {
         //     })
         // })
         Promise.resolve(promise1).then (res => {
-            setOwnerId({ownerId: res.data.id});
+            // setOwnerId({ownerId: res.data.id});
             shareContext.dispatch({type: 'setOwnerId', value:res.data.id})
-            props.history.push("/restaurant", {ownerId: res.data.id})
+            props.history.push("/restaurant")
         }).catch(err => {
             console.error(err.response.data.error);
             setMessage({status: err.response.status,

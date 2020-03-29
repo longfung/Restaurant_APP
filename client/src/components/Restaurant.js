@@ -19,7 +19,7 @@ function Restaurant(props) {
     const shareContext = useContext(store);
     const userId = shareContext.state.ownerId;
     
-    const setRestaurantRoot = props.setRestaurantRoot;
+    // const setRestaurantRoot = props.setRestaurantRoot;
     // const userId = props.location.state.ownerId;
     // const userId = props.ownerId.ownerId;
     const setMessage = props.setMessage;
@@ -76,8 +76,8 @@ function Restaurant(props) {
       debugger;
         const promise1 = access.addRestaurant(restaurant);
         Promise.resolve(promise1).then(res => {
-          console.log("add!!");
-          setRestaurantRoot(restaurant);
+          // console.log("add!!");
+          // setRestaurantRoot(restaurant);
           shareContext.dispatch({setRestaurant: restaurant});
           let m = restaurant.name + ' is created Successfully !!!';
           setMessage({
@@ -106,8 +106,8 @@ function Restaurant(props) {
     const handleUpdateRestaurant = () => {
       const promise1 = access.updateRestaurant(restaurant);
       Promise.resolve(promise1).then(res => {
-        console.log("update!!");
-        setRestaurantRoot(restaurant);
+        // console.log("update!!");
+        // setRestaurantRoot(restaurant);
         shareContext.dispatch({setRestaurant: restaurant});
         let m = restaurant.name + ' is updated Successfully !!!';
         setMessage({

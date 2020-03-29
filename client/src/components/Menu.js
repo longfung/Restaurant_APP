@@ -1,13 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import NavTab from './NavTab';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
 import {Form, Input, Row, Col, Button, FormGroup, Label, Card, CardImg} from 'reactstrap';
+import {store} from './Store';
+
 function Menu(props) {
-    // debugger;
-    const restaurantId = props.restaurant_id;
+    debugger;
+    const shareContext = useContext(store);
+    const restaurantId = shareContext.state.restaurant ? shareContext.state.restaurant.id : 45000;
+    // const restaurantId = props.restaurant_id;
     
     const [menu, setMenu] = useState ({
         id: '',
@@ -15,6 +19,7 @@ function Menu(props) {
         price: 0,
         rest_id: 1000,
         category_id: '',
+        // image_path: `${process.cwd()}/public/images/img1.jpg`
         image_path: ''
     })
     const [menuList, setMenuList] = useState([]);
@@ -25,15 +30,9 @@ function Menu(props) {
         // label: ''
     ])
 
-    const cOptions = [
-        {id: 10, label: "Beef"} ,
-        {id: 20, label: "soup"}
-    ];
-
     const [category, setCategory] = useState(
         { 
-          id: 10, 
-          label: "beef"
+          
         }
     );
 
@@ -58,8 +57,9 @@ function Menu(props) {
         setImage(image)
         setImageName(image.name)   
 
-        var formdata = new FormData();
+        const formdata = new FormData();
         formdata.append('file', image);
+        fileUpload(formdata);
 
         // axios.post('/fileupload', formdata, {
         //     // headers: {'Content-Type': 'multipart/form-data' }
@@ -96,11 +96,25 @@ function Menu(props) {
     const getMenuList = () =>  {
         axios.get('/api/Menu', {params:{restaurant_id: restaurantId}})
         .then(res => { 
-           console.log(res)
+        //    console.log(res)
            setMenuList(res.data) 
         })
         .catch( error => console.log("Error")) 
       };
+
+    const fileUpload = async formdata => {
+        // e.preventDefault();
+        // const formdata = new FormData();
+        // formdata.append('file', image);
+        try {
+            const res = await axios.post('/fileupload', formdata, {headers: {'Content-Type': 'multipart/form-data'}})
+        
+            const {filename, filepath} = res.data;
+            setMenu({...menu, image_path: filepath});
+        } catch (err) {
+            console.log("error:" + err.error);
+        }
+    }
 
     const handlePostMenu = () => {
         if (image) {
@@ -267,7 +281,7 @@ function Menu(props) {
                     <Col xs="3" sm="3">
                         
                         <Card className='width: 6rem'>
-                            <CardImg top width="100%" src={menu.image_path}/>
+                            <CardImg top width="100%" alt={menu.image_path} src={menu.image_path}/>
                         </Card>
                         </Col>
     
@@ -275,7 +289,7 @@ function Menu(props) {
                 <Row>
 
                     <Col xs="6" sm="6">
-                        <Button onClick={handlePostMenu}> Create menu </Button>   
+                        <Button onClick={handleCreateOrUpdateMenu}> Create menu </Button>   
                     </Col>
 
 
