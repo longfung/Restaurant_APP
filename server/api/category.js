@@ -2,48 +2,43 @@ var express = require("express");
 
 var Category = require("../models/category");
 
-
 var router = express.Router();
 
-router.get('/', (req, res) => {
-    console.log("in category Get");
-    var node = req.query.restaurant_id;
-    Category.retrieveAllByRestaurant(node, (err, category) => {
-        // console.log(err);s
-        // console.log(res);
-        if (!err)
-            return res.json(err);   
-        // console.log(rest)
-        return (res.json(category));
-    });
+router.get("/", (req, res) => {
+  console.log("in category Get");
+  var node = req.query.restaurant_id;
+  Category.retrieveAllByRestaurant(node, (err, category) => {
+    // console.log(err);s
+    // console.log(res);
+    if (!err) return res.json(err);
+    // console.log(rest)
+    return res.json(category);
+  });
 });
 
-router.delete('/', (req, res) => {
-    const id = req.query.id;
-    Category.delete(id, (err, category) => {
-        if (err.error)
-            return res.json(err);
-        return (res.json(category));
-    })
-})
-
-router.post('/', (req, res) => {
-    console.log("in Menu Post" + req.body); 
-    var node = req.body;
-    Category.insert(node, (err, result) => {  
-        if (err)
-            return res.json(err);
-        return res.json(result);
-    });
+router.delete("/", (req, res) => {
+  const id = req.query.id;
+  Category.delete(id, (err, category) => {
+    if (err.error) return res.json(err);
+    return res.json(category);
+  });
 });
 
-router.put('/', (req, res) => {
-    const data = req.body;
-    Category.put(data, (err, result) => {
-        if (err.error)
-            return res.json(err);
-        return res.json(result);
-    });
-})
+router.post("/", (req, res) => {
+  console.log("in Menu Post" + req.body);
+  var node = req.body;
+  Category.insert(node, (err, result) => {
+    if (err) return res.json(err);
+    return res.json(result);
+  });
+});
 
-module.exports = router; 
+router.put("/", (req, res) => {
+  const data = req.body;
+  Category.put(data, (err, result) => {
+    if (err.error) return res.json(err);
+    return res.json(result);
+  });
+});
+
+module.exports = router;
