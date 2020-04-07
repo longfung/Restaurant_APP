@@ -39,6 +39,7 @@ app.post('/fileupload', (req, res) => {
           console.log(`Directory ${curDir} already exists!`);
         //   return curDir; 
         }
+    }
     // let filepath = __dirname + '\\images\\' + image.name
     // let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
     image.mv(`${process.cwd()}/client/public/images/${path}/${image.name}`, (err) => {
