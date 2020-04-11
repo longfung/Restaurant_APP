@@ -4,11 +4,13 @@ import axios from "axios";
 import { store } from "./Store";
 
 import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 const access = require("../util/access.js");
 
 function Login(props) {
   debugger;
+  const { t } = useTranslation();
   const shareContext = useContext(store);
   // const restId = shareContext.state.restaurant.Id;
   // const setOwnerId = props.setOwnerId;
@@ -74,19 +76,19 @@ function Login(props) {
     //     .catch(console.log);
     const promise0 = access.performLogin("demo", "demo");
     Promise.resolve(promise0)
-      .then(res0 => {
+      .then((res0) => {
         const promise1 = access.fetchRestuarantByOwnerId(res0.data.id);
-        Promise.resolve(promise1).then(res1 => {
+        Promise.resolve(promise1).then((res1) => {
           // setRestaurant(res1.data);
           shareContext.dispatch({ type: "setRestaurant", value: res1.data });
           shareContext.dispatch({ type: "setUserMode", value: 1 });
           return props.history.push("/order/id");
         });
       })
-      .catch(err => {
+      .catch((err) => {
         setMessage({
           status: err.response.status,
-          msg: err.response.data.error
+          msg: err.response.data.error,
         });
       });
 
@@ -117,20 +119,20 @@ function Login(props) {
     //     })
     // })
     Promise.resolve(promise1)
-      .then(res => {
+      .then((res) => {
         // setOwnerId({ownerId: res.data.id});
         shareContext.dispatch({
           type: "setOwnerId",
-          value: { id: res.data.id, username: res.data.username }
+          value: { id: res.data.id, username: res.data.username },
         });
         shareContext.dispatch({ type: "setUserMode", value: 2 });
         props.history.push("/restaurant");
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err.response.data.error);
         setMessage({
           status: err.response.status,
-          msg: err.response.data.error
+          msg: err.response.data.error,
         });
       });
   };
@@ -156,14 +158,14 @@ function Login(props) {
         <Col sm="5">
           <FormGroup>
             <Label for="userName" hidden>
-              Username
+              {t("Username.1")}
             </Label>
             <Input
               type="Text"
               name="userName"
               id="userName"
-              placeholder="UserName"
-              onChange={e => setUsername(e.target.value)}
+              placeholder={t("Username.1")}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </FormGroup>
         </Col>
@@ -177,7 +179,7 @@ function Login(props) {
               name="password"
               id="password"
               placeholder="Password"
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </FormGroup>
         </Col>

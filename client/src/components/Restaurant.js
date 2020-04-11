@@ -2,12 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import NavTab from "./NavTab";
 import axios from "axios";
 import access from "../util/access";
+import Select from "react-select";
 import { Form, Input, FormGroup, Row, Col, Button, Label } from "reactstrap";
 import { store } from "./Store";
+import { useTranslation } from "react-i18next";
 
 function Restaurant(props) {
   // console.log("In Restaurant");
   debugger;
+  const { t } = useTranslation();
   const shareContext = useContext(store);
   const userId = shareContext.state.ownerId;
 
@@ -16,27 +19,34 @@ function Restaurant(props) {
   // const userId = props.ownerId.ownerId;
   const setMessage = props.setMessage;
   const [restaurant, setRestaurant] = useState({
-    id: "",
-    name: "",
-    address: "",
-    city: "",
-    zipCode: "",
-    state: "",
-    taxRate: 9.25,
-    ownerId: userId
+    // id: "",
+    // name: "",
+    // address: "",
+    // city: "",
+    // zipCode: "",
+    // state: "",
+    // taxRate: 9.25,
+    // locale: "",
+    // ownerId: userId,
   });
+
+  const [localeValue, setLocaleValue] = useState({});
 
   useEffect(() => {
     // console.log("get List");
     // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-    if (shareContext.state.restaurant) {
-      setRestaurant(shareContext.state.restaurant);
-      return;
-    }
+    // if (shareContext.state.restaurant) {
+    //   setRestaurant(shareContext.state.restaurant);
+    //   setLocaleValue({
+    //     value: shareContext.state.locale,
+    //     label: shareContext.state.locale,
+    //   });
+    //   return;
+    // }
 
     const promise1 = access.fetchRestuarantByOwnerId(userId);
     Promise.resolve(promise1)
-      .then(res1 => {
+      .then((res1) => {
         const rest = res1.data;
         setRestaurant({
           id: rest.id,
@@ -46,15 +56,25 @@ function Restaurant(props) {
           city: rest.city,
           zipCode: rest.zip_code,
           state: rest.state,
-          ownerId: userId
+          locale: rest.locale,
+          ownerId: userId,
         });
+        // shareContext.dispatch({ type: "setRestaurant", value: restaurant });
+        setLocaleValue({ value: rest.locale, label: rest.locale });
+        if (!shareContext.state.locale)
+          shareContext.dispatch({ type: "setLocale", value: rest.locale });
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
-    shareContext.dispatch({ type: "setRestaurant", value: restaurant });
-  }, [restaurant]);
+    if (restaurant.id)
+      shareContext.dispatch({ type: "setRestaurant", value: restaurant });
+  }, [restaurant.id]);
+
+  // useEffect(() => {
+  //   setRestaurant({ ...restaurant, locale: localeValue.value });
+  // }, [localeValue]);
 
   const handlePostRestaurant = () => {
     if (restaurant.id != "") {
@@ -66,19 +86,20 @@ function Restaurant(props) {
 
   const handleAddRestaurant = () => {
     debugger;
-    const promise1 = access.addRestaurant(restaurant);
+    const data = moveCorrespond();
+    const promise1 = access.addRestaurant(data);
     Promise.resolve(promise1)
-      .then(res => {
+      .then((res) => {
         // console.log("add!!");
         // setRestaurantRoot(restaurant);
         shareContext.dispatch({ setRestaurant: restaurant });
         let m = restaurant.name + " is created Successfully !!!";
         setMessage({
           status: 200,
-          msg: m
+          msg: m,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
     // console.log("In handleAddRestaurant");
@@ -98,21 +119,37 @@ function Restaurant(props) {
   };
 
   const handleUpdateRestaurant = () => {
-    const promise1 = access.updateRestaurant(restaurant);
+    const data = moveCorrespond();
+    const promise1 = access.updateRestaurant(data);
     Promise.resolve(promise1)
-      .then(res => {
+      .then((res) => {
         // console.log("update!!");
         // setRestaurantRoot(restaurant);
         shareContext.dispatch({ setRestaurant: restaurant });
         let m = restaurant.name + " is updated Successfully !!!";
         setMessage({
           status: 200,
-          msg: m
+          msg: m,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
+  };
+
+  const moveCorrespond = () => {
+    const data = {
+      id: restaurant.id,
+      name: restaurant.name,
+      taxRate: restaurant.tax_rate,
+      address: restaurant.address,
+      city: restaurant.city,
+      zipCode: restaurant.zip_code,
+      state: restaurant.state,
+      locale: localeValue.value,
+      ownerId: userId,
+    };
+    return data;
   };
 
   return (
@@ -122,12 +159,12 @@ function Restaurant(props) {
         <Row form>
           <Col sm="6">
             <FormGroup>
-              <Label for="name">Restaurant Name</Label>
+              <Label for="name">{t("RestaurantName.1")}</Label>
               <Input
                 type="Text"
                 id="name"
                 value={restaurant.name}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, name: e.target.value })
                 }
               />
@@ -135,14 +172,32 @@ function Restaurant(props) {
           </Col>
           <Col sm="6">
             <FormGroup>
-              <Label for="taxRate">Tax Rates</Label>
+              <Label for="taxRate">{t("TaxRate.1")}</Label>
               <Input
                 type="Text"
                 id="taxRate"
                 value={restaurant.taxRate}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, taxRate: e.target.value })
                 }
+              />
+            </FormGroup>
+          </Col>
+
+          <Col xs="6" sm="6">
+            <FormGroup>
+              <Label for="locale">Default Language</Label>
+              <Select
+                id="localeid"
+                options={[
+                  { label: "en", value: "en" },
+                  { label: "tw", value: "tw" },
+                  { label: "zh", value: "zh" },
+                ]}
+                onChange={setLocaleValue}
+                className="mb-3"
+                placeholder="Select a default language"
+                value={localeValue}
               />
             </FormGroup>
           </Col>
@@ -153,7 +208,7 @@ function Restaurant(props) {
                 type="text"
                 id="address"
                 value={restaurant.address}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, address: e.target.value })
                 }
               />
@@ -166,7 +221,7 @@ function Restaurant(props) {
                 type="text"
                 id="city"
                 value={restaurant.city}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, city: e.target.value })
                 }
               />
@@ -179,7 +234,7 @@ function Restaurant(props) {
                 type="Text"
                 id="state"
                 value={restaurant.state}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, state: e.target.value })
                 }
               />
@@ -192,7 +247,7 @@ function Restaurant(props) {
                 type="Text"
                 id="zipCode"
                 value={restaurant.zipCode}
-                onChange={e =>
+                onChange={(e) =>
                   setRestaurant({ ...restaurant, zipCode: e.target.value })
                 }
               />

@@ -9,17 +9,23 @@ import {
   Button,
   Row,
   Col,
-  Jumbotron
+  Jumbotron,
 } from "reactstrap";
 import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
+import i18next from "i18next";
 
 function NavTab(props) {
   const shareContext = useContext(store);
   const username = shareContext.state.username;
 
-  const goComponent = target => {
+  const goComponent = (target) => {
     props.history.push(target);
+  };
+
+  const setLanguage = (locale) => {
+    shareContext.dispatch({ type: "setLocale", value: locale });
+    // i18next.changeLanguage(locale);
   };
 
   return (
@@ -27,7 +33,7 @@ function NavTab(props) {
       <Navbar color="light" light expand="md">
         <Jumbotron fluid className="my-0 py-1 bg-info w-100">
           <Row>
-            <Col sm="10">
+            <Col sm="9">
               <Nav className="mr-auto px-1 bx-1 py-0 my-0" tabs pills>
                 <NavItem className="mt-0 ">
                   <NavLink
@@ -88,7 +94,30 @@ function NavTab(props) {
                 </NavItem>
               </Nav>
             </Col>
-            <Col sm="2">
+            <Col sm="1.5">
+              <Link
+                to="#!"
+                onClick={() => setLanguage("en")}
+                className="font-weight-bold text-white"
+              >
+                EN
+              </Link>
+              <Link
+                to="#!"
+                onClick={() => setLanguage("tw")}
+                className="font-weight-bold text-white"
+              >
+                雜體
+              </Link>
+              <Link
+                to="#!"
+                onClick={() => setLanguage("zh")}
+                className="font-weight-bold text-white"
+              >
+                简体
+              </Link>
+            </Col>
+            <Col sm="1.5">
               <Link
                 to="#!"
                 onClick={() => props.history.push("/user")}

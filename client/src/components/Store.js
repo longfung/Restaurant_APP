@@ -1,9 +1,10 @@
 import React, { useReducer } from "react";
+import i18next from "i18next";
 
 const initialState = {
   ownerId: 0,
   restaurant: null,
-  userMode: 1
+  userMode: 1,
 };
 
 const store = React.createContext(initialState);
@@ -17,12 +18,16 @@ const StateProvider = ({ children }) => {
         return {
           ...state,
           ownerId: action.value.id,
-          username: action.value.username
+          username: action.value.username,
         };
       case "setUserMode":
         return { ...state, userMode: action.value };
       case "setRestaurant":
         return { ...state, restaurant: action.value };
+      case "setLocale":
+        i18next.changeLanguage(action.value);
+        return { ...state, locale: action.value };
+
       default:
         return state;
     }

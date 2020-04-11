@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label,
   Card,
-  CardImg
+  CardImg,
 } from "reactstrap";
 import { store } from "./Store";
 import "../index.css";
@@ -39,11 +39,12 @@ function Menu(props) {
   const [menu, setMenu] = useState({
     id: "",
     name: "",
+    locale: shareContext.state.restaurant.locale,
     price: 0,
     rest_id: 1000,
     category_id: "",
     // image_path: `${process.cwd()}/public/images/img1.jpg`
-    image_path: ""
+    image_path: "",
   });
   const [menuList, setMenuList] = useState([]);
   const [image, setImage] = useState("");
@@ -63,18 +64,18 @@ function Menu(props) {
     Promise.resolve(promise1)
       // axios
       //   .get("/api/category", { params: { restaurant_id: restaurantId } })
-      .then(res => {
-        res.data.map(item =>
-          setCategoryList(prevState => [
+      .then((res) => {
+        res.data.map((item) =>
+          setCategoryList((prevState) => [
             ...prevState,
-            { id: item.id, label: item.category_name }
+            { id: item.id, label: item.category_name },
           ])
         );
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
-  const handleSelector = e => {
+  const handleSelector = (e) => {
     e.preventDefault();
     if (e.target.files.length == 0) return;
     var image = e.target.files[0];
@@ -124,24 +125,30 @@ function Menu(props) {
   };
 
   const getMenuList = () => {
-    const promise1 = access.fetchMenuByRestaurantId(restaurantId);
+    const promise1 = access.fetchMenuByRestaurantId(
+      restaurantId,
+      shareContext.state.locale
+    );
     Promise.resolve(promise1)
       // axios
       //   .get("/api/Menu", { params: { restaurant_id: restaurantId } })
-      .then(res => {
+      .then((res) => {
         //    console.log(res)
-        setMenuList(res.data);
+        const obj = res.data.map((elem) =>
+          elem.name_t != null ? { ...elem, name: elem.name_t } : elem
+        );
+        setMenuList(obj);
       })
-      .catch(error => console.log("Error"));
+      .catch((error) => console.log("Error"));
   };
   // upload to client/public folder, not used now, using firebase instead
-  const fileUpload = async formdata => {
+  const fileUpload = async (formdata) => {
     // e.preventDefault();
     // const formdata = new FormData();
     // formdata.append('file', image);
     try {
       const res = await axios.post("/fileupload", formdata, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const { filename, filepath } = res.data;
@@ -152,23 +159,23 @@ function Menu(props) {
   };
 
   // only upload when the image not upload before
-  const firebaseUpload = image => {
+  const firebaseUpload = (image) => {
     const dir = "D_" + restaurantId;
     storage
       .ref(`${dir}`)
       .child(image.name)
       .getDownloadURL()
       // exist, just get url for display
-      .then(url => setMenu({ ...menu, image_path: url }))
-      .catch(err => {
+      .then((url) => setMenu({ ...menu, image_path: url }))
+      .catch((err) => {
         // not exist, then upload image
         const uploadTask = storage.ref(`${dir}/${image.name}`).put(image);
         uploadTask.on(
           "state_changed",
-          snapshot => {
+          (snapshot) => {
             // progrss function ....
           },
-          error => {
+          (error) => {
             // error function ....
             console.log(error);
           },
@@ -178,7 +185,7 @@ function Menu(props) {
               .ref(`${dir}`)
               .child(image.name)
               .getDownloadURL()
-              .then(url => {
+              .then((url) => {
                 console.log(url);
                 setMenu({ ...menu, image_path: url });
               });
@@ -187,15 +194,15 @@ function Menu(props) {
       });
   };
 
-  const firebaseUpload2 = image => {
+  const firebaseUpload2 = (image) => {
     const dir = "D_" + restaurantId;
     const uploadTask = storage.ref(`${dir}/${image.name}`).put(image);
     uploadTask.on(
       "state_changed",
-      snapshot => {
+      (snapshot) => {
         // progrss function ....
       },
-      error => {
+      (error) => {
         // error function ....
         console.log(error);
       },
@@ -205,7 +212,7 @@ function Menu(props) {
           .ref(`${dir}`)
           .child(image.name)
           .getDownloadURL()
-          .then(url => {
+          .then((url) => {
             console.log(url);
             setMenu({ ...menu, image_path: url });
           });
@@ -252,10 +259,12 @@ function Menu(props) {
     debugger;
     let data = {
       name: menu.name,
+      // intend to do so, only allow default language to update the name, use translation tool for other locale input
+      locale: shareContext.state.locale,
       price: menu.price,
       image_path: menu.image_path,
       restaurant_id: restaurantId,
-      category_id: category.id
+      category_id: category.id,
     };
     const promise1 = access.addMenu(data);
     Promise.resolve(promise1)
@@ -264,7 +273,7 @@ function Menu(props) {
       //     // headers: {'Content-Type': 'multipart/form-data' }
       //     headers: { "Content-Type": "application/json" }
       //   })
-      .then(res => {
+      .then((res) => {
         // debugger;
         // console.log(res.data);
         // invokeFetch();
@@ -280,9 +289,11 @@ function Menu(props) {
     let data = {
       id: menu.id,
       name: menu.name,
+      locale: shareContext.state.restaurant.locale,
       price: menu.price,
       image_path: menu.image_path,
-      category_id: category.id
+      restaurant_id: restaurantId,
+      category_id: category.id,
     };
     const promise1 = access.updateMenu(data);
     Promise.resolve(promise1)
@@ -290,7 +301,7 @@ function Menu(props) {
       //   .put("/api/menu", data, {
       //     headers: { "Content-Type": "application/json" }
       //   })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.json());
         // getMenuList();
         //   setNode({ ...node, id: '', category_name: '', category_description: '', restaurant_id: restaurantId });
@@ -301,32 +312,33 @@ function Menu(props) {
       });
   };
 
-  const setEdit = obj => {
+  const setEdit = (obj) => {
     for (var i = 0; i < categoryList.length; i++) {
       if (obj.category_id == categoryList[i].id) {
         setCategory({
           id: categoryList[i].id,
-          label: categoryList[i].label
+          label: categoryList[i].label,
         });
         break;
       }
     }
     setMenu({
       id: obj.id,
-      name: obj.name,
+      name: obj.name_t == null ? obj.name : obj.name_t,
+      locale: shareContext.state.restaurant.locale,
       price: obj.price,
       rest_id: obj.restaurant_id,
       category_id: obj.category_id,
-      image_path: obj.image_path
+      image_path: obj.image_path,
     });
   };
 
-  const setDelete = obj => {
+  const setDelete = (obj) => {
     const promise1 = access.deleteMenuById(obj.id);
     Promise.resolve(promise1)
       // axios
       //   .delete("/api/menu", { params: { id: obj.id } })
-      .then(res => {
+      .then((res) => {
         // console.log(res.data.json());
         let m = obj.name + " is deleted Successfully !!!";
         setMessage({ status: 200, msg: m });
@@ -335,10 +347,10 @@ function Menu(props) {
         initialMenu();
       })
 
-      .catch(err => console.log(err.error));
+      .catch((err) => console.log(err.error));
   };
 
-  const handleSelect = e => {
+  const handleSelect = (e) => {
     debugger;
     console.log(e.target.value);
     console.log(menu.category_id);
@@ -349,13 +361,14 @@ function Menu(props) {
       ...menu,
       id: "",
       name: "",
+      locale: shareContext.state.locale,
       price: 0,
       category_id: "",
-      image_path: ""
+      image_path: "",
     });
     setCategory({
       id: "",
-      label: ""
+      label: "",
     });
   };
 
@@ -371,7 +384,7 @@ function Menu(props) {
                 type="text"
                 value={menu.name}
                 id="name"
-                onChange={e => setMenu({ ...menu, name: e.target.value })}
+                onChange={(e) => setMenu({ ...menu, name: e.target.value })}
               />{" "}
             </FormGroup>
           </Col>
@@ -382,7 +395,7 @@ function Menu(props) {
                 type="text"
                 id="price"
                 value={menu.price}
-                onChange={e => setMenu({ ...menu, price: e.target.value })}
+                onChange={(e) => setMenu({ ...menu, price: e.target.value })}
               />
             </FormGroup>
           </Col>

@@ -35,13 +35,13 @@ function App(props) {
   const [restaurantRoot, setRestaurantRoot] = useState({}); // nessage has two items as message and status - 0 nothig, 1 info, 2 error
   const [message, setMessage] = useState({
     status: 0,
-    msg: "Error"
+    msg: "Error",
   });
 
   const resetMessageBar = () => {
     setMessage({
       status: 0,
-      msg: ""
+      msg: "",
     });
   };
   const mainBody = () => {
@@ -56,7 +56,7 @@ function App(props) {
             <Route
               exact
               path="/"
-              render={props => (
+              render={(props) => (
                 <Home
                   {...props}
                   setUserMode={setUserMode}
@@ -66,35 +66,37 @@ function App(props) {
             />
             <Route
               path="/restaurant"
-              render={props => (
+              render={(props) => (
                 <Restaurant {...props} setMessage={setMessage} />
               )}
             />
             <Route
               path="/menu"
-              render={props => <Menu {...props} setMessage={setMessage} />}
+              render={(props) => <Menu {...props} setMessage={setMessage} />}
             />
             <Route
               path="/category"
-              render={props => <Category {...props} setMessage={setMessage} />}
+              render={(props) => (
+                <Category {...props} setMessage={setMessage} />
+              )}
             />
             <Route
               exact
               path="/order/:id"
-              render={props => <Order {...props} setMessage={setMessage} />}
+              render={(props) => <Order {...props} setMessage={setMessage} />}
             />
             <Route
               exact
               path="/order"
-              render={props => <Order {...props} setMessage={setMessage} />}
+              render={(props) => <Order {...props} setMessage={setMessage} />}
             />
             <Route
               path="/Login"
-              render={props => <Login {...props} setMessage={setMessage} />}
+              render={(props) => <Login {...props} setMessage={setMessage} />}
             />
             <Route
               path="/User"
-              render={props => <User {...props} setMessage={setMessage} />}
+              render={(props) => <User {...props} setMessage={setMessage} />}
             />
           </Switch>
         </Router>

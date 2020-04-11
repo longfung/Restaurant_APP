@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   console.log("in Menu Get");
 
   // var node = req.query;
-  var node = req.query.restaurant_id;
+  var node = req.query;
   // var categoryId = req.query.categoryId;
 
   // var categoryId = req.query.categoryId;

@@ -20,10 +20,21 @@ body {
 }
 
 .centered {
-  text-align: center
+  text-align: center;
 }
 
 .weather {
-  margin-top: 30px
+  margin-top: 30px;
 }
 
+.imgblock {
+  width: 320px;
+  height: 240px;
+}
+
+.imgbox {
+  width: auto;
+  max-width: 320px;
+  height: auto;
+  max-height: 240px;
+}

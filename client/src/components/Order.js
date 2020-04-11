@@ -19,12 +19,13 @@ import {
   NavLink,
   CardText,
   CardImgOverlay,
-  CardFooter
+  CardFooter,
 } from "reactstrap";
 import CategoryNav from "./CatagoryNav";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
 import { store } from "./Store";
+import "../index.css";
 
 function Order(props) {
   const shareContext = useContext(store);
@@ -58,28 +59,28 @@ function Order(props) {
     debugger;
     axios
       .get("/api/category", { params: { restaurant_id: restaurantId } })
-      .then(res => {
-        res.data.map(item =>
-          setCategoryList(prevState => [
+      .then((res) => {
+        res.data.map((item) =>
+          setCategoryList((prevState) => [
             ...prevState,
-            { id: item.id, label: item.category_name }
+            { id: item.id, label: item.category_name },
           ])
         );
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
     calculateCartTotal();
   }, [cartList]);
 
-  const fetchMenuList = categoryId => {
+  const fetchMenuList = (categoryId) => {
     debugger;
     axios
       .get("/api/menu/category", {
-        params: { restaurantId: restaurantId, categoryId: categoryId }
+        params: { restaurantId: restaurantId, categoryId: categoryId },
       })
-      .then(res => {
+      .then((res) => {
         debugger;
         setMenuList(res.data);
       })
@@ -94,7 +95,7 @@ function Order(props) {
     console.log("add to order " + bRes);
     let bFound = false;
     // search dish has been ordered yet
-    const nCartList = cartList.filter(elem => {
+    const nCartList = cartList.filter((elem) => {
       if (elem.id === item.id) {
         bFound = true;
         elem.quantity++;
@@ -107,7 +108,7 @@ function Order(props) {
         id: item.id,
         name: item.name,
         price: item.price,
-        quantity: 1
+        quantity: 1,
       };
       setCartList([...nCartList, tmpCart]);
     } else {
@@ -116,7 +117,7 @@ function Order(props) {
     return false;
   };
 
-  const isQuantity = item => {
+  const isQuantity = (item) => {
     let bResult = false;
     for (let i = 0; i < cartList.length; i++) {
       if (cartList[i].id === item.id) {
@@ -138,7 +139,7 @@ function Order(props) {
     setCartTotal(sum);
   };
 
-  const getQuantity = item => {
+  const getQuantity = (item) => {
     var q = 0;
     for (let i = 0; i < cartList.length; i++) {
       if (cartList[i].id === item.id) {
@@ -159,7 +160,7 @@ function Order(props) {
     // search dish has been ordered yet
     event.preventDefault();
 
-    const nCartList = cartList.filter(elem => {
+    const nCartList = cartList.filter((elem) => {
       if (elem.id === item.id) {
         elem.quantity--;
         if (elem.quantity !== 0) return elem;
@@ -170,17 +171,19 @@ function Order(props) {
     setCartList([...nCartList]);
   };
 
-  const dishCard = item => {
+  const dishCard = (item) => {
     return (
       <Col sm="4" key={item.id}>
         <Card>
-          <CardImg
-            top
-            width="100%"
-            className="h-100 d-inline-block"
-            src={item.image_path}
-            alt="Card image cap"
-          />
+          <div className="imgblock">
+            <CardImg
+              top
+              width="100%"
+              className="imgbox h-100 d-inline-block"
+              src={item.image_path}
+              alt="Card image cap"
+            />
+          </div>
           <CardBody className="text-left py-0 by-0 pl-0 bl-0">
             <Row>
               <Col sm="4">
@@ -191,7 +194,7 @@ function Order(props) {
               <Col>
                 <Link
                   to="#!"
-                  onClick={e => addToOrder(e, item)}
+                  onClick={(e) => addToOrder(e, item)}
                   className="flow-right"
                 >
                   <MdAddCircle color="Primary" size="2rem" />
@@ -199,7 +202,7 @@ function Order(props) {
                 {isQuantity(item) ? (
                   <Link
                     to="#!"
-                    onClick={e => removeFromOrder(e, item)}
+                    onClick={(e) => removeFromOrder(e, item)}
                     className=" flow-right"
                   >
                     <MdRemoveCircle color="Primary" size="2rem" />
@@ -231,7 +234,7 @@ function Order(props) {
             cartTotal={cartTotal}
             setIsOrder={setIsOrder}
           />
-          <Row>{menuList.map(item => dishCard(item))}</Row>
+          <Row>{menuList.map((item) => dishCard(item))}</Row>
         </div>
       ) : (
         <Cart
