@@ -1,9 +1,28 @@
 {
-  "Username": {
-    "1": "帳號"
-  },
-  "RestaurantName": {
-    "1": "餐廳名稱  "
-  },
-  "TaxRate": { "1": "稅率" }
+    "Username": "帳號",
+    "RestaurantName": "餐廳名稱",
+    "TaxRate": "稅率",
+    "DefaultLanguage": "預設語言",
+    "Address": "地址",
+    "City": "市",
+    "State": "州",
+    "ZipCode": "郵政編碼",
+    "Save": "存檔",
+    "Home": "首頁",
+    "Restaurant": "餐廳",
+    "Menu": "菜單",
+    "Category": "類別",
+    "CategoryDescription": "類別描述",
+    "CategoryList": "類別目錄",
+    "Order": "訂購",
+    "Translator": "翻譯",
+    "Login": "登錄",
+    "CreateUser": "創建用戶",
+    "DishName": "單品名稱",
+    "MenuList": "菜單列表",
+    "SelectCategory": "選擇一個類別",
+    "UploadPicture": "上傳圖片",
+    "Edit": "編輯",
+    "Delete": "刪除",
+    "Price": "單價"
 }

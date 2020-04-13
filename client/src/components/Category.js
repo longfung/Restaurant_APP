@@ -4,6 +4,7 @@ import NavTab from "./NavTab";
 import { Form, Input, Row, Col, Button, FormGroup, Label } from "reactstrap";
 import { store } from "./Store";
 import access from "../util/access";
+import { useTranslation } from "react-i18next";
 
 // import {MyContext} from './MyContext';
 
@@ -15,6 +16,7 @@ import access from "../util/access";
 // } from 'reactstrap';
 function Category(props) {
   // console.log("In Restaurant");
+  const { t } = useTranslation();
   const shareContext = useContext(store);
   const restaurantId = shareContext.state.restaurant
     ? shareContext.state.restaurant.id
@@ -178,7 +180,7 @@ function Category(props) {
         <Row form>
           <Col md={1}>
             <FormGroup>
-              <Label for="catagoryName"> Category Name</Label>
+              <Label for="catagoryName">{t("Category")}</Label>
               <Input
                 type="text"
                 id="categoryName"
@@ -193,7 +195,7 @@ function Category(props) {
         <Row>
           <Col md={1}>
             <FormGroup>
-              <Label for="categoryDescritpion">Category Description</Label>
+              <Label for="categoryDescritpion">{t("CategoryDescription")}</Label>
               <Input
                 type="text"
                 id="categoryDescription"
@@ -206,12 +208,12 @@ function Category(props) {
           </Col>
         </Row>
         <Button id="saveButton" onClick={handleAddCategory}>
-          Save
+          {t("Save")}
         </Button>
       </Form>
       <hr></hr>
       <div>
-        <h2>Category List</h2>
+        <h2>{t("CategoryList")}</h2>
         <ul>
           {categoryList &&
             categoryList.map((item, idx) => (
@@ -219,10 +221,10 @@ function Category(props) {
                 <Col sm={4}>{item.category_name}</Col>
                 <Col sm={6}>{item.category_description}</Col>
                 <Col sm={1}>
-                  <Button onClick={() => setEdit(item)}>Edit</Button>
+                  <Button onClick={() => setEdit(item)}>{t("Edit")}</Button>
                 </Col>
                 <Col sm={1}>
-                  <Button onClick={() => setDelete(item)}>Delete</Button>
+                  <Button onClick={() => setDelete(item)}>{t("Delete")}</Button>
                 </Col>
               </Row>
             ))}

@@ -1,9 +1,28 @@
 {
-  "Username": {
-    "1": "帐号"
-  },
-  "RestaurantName": {
-    "1": "餐厅名称"
-  },
-  "TaxRate": { "1": "稅率" }
+    "Username": "帐号",
+    "RestaurantName": "餐厅名称",
+    "TaxRate": "稅率",
+    "DefaultLanguage": "预设语言",
+    "Address": "地址",
+    "City": "市",
+    "State": "州",
+    "ZipCode": "邮政编码",
+    "Save": "存档",
+    "Home": "首页",
+    "Restaurant": "餐厅",
+    "Menu": "菜单",
+    "Category": "类别",
+    "CategoryDescription": "类别描述",
+    "CategoryList": "类别目录",
+    "Order": "订购",
+    "Translator": "翻译",
+    "Login": "登录",
+    "CreateUser": "创建用户",
+    "DishName": "单品名称",
+    "MenuList": "菜单列表",
+    "SelectCategory": "选择一个类别",
+    "UploadPicture": "上传图片",
+    "Edit": "編輯",
+    "Delete": "刪除",
+    "Price": "单价"
 }

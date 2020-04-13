@@ -79,6 +79,28 @@ async function deleteMenuById(id) {
   return await axios.delete("/api/menu", { params: data });
 }
 
+async function fetchMenuTByRestaurantId(restaurantId, lang) {
+  let data = { restaurantId: restaurantId, locale: lang };
+  return await axios.get("/api/menuT", { params: data });
+}
+
+async function addMenuT(menuT) {
+  return await axios.post("/api/menuT", JSON.stringify(menuT), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function updateMenuT(menuT) {
+  return await axios.put("/api/menuT", JSON.stringify(menuT), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function deleteMenuTById(id, lang) {
+  let data = { id: id, locale: lang };
+  return await axios.delete("/api/menuT", { params: data });
+}
+
 async function fetchUserById(id) {
   let data = { userId: id };
   return await axios.get("/api/user/:id", { params: data });
@@ -113,4 +135,8 @@ module.exports = {
   fetchUserById,
   addUser,
   updateUser,
+  fetchMenuTByRestaurantId,
+  addMenuT,
+  updateMenuT,
+  deleteMenuTById,
 };

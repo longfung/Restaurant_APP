@@ -1,9 +1,28 @@
 {
-  "Username": {
-    "1": "Username"
-  },
-  "RestaurantName": {
-    "1": "Restaurant Name"
-  },
-  "TaxRate": { "1": "Tax Rate" }
+    "Username": "Username",
+    "RestaurantName": "Restaurant Name",
+    "TaxRate": "Tax Rate",
+    "DefaultLanguage": "Default Language",
+    "Address": "Address",
+    "City": "City",
+    "State": "State",
+    "ZipCode": "Zip Code",
+    "Save": "Save",
+    "Home": "Home",
+    "Restaurant": "Restaurant",
+    "Menu": "Menu",
+    "Category": "Category",
+    "CategoryDescription": "Category Description",
+    "CategoryList": "CategoryList",
+    "Order": "Order",
+    "Translator": "Translator",
+    "Login": "Login",
+    "CreateUser": "Create User",
+    "DishName": "Item Name",
+    "MenuList": "Menu List",
+    "SelectCategory": "Select a Category",
+    "UploadPicture": "Upload Picture",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Price": " Price"
 }
