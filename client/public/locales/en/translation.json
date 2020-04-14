@@ -24,5 +24,8 @@
     "UploadPicture": "Upload Picture",
     "Edit": "Edit",
     "Delete": "Delete",
-    "Price": " Price"
+    "Price": " Price",
+    "SubTotal": "Sub Total",
+    "Total": "Total",
+    "Tax": "Tax"
 }

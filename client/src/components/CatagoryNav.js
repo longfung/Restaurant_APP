@@ -13,9 +13,10 @@ import {
 import { MdShoppingCart } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { store } from "./Store";
+import access from '../util/access';
 
 function CategoryNav(props) {
-  debugger;
+  // debugger;
   const shareContext = useContext(store);
   const restaurant = shareContext.state.restaurant;
   // const restaurant = props.restaurant;
@@ -30,8 +31,10 @@ function CategoryNav(props) {
     // const restaurantId = 45000
     console.log("in UseEffect");
     debugger;
-    axios
-      .get("/api/category", { params: { restaurant_id: restaurantId } })
+    const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
+    Promise.resolve(promise1)
+      // axios
+      //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       .then(res => {
         res.data.map(item =>
           setCategoryList(prevState => [
@@ -43,7 +46,7 @@ function CategoryNav(props) {
       .catch(error => console.log(error));
   }, []);
 
-  const setCategory = () => {};
+  const setCategory = () => { };
   return (
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">

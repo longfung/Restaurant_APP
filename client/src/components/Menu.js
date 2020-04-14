@@ -374,6 +374,17 @@ function Menu(props) {
         });
     };
 
+    const fetchCategoryName = cid => {
+        let res = '';
+        categoryList.some(elem => {
+            if (elem.id === cid) {
+                res = elem.label;
+                return true;
+            }
+        })
+        return res;
+    }
+
     return (
         <div>
             <NavTab {...props} />
@@ -449,7 +460,7 @@ function Menu(props) {
                         <Row key={idx}>
                             <Col sm={4}>{item.name}</Col>
                             <Col sm={4}>{item.price}</Col>
-                            <Col sm={2}>{item.category_id}</Col>
+                            <Col sm={2}>{fetchCategoryName(item.category_id)}</Col>
                             <Col sm={1}>
                                 <Button onClick={() => setEdit(item)}>{t("Edit")}</Button>
                             </Col>

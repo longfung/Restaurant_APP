@@ -62,6 +62,11 @@ async function fetchMenuByRestaurantId(restaurantId, lang) {
   return await axios.get("/api/menu", { params: data });
 }
 
+async function fetchMenuByRestaurantCategoryId(restaurantId, categoryId, lang) {
+  let data = { restaurantId: restaurantId, categoryId: categoryId, locale: lang };
+  return await axios.get("/api/menu/category", { params: data });
+}
+
 async function addMenu(menu) {
   return await axios.post("/api/menu", JSON.stringify(menu), {
     headers: { "Content-Type": "application/json" },
@@ -129,6 +134,7 @@ module.exports = {
   updateCategory,
   deleteCategory,
   fetchMenuByRestaurantId,
+  fetchMenuByRestaurantCategoryId,
   addMenu,
   updateMenu,
   deleteMenuById,

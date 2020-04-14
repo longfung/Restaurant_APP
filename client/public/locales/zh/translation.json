@@ -24,5 +24,8 @@
     "UploadPicture": "上传图片",
     "Edit": "編輯",
     "Delete": "刪除",
-    "Price": "单价"
+    "Price": "单价",
+    "SubTotal": "小计",
+    "Total": "总计",
+    "Tax": "税额"
 }

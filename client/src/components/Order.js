@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Cart from "./Cart";
 import Select from "react-select";
-import axios from "axios";
 import { MdAddCircle, MdRemoveCircle, MdDone } from "react-icons/md";
+import access from '../util/access';
 
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -57,8 +57,10 @@ function Order(props) {
     // const restaurantId = 45000
     console.log("in UseEffect");
     debugger;
-    axios
-      .get("/api/category", { params: { restaurant_id: restaurantId } })
+    // axios
+    //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+    const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
+    Promise.resolve(promise1)
       .then((res) => {
         res.data.map((item) =>
           setCategoryList((prevState) => [
@@ -76,10 +78,16 @@ function Order(props) {
 
   const fetchMenuList = (categoryId) => {
     debugger;
-    axios
-      .get("/api/menu/category", {
-        params: { restaurantId: restaurantId, categoryId: categoryId },
-      })
+    let promise1 = '';
+    if (categoryId)
+      promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, categoryId, shareContext.state.locale);
+    else
+      promise1 = access.fetchMenuByRestaurantId(restaurantId, shareContext.state.locale)
+    Promise.resolve(promise1)
+      // axios
+      //   .get("/api/menu/category", {
+      //     params: { restaurantId: restaurantId, categoryId: categoryId },
+      //   })
       .then((res) => {
         debugger;
         setMenuList(res.data);
@@ -234,19 +242,19 @@ function Order(props) {
             cartTotal={cartTotal}
             setIsOrder={setIsOrder}
           />
-          <Row>{menuList.map((item) => dishCard(item))}</Row>
+          <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
         </div>
       ) : (
-        <Cart
-          addToOrder={addToOrder}
-          removeFromOrder={removeFromOrder}
-          taxRate={restaurant.taxRate}
-          cartTotal={cartTotal}
-          isQuantity={isQuantity}
-          cartList={cartList}
-          setIsOrder={setIsOrder}
-        />
-      )}
+          <Cart
+            addToOrder={addToOrder}
+            removeFromOrder={removeFromOrder}
+            taxRate={restaurant.taxRate}
+            cartTotal={cartTotal}
+            isQuantity={isQuantity}
+            cartList={cartList}
+            setIsOrder={setIsOrder}
+          />
+        )}
     </div>
   );
 }

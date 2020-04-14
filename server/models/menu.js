@@ -24,7 +24,7 @@ class Menu {
       db.query(
         // "select * from menu where restaurant_id = $1 and category_id = $2",
         "select m.id, m.name, m.price, m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
-        left join menu_t as t on m.id = t.id and t.lang = $1 where .restaurant_id = $2 and category_id = 3",
+        left join menu_t as t on m.id = t.id and t.lang = $1 where m.restaurant_id = $2 and category_id = $3",
         [locale, restaurantId, categoryId],
         function (err, res) {
           if (err.error) return callback(err);

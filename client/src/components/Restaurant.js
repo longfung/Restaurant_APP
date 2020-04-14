@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import NavTab from "./NavTab";
 import axios from "axios";
 import access from "../util/access";
@@ -12,12 +12,12 @@ import {
     Button,
     Label
 } from "reactstrap";
-import {store} from "./Store";
-import {useTranslation} from "react-i18next";
+import { store } from "./Store";
+import { useTranslation } from "react-i18next";
 
 function Restaurant(props) { // console.log("In Restaurant");
     debugger;
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const shareContext = useContext(store);
     const userId = shareContext.state.ownerId;
 
@@ -26,15 +26,15 @@ function Restaurant(props) { // console.log("In Restaurant");
     // const userId = props.ownerId.ownerId;
     const setMessage = props.setMessage;
     const [restaurant, setRestaurant] = useState({
-        // id: "",
-        // name: "",
-        // address: "",
-        // city: "",
-        // zipCode: "",
-        // state: "",
-        // taxRate: 9.25,
-        // locale: "",
-        // ownerId: userId,
+        id: "",
+        name: "",
+        address: "",
+        city: "",
+        zipCode: "",
+        state: "",
+        taxRate: 0,
+        locale: "",
+        ownerId: userId,
     });
 
     const [localeValue, setLocaleValue] = useState({});
@@ -66,19 +66,19 @@ function Restaurant(props) { // console.log("In Restaurant");
                 ownerId: userId
             });
             // shareContext.dispatch({ type: "setRestaurant", value: restaurant });
-            setLocaleValue({value: rest.locale, label: rest.locale});
-            if (! shareContext.state.locale) 
-                shareContext.dispatch({type: "setLocale", value: rest.locale});
-            
+            setLocaleValue({ value: rest.locale, label: rest.locale });
+            if (!shareContext.state.locale)
+                shareContext.dispatch({ type: "setLocale", value: rest.locale });
+
 
 
         }).catch((error) => console.log(error));
     }, []);
 
     useEffect(() => {
-        if (restaurant.id) 
-            shareContext.dispatch({type: "setRestaurant", value: restaurant});
-        
+        if (restaurant.id)
+            shareContext.dispatch({ type: "setRestaurant", value: restaurant });
+
 
 
     }, [restaurant.id]);
@@ -102,9 +102,9 @@ function Restaurant(props) { // console.log("In Restaurant");
         Promise.resolve(promise1).then((res) => {
             // console.log("add!!");
             // setRestaurantRoot(restaurant);
-            shareContext.dispatch({setRestaurant: restaurant});
+            shareContext.dispatch({ setRestaurant: restaurant });
             let m = restaurant.name + " is created Successfully !!!";
-            setMessage({status: 200, msg: m});
+            setMessage({ status: 200, msg: m });
         }).catch((err) => {
             console.log(err);
         });
@@ -130,9 +130,9 @@ function Restaurant(props) { // console.log("In Restaurant");
         Promise.resolve(promise1).then((res) => {
             // console.log("update!!");
             // setRestaurantRoot(restaurant);
-            shareContext.dispatch({setRestaurant: restaurant});
+            shareContext.dispatch({ setRestaurant: restaurant });
             let m = restaurant.name + " is updated Successfully !!!";
-            setMessage({status: 200, msg: m});
+            setMessage({ status: 200, msg: m });
         }).catch((err) => {
             console.log(err);
         });
@@ -155,34 +155,34 @@ function Restaurant(props) { // console.log("In Restaurant");
 
     return (
         <div>
-            <NavTab {...props}/>
+            <NavTab {...props} />
             <Form>
                 <Row form>
                     <Col sm="6">
                         <FormGroup>
                             <Label for="name">
                                 {
-                                t("RestaurantName")
-                            }</Label>
+                                    t("RestaurantName")
+                                }</Label>
                             <Input type="Text" id="name"
                                 value={
-                                    restaurant.name
+                                    restaurant.name || ''
                                 }
                                 onChange={
                                     (e) => setRestaurant({
                                         ...restaurant,
                                         name: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                     <Col sm="6">
                         <FormGroup>
-                            <Label for="taxRate">
+                            <Label for="taxRateId">
                                 {
-                                t("TaxRate")
-                            }</Label>
-                            <Input type="Text" id="taxRate"
+                                    t("TaxRate")
+                                }</Label>
+                            <Input type="Text" id="taxRateId"
                                 value={
                                     restaurant.taxRate
                                 }
@@ -191,7 +191,7 @@ function Restaurant(props) { // console.log("In Restaurant");
                                         ...restaurant,
                                         taxRate: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
 
@@ -199,8 +199,8 @@ function Restaurant(props) { // console.log("In Restaurant");
                         <FormGroup>
                             <Label for="locale">
                                 {
-                                t("DefaultLanguage")
-                            }</Label>
+                                    t("DefaultLanguage")
+                                }</Label>
                             <Select id="localeid"
                                 options={
                                     [
@@ -219,15 +219,15 @@ function Restaurant(props) { // console.log("In Restaurant");
                                 onChange={setLocaleValue}
                                 className="mb-3"
                                 placeholder="Select a default language"
-                                value={localeValue}/>
+                                value={localeValue} />
                         </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
                         <FormGroup>
                             <Label for="address">
                                 {
-                                t("Address")
-                            }</Label>
+                                    t("Address")
+                                }</Label>
                             <Input type="text" id="address"
                                 value={
                                     restaurant.address
@@ -237,15 +237,15 @@ function Restaurant(props) { // console.log("In Restaurant");
                                         ...restaurant,
                                         address: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
                         <FormGroup>
                             <Label for="city">
                                 {
-                                t("City")
-                            }</Label>
+                                    t("City")
+                                }</Label>
                             <Input type="text" id="city"
                                 value={
                                     restaurant.city
@@ -255,15 +255,15 @@ function Restaurant(props) { // console.log("In Restaurant");
                                         ...restaurant,
                                         city: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                     <Col sm="6">
                         <FormGroup>
                             <Label for="state">
                                 {
-                                t("State")
-                            }</Label>
+                                    t("State")
+                                }</Label>
                             <Input type="Text" id="state"
                                 value={
                                     restaurant.state
@@ -273,32 +273,32 @@ function Restaurant(props) { // console.log("In Restaurant");
                                         ...restaurant,
                                         state: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                     <Col sm="6">
                         <FormGroup>
                             <Label for="zipCode">
                                 {
-                                t("ZipCode")
-                            }</Label>
+                                    t("ZipCode")
+                                }</Label>
                             <Input type="Text" id="zipCode"
                                 value={
-                                    restaurant.zipCode
+                                    restaurant.zipCode || ''
                                 }
                                 onChange={
                                     (e) => setRestaurant({
                                         ...restaurant,
                                         zipCode: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                     <Button type="button"
                         onClick={handlePostRestaurant}>
                         {
-                        t("Save")
-                    } </Button>
+                            t("Save")
+                        } </Button>
                 </Row>
             </Form>
         </div>

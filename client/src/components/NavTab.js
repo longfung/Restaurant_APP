@@ -1,5 +1,5 @@
-import React, {useState, useContext} from "react";
-import {Link, withRouter} from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, withRouter } from "react-router-dom";
 import {
     Nav,
     NavItem,
@@ -11,23 +11,34 @@ import {
     Col,
     Jumbotron
 } from "reactstrap";
-import {MdAccountCircle} from "react-icons/md";
-import {store} from "./Store";
-import i18next from "i18next";
-import {useTranslation} from "react-i18next";
+import { MdAccountCircle } from "react-icons/md";
+import { store } from "./Store";
+import { useTranslation } from "react-i18next";
 
 function NavTab(props) {
+    debugger;
     const shareContext = useContext(store);
     const username = shareContext.state.username;
-    const [localeClass, setLocaleClass] = useState({en: "text-primary", tw: "text-primary", zh: "text-primary"});
-    const {t} = useTranslation();
+    const [localeClass, setLocaleClass] = useState(
+        {
+            // en: "text-secondary",
+            // tw: "text-primary",
+            // zh: "text-primary"
+        }
+    );
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        setLocaleUIClass(shareContext.state.locale);
+    }, [shareContext.state.locale])
+
     const goComponent = (target) => {
         props.history.push(target);
     };
 
     const setLanguage = (locale) => {
         debugger;
-        shareContext.dispatch({type: "setLocale", value: locale});
+        shareContext.dispatch({ type: "setLocale", value: locale });
         setLocaleUIClass(locale);
 
         // i18next.changeLanguage(locale);
@@ -79,66 +90,66 @@ function NavTab(props) {
                                 <NavItem className="mt-0 ">
                                     <NavLink className="border-info bg-light text-uppercase text-primary" href="/">
                                         {
-                                        t("Home")
-                                    } </NavLink>
+                                            t("Home")
+                                        } </NavLink>
                                 </NavItem>
                                 <NavItem className="mt-0">
                                     <Button className=" border-info bg-light text-dark text-uppercase"
                                         onClick={
                                             () => goComponent("/Restaurant")
-                                    }>
+                                        }>
                                         {
-                                        t("Restaurant")
-                                    } </Button>
+                                            t("Restaurant")
+                                        } </Button>
                                 </NavItem>
                                 <NavItem>
                                     <Button className=" border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
                                             () => goComponent("/Menu")
-                                    }>
+                                        }>
                                         {
-                                        t("Menu")
-                                    } </Button>
+                                            t("Menu")
+                                        } </Button>
                                 </NavItem>
                                 <NavItem>
                                     <Button className="border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
                                             () => goComponent("/Category")
-                                    }>
+                                        }>
                                         {
-                                        t("Category")
-                                    } </Button>
+                                            t("Category")
+                                        } </Button>
                                 </NavItem>
                                 <NavItem>
                                     <Button className="border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
                                             () => goComponent("/Order")
-                                    }>
+                                        }>
                                         {
-                                        t("Order")
-                                    } </Button>
+                                            t("Order")
+                                        } </Button>
                                 </NavItem>
                                 <NavItem>
                                     <Button className="border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
                                             () => goComponent("/MenuT")
-                                    }>
+                                        }>
                                         {
-                                        t("Translator")
-                                    } </Button>
+                                            t("Translator")
+                                        } </Button>
                                 </NavItem>
                                 {" "}
                                 <NavItem className="mt-0 ">
                                     <NavLink className="border-info bg-light text-uppercase text-primary" href="/Login">
                                         {
-                                        t("Login")
-                                    } </NavLink>
+                                            t("Login")
+                                        } </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink className="border-info bg-light text-uppercase text-primary" href="/User">
                                         {
-                                        t("CreateUser")
-                                    } </NavLink>
+                                            t("CreateUser")
+                                        } </NavLink>
                                 </NavItem>
                             </Nav>
                         </Col>
@@ -149,9 +160,9 @@ function NavTab(props) {
                                 }
                                 className={
                                     `font-weight-bold ${
-                                        localeClass.en
+                                    localeClass.en
                                     }`
-                            }>
+                                }>
                                 EN
                             </Link>
                             <Link to="#!"
@@ -160,9 +171,9 @@ function NavTab(props) {
                                 }
                                 className={
                                     `font-weight-bold ${
-                                        localeClass.tw
+                                    localeClass.tw
                                     }`
-                            }>
+                                }>
                                 繁體
                             </Link>
                             <Link to="#!"
@@ -171,9 +182,9 @@ function NavTab(props) {
                                 }
                                 className={
                                     `font-weight-bold ${
-                                        localeClass.zh
+                                    localeClass.zh
                                     }`
-                            }>
+                                }>
                                 简体
                             </Link>
                         </Col>
@@ -183,7 +194,7 @@ function NavTab(props) {
                                     () => props.history.push("/user")
                                 }
                                 className="font-weight-bold text-Dark">
-                                <MdAccountCircle color="gold" size="2.2rem"/> {username} </Link>
+                                <MdAccountCircle color="gold" size="2.2rem" /> {username} </Link>
                         </Col>
                     </Row>
                 </Jumbotron>
