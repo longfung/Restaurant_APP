@@ -27,5 +27,9 @@
     "Price": " Price",
     "SubTotal": "Sub Total",
     "Total": "Total",
-    "Tax": "Tax"
+    "Tax": "Tax",
+    "TranslationList": "Translation List",
+    "TargetLocale": "Target Language",
+    "DefaultLocale": "Default Language",
+    "AllCategory": "All Category"
 }

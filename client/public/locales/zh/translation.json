@@ -27,5 +27,9 @@
     "Price": "单价",
     "SubTotal": "小计",
     "Total": "总计",
-    "Tax": "税额"
+    "Tax": "税额",
+    "TranslationList": "翻译清单",
+    "TargetLocale": "翻译文字",
+    "DefaultLocale": "原版文字",
+    "AllCategory": "全部"
 }

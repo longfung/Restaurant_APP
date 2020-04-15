@@ -7,7 +7,7 @@ class Category {
         const entityId = query.entityId;
         db.query(
             // "select * from menu where restaurant_id = $1 and category_id = $2",
-            "select c.id, c.category_name, c.category_description, c.restaurant_id, t.text as name_t from category as c \
+            "select c.id, c.category_name, c.category_description, c.restaurant_id, t.text as namet from category as c \
             left join entity_t as t on c.id = t.id and t.lang = $1 and t.entity_id = $2 where c.restaurant_id = $3",
             [locale, entityId, restaurantId],
             function (err, res) {

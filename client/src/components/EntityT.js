@@ -19,10 +19,12 @@ import { store } from "./Store";
 import "../index.css";
 import { storage } from "../firebase";
 import access from "../util/access";
+import { useTranslation } from 'react-i18next';
 
 function EntityT(props) {
     debugger;
     const shareContext = useContext(store);
+    const { t } = useTranslation();
 
     const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
     if (!restaurantId) {
@@ -81,7 +83,7 @@ function EntityT(props) {
         setMenuT({
             id: obj.id,
             name: obj.name,
-            namet: obj.namet,
+            namet: obj.namet == null ? '' : obj.namet,
             locale: obj.locale,
             entityId: entity,
             RrstaurantId: obj.restaurantId
@@ -114,7 +116,7 @@ function EntityT(props) {
 
     const switchLanguage = (elem) => {
         setLang(elem);
-        getMenuTList(elem);
+        getMenuTList(elem, entity);
     }
 
     const switchEntity = (elem) => {
@@ -149,16 +151,17 @@ function EntityT(props) {
                 <Row form>
                     <Col xs="6" sm="6">
                         <FormGroup>
-                            <Label for="name">Dish Name</Label>
-                            <Input type="text"
+                            <Label for="name">{t("DefaultLocale")}</Label>
+                            <Input disabled type="text"
                                 value={
                                     menuT.name
                                 }
-                                id="name" />{" "} </FormGroup>
+                                id="name" />
+                        </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
                         <FormGroup>
-                            <Label for="nameT">Locale Name</Label>
+                            <Label for="nameT">{t("TargetLocale")}</Label>
                             <Input type="text" id="nameT"
                                 value={
                                     menuT.namet
@@ -184,7 +187,7 @@ function EntityT(props) {
             <div>
                 <Row>
                     <Col sm="5">
-                        <h2>Menu List for translation</h2>
+                        <h2>{t("TranslationList")}</h2>
                     </Col>
                     <Col sm="7">
                         <Button onClick={
