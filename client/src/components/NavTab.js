@@ -132,7 +132,7 @@ function NavTab(props) {
                                 <NavItem>
                                     <Button className="border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
-                                            () => goComponent("/MenuT")
+                                            () => goComponent("/EntityT")
                                         }>
                                         {
                                             t("Translator")

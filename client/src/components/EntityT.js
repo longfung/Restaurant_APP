@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import axios from "axios";
 import NavTab from "./NavTab";
@@ -15,17 +15,17 @@ import {
     Card,
     CardImg
 } from "reactstrap";
-import {store} from "./Store";
+import { store } from "./Store";
 import "../index.css";
-import {storage} from "../firebase";
+import { storage } from "../firebase";
 import access from "../util/access";
 
-function MenuT(props) {
+function EntityT(props) {
     debugger;
     const shareContext = useContext(store);
 
     const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
-    if (! restaurantId) {
+    if (!restaurantId) {
         props.history.push("/Login");
     }
     const setMessage = props.setMessage;
@@ -33,23 +33,17 @@ function MenuT(props) {
 
     const [menuT, setMenuT] = useState({});
     const [menuTList, setMenuTList] = useState([]);
-    const [lang, setLang] = useState("");
+    const [entity, setEntity] = useState(1);
+    const [lang, setLang] = useState('tw');
 
     useEffect(() => {
-        getMenuTList('tw');
+        getMenuTList(lang, entity);
     }, []);
 
-    const getMenuTList = (locale) => {
-        const promise1 = access.fetchMenuTByRestaurantId(restaurantId,
-        // shareContext.state.locale
-            locale);
+    const getMenuTList = (locale, entity) => {
+        const promise1 = access.fetchEntityTByRestaurantId(restaurantId,
+            locale, entity);
         Promise.resolve(promise1).then((res) => {
-            // axios
-            // .get("/api/Menu", { params: { restaurant_id: restaurantId } }).then((res) => {
-            //    console.log(res)
-            // const obj = res.data.map((elem) =>
-            // elem.name_t != null ? { ...elem, name: elem.name_t } : elem
-            // );
             setMenuTList(res.data);
         }).catch((error) => console.log("Error"));
     };
@@ -62,11 +56,12 @@ function MenuT(props) {
     const postUpdateMenu = () => { // debugger;
         const data = {
             id: menuT.id,
-            nameT: menuT.nameT,
-            locale: "tw",
+            namet: menuT.namet,
+            locale: lang,
+            entityId: entity,
             restaurantId: restaurantId
         };
-        const promise1 = access.updateMenuT(data);
+        const promise1 = access.updateEntityT(data);
         Promise.resolve(promise1).then((res) => {
             // axios
             // .put("/api/menu", data, {
@@ -77,8 +72,8 @@ function MenuT(props) {
             // setNode({ ...node, id: '', category_name: '', category_description: '', restaurant_id: restaurantId });
             // initialMenu();
             let m = menuT.name + " is updated Successfully !!!";
-            setMessage({status: 200, msg: m});
-            getMenuTList();
+            setMessage({ status: 200, msg: m });
+            getMenuTList(lang, entity);
         });
     };
 
@@ -86,8 +81,9 @@ function MenuT(props) {
         setMenuT({
             id: obj.id,
             name: obj.name,
-            nameT: obj.menuT,
+            namet: obj.namet,
             locale: obj.locale,
+            entityId: entity,
             RrstaurantId: obj.restaurantId
         });
     };
@@ -98,7 +94,7 @@ function MenuT(props) {
             // axios
             // .delete("/api/menu", { params: { id: obj.id } }).then((res) => { // console.log(res.data.json());
             let m = obj.name + " is deleted Successfully !!!";
-            setMessage({status: 200, msg: m});
+            setMessage({ status: 200, msg: m });
             getMenuTList();
             // setMenu({ ...menu, name: '', price: 0, category_id: '', path: res.data.filepath });
             initialMenuT();
@@ -109,20 +105,47 @@ function MenuT(props) {
             ...menuT,
             id: "",
             name: "",
-            nameT: "",
+            namet: "",
             locale: "",
+            entityId: "",
             restaurantId: ""
         });
     };
 
     const switchLanguage = (elem) => {
+        setLang(elem);
         getMenuTList(elem);
     }
 
+    const switchEntity = (elem) => {
+        setEntity(elem);
+        getMenuTList(lang, elem);
+        // switch (elem) {
+        //     case access.Entity.menu:
+        //         getMenuTList(lang, elem);
+        //         break;
+        //     case access.Entity.category:
+        //         getCategoryTList(lang)
+        // }
+    }
+
+
     return (
         <div>
-            <NavTab {...props}/>
+            <NavTab {...props} />
             <Form>
+                <Row form>
+                    <Col sm="2">
+                        <Button onClick={
+                            () => switchEntity(1)
+                        }>
+                            Menu</Button>
+                        <Button onClick={
+                            () => switchEntity(2)
+                        }>
+                            Category</Button>
+                    </Col>
+                </Row>
                 <Row form>
                     <Col xs="6" sm="6">
                         <FormGroup>
@@ -131,21 +154,21 @@ function MenuT(props) {
                                 value={
                                     menuT.name
                                 }
-                                id="name"/>{" "} </FormGroup>
+                                id="name" />{" "} </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
                         <FormGroup>
-                            <Label for="menuT">Locale Name</Label>
-                            <Input type="text" id="price"
+                            <Label for="nameT">Locale Name</Label>
+                            <Input type="text" id="nameT"
                                 value={
-                                    menuT.nameT
+                                    menuT.namet
                                 }
                                 onChange={
                                     (e) => setMenuT({
                                         ...menuT,
-                                        nameT: e.target.value
+                                        namet: e.target.value
                                     })
-                                }/>
+                                } />
                         </FormGroup>
                     </Col>
                 </Row>
@@ -175,16 +198,16 @@ function MenuT(props) {
                     </Col>
                 </Row>
                 <ul> {
-                    menuTList.map((item, idx) => (
+                    menuTList && menuTList.map((item, idx) => (
                         <Row key={idx}>
                             <Col sm={5}>
                                 {
-                                item.name
-                            }</Col>
+                                    item.name
+                                }</Col>
                             <Col sm={5}>
                                 {
-                                item.namet
-                            }</Col>
+                                    item.namet
+                                }</Col>
                             <Col sm={1}>
                                 <Button onClick={
                                     () => setEdit(item)
@@ -202,4 +225,4 @@ function MenuT(props) {
         </div>
     );
 }
-export default MenuT;
+export default EntityT;

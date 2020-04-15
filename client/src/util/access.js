@@ -1,5 +1,10 @@
 const axios = require("axios");
 
+const Entity = {
+  menu: 1,
+  category: 2
+}
+
 async function fetchRestuarantByOwnerId(id) {
   let data = {
     ownerId: id,
@@ -35,8 +40,8 @@ async function performLogin(username, password) {
   });
 }
 
-async function fetchCategoryByRestaurantId(restaurantId) {
-  let data = { restaurant_id: restaurantId };
+async function fetchCategoryByRestaurantId(restaurantId, lang) {
+  let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.category };
   return await axios.get("/api/category", { params: data });
 }
 
@@ -52,18 +57,18 @@ async function updateCategory(category) {
   });
 }
 
-async function deleteCategory(id) {
-  let data = { id: id };
+async function deleteCategoryById(id, restaurantId) {
+  let data = { id: id, entityId: Entity.category, restaurantId: restaurantId };
   return await axios.delete("/api/category", { params: data });
 }
 
 async function fetchMenuByRestaurantId(restaurantId, lang) {
-  let data = { restaurantId: restaurantId, locale: lang };
+  let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.menu };
   return await axios.get("/api/menu", { params: data });
 }
 
 async function fetchMenuByRestaurantCategoryId(restaurantId, categoryId, lang) {
-  let data = { restaurantId: restaurantId, categoryId: categoryId, locale: lang };
+  let data = { restaurantId: restaurantId, categoryId: categoryId, locale: lang, entityId: Entity.menu };
   return await axios.get("/api/menu/category", { params: data });
 }
 
@@ -84,26 +89,30 @@ async function deleteMenuById(id) {
   return await axios.delete("/api/menu", { params: data });
 }
 
-async function fetchMenuTByRestaurantId(restaurantId, lang) {
-  let data = { restaurantId: restaurantId, locale: lang };
-  return await axios.get("/api/menuT", { params: data });
+async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
+  let data = { restaurantId: restaurantId, locale: lang, entityId: entityId };
+  if (entityId == Entity.menu)
+    return await axios.get("/api/entityT/menu", { params: data });
+  else
+    return await axios.get("/api/entityT/category", { params: data });
+
 }
 
-async function addMenuT(menuT) {
-  return await axios.post("/api/menuT", JSON.stringify(menuT), {
+async function addEntityT(entityT) {
+  return await axios.post("/api/entityT", JSON.stringify(entityT), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
-async function updateMenuT(menuT) {
-  return await axios.put("/api/menuT", JSON.stringify(menuT), {
+async function updateEntityT(entityT) {
+  return await axios.put("/api/entityT", JSON.stringify(entityT), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
-async function deleteMenuTById(id, lang) {
+async function deleteEntityTById(id, lang) {
   let data = { id: id, locale: lang };
-  return await axios.delete("/api/menuT", { params: data });
+  return await axios.delete("/api/entityT", { params: data });
 }
 
 async function fetchUserById(id) {
@@ -125,6 +134,7 @@ async function updateUser(user) {
 }
 
 module.exports = {
+  Entity,
   fetchRestuarantByOwnerId,
   performLogin,
   addRestaurant,
@@ -132,7 +142,7 @@ module.exports = {
   fetchCategoryByRestaurantId,
   addCategory,
   updateCategory,
-  deleteCategory,
+  deleteCategoryById,
   fetchMenuByRestaurantId,
   fetchMenuByRestaurantCategoryId,
   addMenu,
@@ -141,8 +151,8 @@ module.exports = {
   fetchUserById,
   addUser,
   updateUser,
-  fetchMenuTByRestaurantId,
-  addMenuT,
-  updateMenuT,
-  deleteMenuTById,
+  fetchEntityTByRestaurantId,
+  addEntityT,
+  updateEntityT,
+  deleteEntityTById,
 };

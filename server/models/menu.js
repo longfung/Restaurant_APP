@@ -4,11 +4,12 @@ class Menu {
   static retrieveByRestaurant(query, callback) {
     const restaurantId = query.restaurantId;
     const locale = query.locale;
+    const entityId = query.entityId;
     db.query(
       //   "select * from menu where restaurant_id = $1",
       "select m.id, m.name, m.price, m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
-        left join menu_t t on m.id = t.id and t.lang = $1 where m.restaurant_id = $2",
-      [locale, restaurantId],
+        left join entity_t t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
+      [locale, entityId, restaurantId],
       function (err, res) {
         if (err.error) return callback(err);
         callback(err, res);
@@ -20,12 +21,13 @@ class Menu {
     const restaurantId = query.restaurantId;
     const categoryId = query.categoryId;
     const locale = query.locale;
+    const entityId = query.entityId;
     if (categoryId) {
       db.query(
         // "select * from menu where restaurant_id = $1 and category_id = $2",
         "select m.id, m.name, m.price, m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
-        left join menu_t as t on m.id = t.id and t.lang = $1 where m.restaurant_id = $2 and category_id = $3",
-        [locale, restaurantId, categoryId],
+        left join entity_t as t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3 and category_id = $4",
+        [locale, entityId, restaurantId, categoryId],
         function (err, res) {
           if (err.error) return callback(err);
           callback(err, res);
@@ -36,7 +38,7 @@ class Menu {
 
   static insert(node, callback) {
     db.query(
-      "INSERT INTO menu (name, price, image_path, restaurant_id, category_id) VALUES ($1, $2, $3, $4, $5)",
+      "INSERT INTO menu (name, price, image_path, restaurant_id, category_id) VALUES ($1, $2, $3, $4, $5) returning id",
       [
         node.name,
         node.price,
@@ -48,8 +50,8 @@ class Menu {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);
         db.query(
-          "INSERT INTO menu_t (id, lang, text, restaurant_id) VALUES ($1, $2, $3, $4)",
-          [rest.id, node.name, node.locale, node.restaurant_id],
+          "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+          [res.id, node.name, node.locale, node.restaurant_id, node.entityId],
           (err, res) => {
             callback(res);
           }
@@ -66,14 +68,14 @@ class Menu {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);
         db.query(
-          "update menu_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 returning id",
-          [node.name, node.id, node.locale, node.restaurant_id],
+          "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
+          [node.name, node.id, node.locale, node.restaurant_id, node.entityId],
           (err, res) => {
             if (err.error) return callback(err);
             if (res.length == 0) {
               db.query(
-                "INSERT INTO menu_t (id, text, lang, restaurant_id) VALUES ($1, $2, $3, $4)",
-                [node.id, node.name, node.locale, node.restaurant_id],
+                "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+                [node.id, node.name, node.locale, node.restaurant_id, node.entityId],
                 (err, res) => {
                   if (err.error) return callback(err);
                   callback(res);

@@ -11,7 +11,7 @@ import NavTab from "./components/NavTab";
 import Order from "./components/Order";
 import Login from "./components/Login";
 import User from "./components/User";
-import MenuT from "./components/MenuT";
+import EntityT from "./components/EntityT";
 import MessageBar from "./components/MessageBar";
 import { StateProvider, store } from "./components/Store";
 // import MyProvider from './components/MyProvider';
@@ -100,8 +100,8 @@ function App(props) {
               render={(props) => <User {...props} setMessage={setMessage} />}
             />
             <Route
-              path="/MenuT"
-              render={(props) => <MenuT {...props} setMessage={setMessage} />}
+              path="/EntityT"
+              render={(props) => <EntityT {...props} setMessage={setMessage} />}
             />
           </Switch>
         </Router>

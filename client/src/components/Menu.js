@@ -62,7 +62,7 @@ function Menu(props) {
         // const restaurantId = 45000
         console.log("in UseEffect");
         getMenuList();
-        const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
+        const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
         Promise.resolve(promise1)
             // axios
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
@@ -263,6 +263,7 @@ function Menu(props) {
             name: menu.name,
             // intend to do so, only allow default language to update the name, use translation tool for other locale input
             locale: shareContext.state.locale,
+            entityId: access.Entity.menu,
             price: menu.price,
             image_path: menu.image_path,
             restaurant_id: restaurantId,
@@ -287,11 +288,13 @@ function Menu(props) {
     };
 
     const postUpdateMenu = () => {
-        // debugger;
+        debugger;
+        const dd = access.Entity;
         let data = {
             id: menu.id,
             name: menu.name,
             locale: shareContext.state.locale,
+            entityId: access.Entity.menu,
             price: menu.price,
             image_path: menu.image_path,
             restaurant_id: restaurantId,

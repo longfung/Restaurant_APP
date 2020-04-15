@@ -6,7 +6,7 @@ var router = express.Router();
 
 router.get("/", (req, res) => {
   console.log("in category Get");
-  var node = req.query.restaurant_id;
+  var node = req.query;
   Category.retrieveAllByRestaurant(node, (err, category) => {
     // console.log(err);s
     // console.log(res);
@@ -17,8 +17,8 @@ router.get("/", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
-  const id = req.query.id;
-  Category.delete(id, (err, category) => {
+  const query = req.query;
+  Category.delete(query, (err, category) => {
     if (err.error) return res.json(err);
     return res.json(category);
   });

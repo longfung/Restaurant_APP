@@ -49,8 +49,10 @@ function Category(props) {
   useEffect(() => {
     // console.log("get List");
     // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-    axios
-      .get("/api/category", { params: { restaurant_id: restaurantId } })
+    const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
+    Promise.resolve(promise1)
+      // axios
+      //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       // .then(res => res.json()),
       .then(res => {
         // const d = res.data;
@@ -74,7 +76,14 @@ function Category(props) {
     //   category_description: node.category_description,
     //   restaurant_id: node.restaurant_id
     // });
-    const promise1 = access.addCategory(node);
+    let data = {
+      category_name: node.category_name,
+      locale: shareContext.state.restaurant.locale,
+      entityId: access.Entity.category,
+      category_description: node.category_description,
+      restaurantId: node.restaurant_id
+    };
+    const promise1 = access.addCategory(data);
     Promise.resolve(promise1)
       // axios.post('/api/category', data, {
       //         headers: { 'Content-Type': 'application/json' }
@@ -96,14 +105,16 @@ function Category(props) {
   };
 
   const handleUpdateCategory = () => {
-    // let data = JSON.stringify({
-    //   id: node.id,
-    //   category_name: node.category_name,
-    //   category_description: node.category_description,
-    //   restaurant_id: node.restaurant_id
-    // });
+    let data = {
+      id: node.id,
+      category_name: node.category_name,
+      locale: shareContext.state.restaurant.locale,
+      entityId: access.Entity.category,
+      category_description: node.category_description,
+      restaurantId: node.restaurant_id
+    };
 
-    const promise1 = access.updateCategory(node);
+    const promise1 = access.updateCategory(data);
     Promise.resolve(promise1)
       // axios.put('/api/category', data, {
       //       headers: { 'Content-Type': 'application/json' }
@@ -128,9 +139,11 @@ function Category(props) {
     // debugger;
     // console.log("get List action");
     // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-    axios
-      .get("/api/category", { params: { restaurant_id: restaurantId } })
-      // .then(res => {console.log(res)})
+    // axios
+    //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+    // .then(res => {console.log(res)})
+    const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
+    Promise.resolve(promise1)
       .then(res => {
         console.log(res);
         setCategoryList(res.data);
@@ -147,8 +160,10 @@ function Category(props) {
   };
 
   const setDelete = obj => {
-    axios
-      .delete("/api/category", { params: { id: obj.id } })
+    const promise1 = access.deleteCategoryById(obj.id, restaurantId);
+    Promise.resolve(promise1)
+      // axios
+      //   .delete("/api/category", { params: { id: obj.id } })
       .then(res => {
         // console.log(res.data.json());
         let m = obj.category_name + " is deleted Successfully !!!";
