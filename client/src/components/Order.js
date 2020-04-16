@@ -3,7 +3,6 @@ import Cart from "./Cart";
 import Select from "react-select";
 import { MdAddCircle, MdRemoveCircle, MdDone } from "react-icons/md";
 import access from '../util/access';
-
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
 import {
@@ -26,8 +25,10 @@ import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
 import { store } from "./Store";
 import "../index.css";
+import { useTranslation } from 'react-i18next';
 
 function Order(props) {
+  const { t } = useTranslation();
   const shareContext = useContext(store);
   debugger;
   const restaurant = shareContext.state.restaurant;
@@ -62,15 +63,16 @@ function Order(props) {
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
     Promise.resolve(promise1)
       .then((res) => {
+        setCategoryList([]);
         res.data.map((item) =>
           setCategoryList((prevState) => [
             ...prevState,
-            { id: item.id, label: item.category_name },
+            { id: item.id, label: item.namet == null ? item.category_name : item.namet },
           ])
         );
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [shareContext.state.locale]);
 
   useEffect(() => {
     calculateCartTotal();
@@ -90,12 +92,21 @@ function Order(props) {
       //   })
       .then((res) => {
         debugger;
-        setMenuList(res.data);
+        res.data.forEach(item => {
+          let cnt = 0;
+          if (item.price_s > 0) cnt++;
+          if (item.price_m > 0) cnt++;
+          if (item.price_l > 0) cnt++;
+          if (item.price_x > 0) cnt++;
+          item['isMultiple'] = cnt > 1 ? true : false;
+          setMenuList(prevState => [...prevState, item])
+        })
+        // setMenuList(res.data);
       })
       .catch();
   };
 
-  const addToOrder = (event, item) => {
+  const addToOrder = (event, item, price, size) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -104,7 +115,7 @@ function Order(props) {
     let bFound = false;
     // search dish has been ordered yet
     const nCartList = cartList.filter((elem) => {
-      if (elem.id === item.id) {
+      if (elem.id === item.id && elem.size == size) {
         bFound = true;
         elem.quantity++;
         return elem;
@@ -115,7 +126,9 @@ function Order(props) {
       const tmpCart = {
         id: item.id,
         name: item.name,
-        price: item.price,
+        isMultiple: item.isMultiple,
+        price: price,
+        size: size,
         quantity: 1,
       };
       setCartList([...nCartList, tmpCart]);
@@ -125,10 +138,10 @@ function Order(props) {
     return false;
   };
 
-  const isQuantity = (item) => {
+  const isQuantity = (item, size) => {
     let bResult = false;
     for (let i = 0; i < cartList.length; i++) {
-      if (cartList[i].id === item.id) {
+      if (cartList[i].id === item.id && cartList[i].size == size) {
         bResult = cartList[i].quantity > 0;
         break;
       }
@@ -147,10 +160,10 @@ function Order(props) {
     setCartTotal(sum);
   };
 
-  const getQuantity = (item) => {
+  const getQuantity = (item, size) => {
     var q = 0;
     for (let i = 0; i < cartList.length; i++) {
-      if (cartList[i].id === item.id) {
+      if (cartList[i].id === item.id && cartList[i].size == size) {
         q = cartList[i].quantity;
         break;
       }
@@ -164,12 +177,12 @@ function Order(props) {
     }
   };
 
-  const removeFromOrder = (event, item) => {
+  const removeFromOrder = (event, item, size) => {
     // search dish has been ordered yet
     event.preventDefault();
 
     const nCartList = cartList.filter((elem) => {
-      if (elem.id === item.id) {
+      if (elem.id === item.id && elem.size === size) {
         elem.quantity--;
         if (elem.quantity !== 0) return elem;
         else return null;
@@ -177,6 +190,41 @@ function Order(props) {
       return elem;
     });
     setCartList([...nCartList]);
+  };
+
+  const dishPrice = (item, price, size, symbol) => {
+    return (
+      <Row>
+        <Col sm="4">
+          <CardText className="d-inline bg-dark font-weight-bold text-light">
+            ${price}
+          </CardText>
+          &nbsp;
+          {item.isMultiple == true ? t(symbol) : null}
+        </Col>
+        <Col>
+          <Link
+            to="#!"
+            onClick={(e) => addToOrder(e, item, price, size)}
+            className="flow-right"
+          >
+            <MdAddCircle color="Primary" size="2rem" />
+          </Link>
+          {isQuantity(item, size) ? (
+            <Link
+              to="#!"
+              onClick={(e) => removeFromOrder(e, item, size)}
+              className=" flow-right"
+            >
+              <MdRemoveCircle color="Primary" size="2rem" />
+            </Link>
+          ) : null}
+        </Col>
+        <Col>
+          <i>{getQuantity(item, size)}</i>
+        </Col>
+      </Row>
+    )
   };
 
   const dishCard = (item) => {
@@ -192,35 +240,12 @@ function Order(props) {
               alt="Card image cap"
             />
           </div>
+
           <CardBody className="text-left py-0 by-0 pl-0 bl-0">
-            <Row>
-              <Col sm="4">
-                <CardText className="d-inline bg-dark font-weight-bold text-light">
-                  ${item.price}
-                </CardText>
-              </Col>
-              <Col>
-                <Link
-                  to="#!"
-                  onClick={(e) => addToOrder(e, item)}
-                  className="flow-right"
-                >
-                  <MdAddCircle color="Primary" size="2rem" />
-                </Link>
-                {isQuantity(item) ? (
-                  <Link
-                    to="#!"
-                    onClick={(e) => removeFromOrder(e, item)}
-                    className=" flow-right"
-                  >
-                    <MdRemoveCircle color="Primary" size="2rem" />
-                  </Link>
-                ) : null}
-              </Col>
-              <Col>
-                <i>{getQuantity(item)}</i>
-              </Col>
-            </Row>
+            {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+            {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+            {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+            {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
           </CardBody>
           <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
             <CardText className="font-weight-bold">{item.name}</CardText>

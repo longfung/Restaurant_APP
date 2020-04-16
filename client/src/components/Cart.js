@@ -27,6 +27,13 @@ function Cart(props) {
                         </Col>
                         <Col sm="2">
                             {elem.price}
+                        &nbsp;
+
+                        {elem.size == 1 && elem.isMultiple == true ? t("S") : null}
+                            {elem.size == 2 && elem.isMultiple == true ? t("M") : null}
+                            {elem.size == 3 && elem.isMultiple == true ? t("L") : null}
+                            {elem.size == 4 && elem.isMultiple == true ? t("X") : null}
+
                         </Col>
                         <Col sm="2">
                             {elem.quantity}
@@ -35,11 +42,11 @@ function Cart(props) {
                             {(elem.price * elem.quantity).toFixed(2)}
                         </Col>
                         <Col sm='2'>
-                            <Link to='#!' onClick={e => addToOrder(e, elem)} className='flow-right'>
+                            <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)} className='flow-right'>
                                 <MdAddCircle color='Primary' size='2rem' />
                             </Link>
-                            {isQuantity(elem) ?
-                                <Link to='#!' onClick={e => removeFromOrder(e, elem)} className=' flow-right'>
+                            {isQuantity(elem, elem.size) ?
+                                <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)} className=' flow-right'>
                                     <MdRemoveCircle color='Primary' size='2rem' />
                                 </Link>
                                 : null}

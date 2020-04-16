@@ -7,7 +7,8 @@ class Menu {
     const entityId = query.entityId;
     db.query(
       //   "select * from menu where restaurant_id = $1",
-      "select m.id, m.name, m.price, m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
+      "select m.id, m.name, m.price_s, m.price_m, m.price_l, m.price_x, \
+        m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
         left join entity_t t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
       [locale, entityId, restaurantId],
       function (err, res) {
@@ -25,7 +26,8 @@ class Menu {
     if (categoryId) {
       db.query(
         // "select * from menu where restaurant_id = $1 and category_id = $2",
-        "select m.id, m.name, m.price, m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
+        "select m.id, m.name, m.price_s, m.price_m, m.price_l, m.price_x, \
+        m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
         left join entity_t as t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3 and category_id = $4",
         [locale, entityId, restaurantId, categoryId],
         function (err, res) {
@@ -38,10 +40,13 @@ class Menu {
 
   static insert(node, callback) {
     db.query(
-      "INSERT INTO menu (name, price, image_path, restaurant_id, category_id) VALUES ($1, $2, $3, $4, $5) returning id",
+      "INSERT INTO menu (name, price_s, price_m, price_l, price_x, image_path, restaurant_id, category_id) VALUES ($1, $2, $3, $4, $5) returning id",
       [
         node.name,
-        node.price,
+        node.price_s,
+        node.price_m,
+        node.price_l,
+        node.price_x,
         node.image_path,
         node.restaurant_id,
         node.category_id,
@@ -62,8 +67,8 @@ class Menu {
 
   static put(node, callback) {
     db.query(
-      "update menu set price = $1, image_path = $2, category_id = $3 where id = $4 returning id",
-      [node.price, node.image_path, node.category_id, node.id],
+      "update menu set price_s = $1, price_m = $2, price_l = $3, price_x = $4, image_path = $5, category_id = $6 where id = $7 returning id",
+      [node.price_s, node.price_m, node.price_l, node.price_x, node.image_path, node.category_id, node.id],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);

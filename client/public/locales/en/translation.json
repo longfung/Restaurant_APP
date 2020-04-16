@@ -11,6 +11,8 @@
     "Home": "Home",
     "Restaurant": "Restaurant",
     "Menu": "Menu",
+    "Name": "Name",
+    "Action": "Action",
     "Category": "Category",
     "CategoryDescription": "Category Description",
     "CategoryList": "CategoryList",
@@ -31,5 +33,14 @@
     "TranslationList": "Translation List",
     "TargetLocale": "Target Language",
     "DefaultLocale": "Default Language",
-    "AllCategory": "All Category"
+    "AllCategory": "All Category",
+    "Regular": "Regular Size",
+    "Small": "Small",
+    "Medium": "Medium Size",
+    "Large": "Large Size",
+    "Extra": "Extra Size",
+    "S": "S",
+    "M": "M",
+    "L": "L",
+    "X": "X"
 }

@@ -11,6 +11,8 @@
     "Home": "首页",
     "Restaurant": "餐厅",
     "Menu": "菜单",
+    "Name": "名称",
+    "Action": "可能选项",
     "Category": "类别",
     "CategoryDescription": "类别描述",
     "CategoryList": "类别目录",
@@ -31,5 +33,13 @@
     "TranslationList": "翻译清单",
     "TargetLocale": "翻译文字",
     "DefaultLocale": "原版文字",
-    "AllCategory": "全部"
+    "AllCategory": "全部",
+    "Small": "小量",
+    "Medium": "中量",
+    "Large": "大量",
+    "Extra": "特大量",
+    "S": "小",
+    "M": "中",
+    "L": "大",
+    "X": "特大"
 }

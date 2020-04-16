@@ -42,7 +42,10 @@ function Menu(props) {
         id: "",
         name: "",
         locale: shareContext.state.restaurant.locale,
-        price: 0,
+        price_s: 0,
+        price_m: 0,
+        price_l: 0,
+        price_x: 0,
         rest_id: 1000,
         category_id: "",
         // image_path: `${process.cwd()}/public/images/img1.jpg`
@@ -62,19 +65,7 @@ function Menu(props) {
         // const restaurantId = 45000
         console.log("in UseEffect");
         getMenuList();
-        const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
-        Promise.resolve(promise1)
-            // axios
-            //   .get("/api/category", { params: { restaurant_id: restaurantId } })
-            .then((res) => {
-                res.data.map((item) =>
-                    setCategoryList((prevState) => [
-                        ...prevState,
-                        { id: item.id, label: item.category_name },
-                    ])
-                );
-            })
-            .catch((error) => console.log(error));
+        getCategoryList();
     }, [shareContext.state.locale]);
 
     const handleSelector = (e) => {
@@ -143,6 +134,23 @@ function Menu(props) {
             })
             .catch((error) => console.log("Error"));
     };
+
+    const getCategoryList = () => {
+        const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
+        Promise.resolve(promise1)
+            // axios
+            //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+            .then((res) => {
+                setCategoryList([]);
+                res.data.map((item) =>
+                    setCategoryList((prevState) => [
+                        ...prevState,
+                        { id: item.id, label: item.namet == null ? item.category_name : item.namet },
+                    ])
+                );
+            })
+            .catch((error) => console.log(error));
+    }
     // upload to client/public folder, not used now, using firebase instead
     const fileUpload = async (formdata) => {
         // e.preventDefault();
@@ -264,7 +272,10 @@ function Menu(props) {
             // intend to do so, only allow default language to update the name, use translation tool for other locale input
             locale: shareContext.state.locale,
             entityId: access.Entity.menu,
-            price: menu.price,
+            price_s: menu.price_s,
+            price_m: menu.price_m,
+            price_l: menu.price_l,
+            price_x: menu.price_x,
             image_path: menu.image_path,
             restaurant_id: restaurantId,
             category_id: category.id,
@@ -295,7 +306,10 @@ function Menu(props) {
             name: menu.name,
             locale: shareContext.state.locale,
             entityId: access.Entity.menu,
-            price: menu.price,
+            price_s: menu.price_s,
+            price_m: menu.price_m,
+            price_l: menu.price_l,
+            price_x: menu.price_x,
             image_path: menu.image_path,
             restaurant_id: restaurantId,
             category_id: category.id,
@@ -331,7 +345,10 @@ function Menu(props) {
             id: obj.id,
             name: obj.name_t == null ? obj.name : obj.name_t,
             locale: shareContext.state.restaurant.locale,
-            price: obj.price,
+            price_s: obj.price_s == null ? 0 : obj.price_s,
+            price_m: obj.price_m == null ? 0 : obj.price_m,
+            price_l: obj.price_l == null ? 0 : obj.price_l,
+            price_x: obj.price_x == null ? 0 : obj.price_x,
             rest_id: obj.restaurant_id,
             category_id: obj.category_id,
             image_path: obj.image_path,
@@ -367,7 +384,10 @@ function Menu(props) {
             id: "",
             name: "",
             locale: shareContext.state.locale,
-            price: 0,
+            price_s: 0,
+            price_m: 0,
+            price_l: 0,
+            price_x: 0,
             category_id: "",
             image_path: "",
         });
@@ -392,9 +412,9 @@ function Menu(props) {
         <div>
             <NavTab {...props} />
             <Form>
-                <Row form>
+                <Row>
                     <Col xs="6" sm="6">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="name">{t("DishName")}</Label>
                             <Input
                                 type="text"
@@ -405,20 +425,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
-                        <FormGroup>
-                            <Label for="price">{t("Price")}</Label>
-                            <Input
-                                type="text"
-                                id="price"
-                                value={menu.price}
-                                onChange={(e) => setMenu({ ...menu, price: e.target.value })}
-                            />
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="6" sm="6">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="categoryid">{t("Category")}</Label>
                             <Select
                                 id="categoryid"
@@ -430,6 +437,55 @@ function Menu(props) {
                             />
                         </FormGroup>
                     </Col>
+                </Row>
+                <Row>
+                    <Col xs="3" sm="3">
+                        <FormGroup>
+                            <Label for="price_s">{t("Price")}({t("Regular")})</Label>
+                            <Input
+                                type="text"
+                                id="price_s"
+                                value={menu.price_s}
+                                onChange={(e) => setMenu({ ...menu, price_s: e.target.value })}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col xs="3" sm="3">
+                        <FormGroup>
+                            <Label for="price_m">{t("Price")}({t("Medium")})</Label>
+                            <Input
+                                type="text"
+                                id="price_m"
+                                value={menu.price_m}
+                                onChange={(e) => setMenu({ ...menu, price_m: e.target.value })}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col xs="3" sm="3">
+                        <FormGroup>
+                            <Label for="price_l">{t("Price")}({t("Large")})</Label>
+                            <Input
+                                type="text"
+                                id="price_l"
+                                value={menu.price_l}
+                                onChange={(e) => setMenu({ ...menu, price_l: e.target.value })}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col xs="3" sm="3">
+                        <FormGroup>
+                            <Label for="price_x">{t("Price")}({t("Extra")})</Label>
+                            <Input
+                                type="text"
+                                id="price_x"
+                                value={menu.price_x}
+                                onChange={(e) => setMenu({ ...menu, price_x: e.target.value })}
+                            />
+                        </FormGroup>
+                    </Col>
+                </Row>
+                <Row>
+
                     <Col xs="2" sm="2">
                         <FormGroup>
                             <Label for="pathId">{t("UploadPicture")}</Label>
@@ -455,21 +511,36 @@ function Menu(props) {
                     </Col>
                 </Row>
             </Form>
-            <hr></hr>
+
             <div>
-                <h2>{t("MenuList")}</h2>
+                <h3>{t("MenuList")}</h3>
                 <ul>
+                    <Row className="flow-center">
+                        <Col sm={3}>{t("Name")}</Col>
+                        <Col sm={1}>{t("S")}</Col>
+                        <Col sm={1}>{t("M")}</Col>
+                        <Col sm={1}>{t("L")}</Col>
+                        <Col sm={1}>{t("X")}</Col>
+                        <Col sm={2}>{t("Category")}</Col>
+                        <Col sm={3}>{t("Action")}</Col>
+
+
+                    </Row>
+                    <hr></hr>
                     {menuList.map((item, idx) => (
                         <Row key={idx}>
-                            <Col sm={4}>{item.name}</Col>
-                            <Col sm={4}>{item.price}</Col>
+                            <Col sm={3}>{item.name}</Col>
+                            <Col sm={1}>{item.price_s}</Col>
+                            <Col sm={1}>{item.price_m}</Col>
+                            <Col sm={1}>{item.price_l}</Col>
+                            <Col sm={1}>{item.price_x}</Col>
                             <Col sm={2}>{fetchCategoryName(item.category_id)}</Col>
-                            <Col sm={1}>
+                            <Col sm={2} className="ml-1" >
                                 <Button onClick={() => setEdit(item)}>{t("Edit")}</Button>
-                            </Col>
-                            <Col sm={1}>
+                                &nbsp;
                                 <Button onClick={() => setDelete(item)}>{t("Delete")}</Button>
                             </Col>
+                            <Col sm={1}></Col>
                         </Row>
                     ))}
                 </ul>

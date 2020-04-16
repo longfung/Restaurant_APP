@@ -11,6 +11,8 @@
     "Home": "首頁",
     "Restaurant": "餐廳",
     "Menu": "菜單",
+    "Name": "名稱",
+    "Action": "可能選項",
     "Category": "類別",
     "CategoryDescription": "類別描述",
     "CategoryList": "類別目錄",
@@ -31,5 +33,13 @@
     "TranslationList": "翻譯清單",
     "TargetLocale": "翻譯文字",
     "DefaultLocale": "原版文字",
-    "AllCategory": "全部"
+    "AllCategory": "全部",
+    "Small": "小量",
+    "Medium": "中量",
+    "Large": "大量",
+    "Extra": "特大量",
+    "S": "小",
+    "M": "中",
+    "L": "大",
+    "X": "特大"
 }
