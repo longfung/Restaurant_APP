@@ -20,6 +20,7 @@ import "../index.css";
 import { storage } from "../firebase";
 import access from "../util/access";
 import { useTranslation } from "react-i18next"
+import Editpan from "./Editpan";
 
 function Menu(props) {
     debugger;
@@ -41,6 +42,7 @@ function Menu(props) {
     const [menu, setMenu] = useState({
         id: "",
         name: "",
+        description: "",
         locale: shareContext.state.restaurant.locale,
         price_s: 0,
         price_m: 0,
@@ -60,6 +62,7 @@ function Menu(props) {
     ]);
 
     const [category, setCategory] = useState({});
+    // const [desc, setDesc] = useState('');
 
     useEffect(() => {
         // const restaurantId = 45000
@@ -269,6 +272,7 @@ function Menu(props) {
         debugger;
         let data = {
             name: menu.name,
+            description: menu.description,
             // intend to do so, only allow default language to update the name, use translation tool for other locale input
             locale: shareContext.state.locale,
             entityId: access.Entity.menu,
@@ -305,6 +309,7 @@ function Menu(props) {
             id: menu.id,
             name: menu.name,
             locale: shareContext.state.locale,
+            description: menu.description,
             entityId: access.Entity.menu,
             price_s: menu.price_s,
             price_m: menu.price_m,
@@ -344,6 +349,7 @@ function Menu(props) {
         setMenu({
             id: obj.id,
             name: obj.name_t == null ? obj.name : obj.name_t,
+            description: obj.description,
             locale: shareContext.state.restaurant.locale,
             price_s: obj.price_s == null ? 0 : obj.price_s,
             price_m: obj.price_m == null ? 0 : obj.price_m,
@@ -383,6 +389,7 @@ function Menu(props) {
             ...menu,
             id: "",
             name: "",
+            description: "",
             locale: shareContext.state.locale,
             price_s: 0,
             price_m: 0,
@@ -503,6 +510,14 @@ function Menu(props) {
                                 />
                             </div>
                         </Card>
+                    </Col>
+                    <Col sm="6">
+
+
+                        <Label> Detail Description</Label>
+
+                        <Editpan setMenu={setMenu} menu={menu} />
+
                     </Col>
                 </Row>
                 <Row>
