@@ -56,14 +56,55 @@ class Menu {
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);
-        db.query(
-          "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
-          [res.id, node.name, node.locale, node.restaurant_id, node.entityId],
-          (err, res) => {
-            callback(res);
-          }
-        );
+        // db.query(
+        //   "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+        //   [res.id, node.name, node.locale, node.restaurant_id, node.entityId],
+        //   (err, res) => {
+        //     callback(res);
+        //   }
+        // );
+        const promise1 = Menu.insertNameT(res[0].id, node);
+        const promise2 = Menu.insertDescT(res[0].id, node);
+        Promise.resolve(promise1, promise2).then(res => {
+          callback(res);
+        })
+          .catch((err) => callback(err))
       }
+    );
+  }
+
+  // static insertNameT(id, node, callback) {
+  //   db.query(
+  //     "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+  //     [id, node.name, node.locale, node.restaurant_id, 1],
+  //     (err, res) => {
+  //       callback(res);
+  //     }
+  //   );
+  // } 
+
+  static insertNameT(id, node) {
+    console.log("in insertNameT" + id);
+    return new Promise((resolve, rejsct) => db.query(
+      "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+      [id, node.name, node.locale, node.restaurant_id, node.entityId],
+      (err, res) => {
+        if (err.error) rejsct("err");
+        resolve(res)
+      }
+    ));
+  }
+
+  static async insertDescT(nId, node) {
+    console.log("in insertDescT" + nId);
+    return new Promise((resolve, rejsct) => db.query(
+      "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+      [nId, node.description, node.locale, node.restaurant_id, 3],
+      (err, res) => {
+        if (err.error) rejsct("err");
+        resolve(res)
+      }
+    )
     );
   }
 

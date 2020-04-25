@@ -20,6 +20,8 @@ import "../index.css";
 import { storage } from "../firebase";
 import access from "../util/access";
 import { useTranslation } from 'react-i18next';
+import Editpan from "./Editpan";
+import Displaypan from "./DisplayPan";
 
 function EntityT(props) {
     debugger;
@@ -34,6 +36,7 @@ function EntityT(props) {
     // const restaurantId = props.restaurant_id;
 
     const [menuT, setMenuT] = useState({});
+    const [menuTClone, setMenuTClone] = useState({});
     const [menuTList, setMenuTList] = useState([]);
     const [entity, setEntity] = useState(1);
     const [lang, setLang] = useState('tw');
@@ -58,7 +61,7 @@ function EntityT(props) {
     const postUpdateMenu = () => { // debugger;
         const data = {
             id: menuT.id,
-            namet: menuT.namet,
+            namet: entity == 1 ? menuT.namet : menuT.description,
             locale: lang,
             entityId: entity,
             restaurantId: restaurantId
@@ -82,11 +85,16 @@ function EntityT(props) {
     const setEdit = (obj) => {
         setMenuT({
             id: obj.id,
-            name: obj.name,
+            name: obj.name ? obj.name : null,
+            description: obj.namet == null ? '' : obj.namet,
             namet: obj.namet == null ? '' : obj.namet,
             locale: obj.locale,
             entityId: entity,
             RrstaurantId: obj.restaurantId
+        });
+        setMenuTClone({
+            id: obj.id,
+            description: obj.description ? obj.description : null,
         });
     };
 
@@ -107,10 +115,16 @@ function EntityT(props) {
             ...menuT,
             id: "",
             name: "",
+            description: "",
             namet: "",
             locale: "",
             entityId: "",
             restaurantId: ""
+        });
+        setMenuTClone({
+            ...menuTClone,
+            id: "",
+            description: ""
         });
     };
 
@@ -136,45 +150,71 @@ function EntityT(props) {
         <div>
             <NavTab {...props} />
             <Form>
-                <Row form>
-                    <Col sm="2">
+                <Row form styple="display:inline;">
+                    <Col sm="6">
+
                         <Button onClick={
                             () => switchEntity(1)
                         }>
-                            Menu</Button>
+                            Menu Name</Button>
+                            &nbsp;
                         <Button onClick={
                             () => switchEntity(2)
                         }>
                             Category</Button>
+                            &nbsp;
+                        <Button onClick={
+                            () => switchEntity(3)
+                        }>
+                            Menu Desc</Button>
                     </Col>
                 </Row>
-                <Row form>
-                    <Col xs="6" sm="6">
-                        <FormGroup>
-                            <Label for="name">{t("DefaultLocale")}</Label>
-                            <Input disabled type="text"
-                                value={
-                                    menuT.name
-                                }
-                                id="name" />
-                        </FormGroup>
-                    </Col>
-                    <Col xs="6" sm="6">
-                        <FormGroup>
-                            <Label for="nameT">{t("TargetLocale")}</Label>
-                            <Input type="text" id="nameT"
-                                value={
-                                    menuT.namet
-                                }
-                                onChange={
-                                    (e) => setMenuT({
-                                        ...menuT,
-                                        namet: e.target.value
-                                    })
-                                } />
-                        </FormGroup>
-                    </Col>
-                </Row>
+                {entity == 3 ?
+                    <Row>
+
+                        <Col sm="6">
+                            <Label>  {t("DefaultLocale")}</Label>
+
+                            <Displaypan setMenu={setMenuTClone} menu={menuTClone} />
+                        </Col>
+                        <Col sm="6">
+                            <Label>  {t("TargetLocale")}</Label>
+
+                            <Editpan setMenu={setMenuT} menu={menuT} />
+                        </Col>
+
+                    </Row>
+                    :
+
+
+                    <Row form>
+                        <Col xs="6" sm="6">
+                            <FormGroup>
+                                <Label for="name">{t("DefaultLocale")}</Label>
+                                <Input disabled type="text"
+                                    value={
+                                        menuT.name
+                                    }
+                                    id="name" />
+                            </FormGroup>
+                        </Col>
+                        <Col xs="6" sm="6">
+                            <FormGroup>
+                                <Label for="nameT">{t("TargetLocale")}</Label>
+                                <Input type="text" id="nameT"
+                                    value={
+                                        menuT.namet
+                                    }
+                                    onChange={
+                                        (e) => setMenuT({
+                                            ...menuT,
+                                            namet: e.target.value
+                                        })
+                                    } />
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                }
                 <Row>
                     <Col xs="6" sm="6">
                         <Button onClick={handleUpdateMenu}>
@@ -203,13 +243,16 @@ function EntityT(props) {
                 <ul> {
                     menuTList && menuTList.map((item, idx) => (
                         <Row key={idx}>
+                            <Col sm="5">
+                                {entity == 3 ?
+                                    item.description ? item.description.substring(0, 24) : null
+                                    :
+                                    (item.name)
+                                }
+                            </Col>
                             <Col sm={5}>
                                 {
-                                    item.name
-                                }</Col>
-                            <Col sm={5}>
-                                {
-                                    item.namet
+                                    item.namet ? item.namet.substring(0, 24) : null
                                 }</Col>
                             <Col sm={1}>
                                 <Button onClick={

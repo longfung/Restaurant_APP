@@ -5,7 +5,7 @@ var EntityT = require("../models/entityT");
 var router = express.Router();
 
 router.get("/menu", (req, res) => {
-  console.log("in MenuT Get");
+  console.log("in MenuT name Get");
 
   // var node = req.query;
   var node = req.query;
@@ -13,6 +13,23 @@ router.get("/menu", (req, res) => {
 
   // var categoryId = req.query.categoryId;
   EntityT.retrieveMenuTByRestaurant(node, (err, menu) => {
+    // console.log(err);
+    // console.log(res);
+    if (!err) return res.json(err);
+    // console.log(rest).
+    return res.json(menu);
+  });
+});
+
+router.get("/desc", (req, res) => {
+  console.log("in MenuT desc Get");
+
+  // var node = req.query;
+  var node = req.query;
+  // var categoryId = req.query.categoryId;
+
+  // var categoryId = req.query.categoryId;
+  EntityT.retrieveDescTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
     if (!err) return res.json(err);

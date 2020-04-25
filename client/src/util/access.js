@@ -2,7 +2,8 @@ const axios = require("axios");
 
 const Entity = {
   menu: 1,
-  category: 2
+  category: 2,
+  desc: 3
 }
 
 async function fetchRestuarantByOwnerId(id) {
@@ -91,11 +92,12 @@ async function deleteMenuById(id) {
 
 async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: entityId };
-  if (entityId == Entity.menu)
-    return await axios.get("/api/entityT/menu", { params: data });
-  else
+  if (entityId == Entity.category)
     return await axios.get("/api/entityT/category", { params: data });
-
+  else if (entityId == Entity.menu)
+    return await axios.get("/api/entityT/menu", { params: data });
+  else if (entityId == Entity.desc)
+    return await axios.get("/api/entityT/desc", { params: data });
 }
 
 async function addEntityT(entityT) {

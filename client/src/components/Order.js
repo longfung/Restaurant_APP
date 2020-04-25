@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Cart from "./Cart";
 import Select from "react-select";
-import { MdAddCircle, MdRemoveCircle, MdDone } from "react-icons/md";
+import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote } from "react-icons/md";
 import access from '../util/access';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -21,6 +21,7 @@ import {
   CardFooter,
 } from "reactstrap";
 import CategoryNav from "./CatagoryNav";
+import Detail from "./Detail";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
 import { store } from "./Store";
@@ -53,6 +54,10 @@ function Order(props) {
   const [cartList, setCartList] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [isOrder, setIsOrder] = useState(true);
+  const [detail, setDetail] = useState({
+    isDetail: false,
+    menu: ''
+  });
 
   useEffect(() => {
     // const restaurantId = 45000
@@ -248,7 +253,17 @@ function Order(props) {
             {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
           </CardBody>
           <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
-            <CardText className="font-weight-bold">{item.name}</CardText>
+            <Link
+              to="#!"
+              onClick={(e) => setDetail({
+                isDetail: true,
+                menu: item
+              })}
+              className=" flow-left"
+            >
+              <MdEventNote color="Primary" size="2rem" />
+            </Link> &nbsp;{item.name}
+
           </CardBody>
         </Card>
       </Col>
@@ -259,16 +274,22 @@ function Order(props) {
     <div>
       {userMode == 2 ? <NavTab {...props} /> : null}
       {isOrder ? (
-        <div>
-          <CategoryNav
-            {...props}
-            restaurant={restaurant}
-            fetchMenuList={fetchMenuList}
-            cartTotal={cartTotal}
-            setIsOrder={setIsOrder}
-          />
-          <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
-        </div>
+        detail.isDetail == true ?
+          <div>
+            <Detail {...props} menu={detail.menu} setDetail={setDetail} /> }
+          </div>
+          : (
+            <div>
+              <CategoryNav
+                {...props}
+                restaurant={restaurant}
+                fetchMenuList={fetchMenuList}
+                cartTotal={cartTotal}
+                setIsOrder={setIsOrder}
+              />
+              <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
+            </div>
+          )
       ) : (
           <Cart
             addToOrder={addToOrder}

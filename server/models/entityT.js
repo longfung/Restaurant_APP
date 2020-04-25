@@ -17,6 +17,22 @@ class EntityT {
     );
   }
 
+  static retrieveDescTByRestaurant(query, callback) {
+    const restaurantId = query.restaurantId;
+    const locale = query.locale;
+    const entityId = query.entityId;
+    console.log("in EntityT Desc: " + entityId);
+    db.query(
+      //   "select * from menu where restaurant_id = $1",
+      "select m.id, m.description, t.lang, t.text as nameT from menu as m \
+        left join entity_t as t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
+      [locale, entityId, restaurantId],
+      function (err, res) {
+        if (err.error) return callback(err);
+        callback(err, res);
+      }
+    );
+  }
   static retrieveCategoryTByRestaurant(query, callback) {
     const restaurantId = query.restaurantId;
     const locale = query.locale;
