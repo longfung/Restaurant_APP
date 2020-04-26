@@ -19,8 +19,8 @@ function Cart(props) {
 
     return (
         <div>
-            {cartList && cartList.map(elem =>
-                <div key={elem.name}>
+            {cartList && cartList.map((elem, idx) =>
+                <div key={idx}>
                     <Row>
                         < Col sm="4">
                             {elem.name}

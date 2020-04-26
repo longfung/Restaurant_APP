@@ -24,42 +24,47 @@ app.use("/api/category", require("./api/category"));
 app.use("/api/user", require("./api/user"));
 // app.use('/api/fileupload', require('./api/fileupload'));
 app.post("/fileupload", (req, res) => {
-  console.log(`"fileuplaod2" + ${workspaceFolder}`);
+  // console.log(`"fileuplaod2" + ${workspaceFolder}`);
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).json({ err: "NO file uploaded" });
   }
   let image = req.files.file;
-  let path = req.file.path;
-  let curDir = `${process.cwd()}/client/public/images/${path}`;
-  try {
-    fs.mkdirSync(curDir);
-    console.log(`Directory ${curDir} created!`);
-  } catch (err) {
-    if (err.code === "EEXIST") {
-      // curDir already exists!
-      console.log(`Directory ${curDir} already exists!`);
-      //   return curDir;
-    }
-  }
+  // let path = req.file.path;
+  // let curDir = `${process.cwd()}/client/public/images/${path}`;
+  // try {
+  //   fs.mkdirSync(curDir);
+  //   console.log(`Directory ${curDir} created!`);
+  // } catch (err) {
+  //   if (err.code === "EEXIST") {
+  //     // curDir already exists!
+  //     console.log(`Directory ${curDir} already exists!`);
+  //     //   return curDir;
+  //   }
+  // }
   // let filepath = __dirname + '\\images\\' + image.name
   // let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
-  image.mv(
-    `${process.cwd()}/client/public/images/${path}/${image.name}`,
-    (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send(err);
-      }
+  // add for not actually upload image, just to get the name back and upload picture to public folder 
+  // separate manually
+  console.log(`${process.cwd()}/client/public/images/${image.name}`);
+  res.json({ filename: image.name, filepath: `/images/${image.name}` });
 
-      let imagepath = "/images/" + image.name;
-      // console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());
-      // res.send({filename: imagepath});
-      // res.json({filename: imagepath});
-      console.log(`${process.cwd()}/client/public/images/${image.name}`);
-      res.json({ filename: image.name, filepath: `/images/${image.name}` });
-      // res.send({filename: filepath});
-    }
-  );
+  // image.mv(
+  //   `${process.cwd()}/client/public/images/${path}/${image.name}`,
+  //   (err) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return res.status(500).send(err);
+  //     }
+
+  //     let imagepath = "/images/" + image.name;
+  //     // console.log("upload file name " + filepath + ":" + image.name + " : " + process.cwd());
+  //     // res.send({filename: imagepath});
+  //     // res.json({filename: imagepath});
+  //     console.log(`${process.cwd()}/client/public/images/${image.name}`);
+  //     res.json({ filename: image.name, filepath: `/images/${image.name}` });
+  //     // res.send({filename: filepath});
+  //   }
+  // );
 });
 
 app.listen(PORT, () => {

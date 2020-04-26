@@ -63,6 +63,7 @@ function Order(props) {
     // const restaurantId = 45000
     console.log("in UseEffect");
     debugger;
+    fetchMenuList();
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -97,7 +98,10 @@ function Order(props) {
       //   })
       .then((res) => {
         debugger;
-        res.data.forEach(item => {
+        setMenuList([]);
+        res.data && res.data.forEach(item => {
+          if (item.name_t != null) item.name = item.name_t;
+          if (item.description_t != null) item.description = item.description_t;
           let cnt = 0;
           if (item.price_s > 0) cnt++;
           if (item.price_m > 0) cnt++;
@@ -105,6 +109,13 @@ function Order(props) {
           if (item.price_x > 0) cnt++;
           item['isMultiple'] = cnt > 1 ? true : false;
           setMenuList(prevState => [...prevState, item])
+          // update cart list if there is any
+          cartList.forEach(elem => {
+            console.log("before" + elem.name);
+            if (elem.id == item.id)
+              elem.name = item.name;
+            console.log("after" + elem.name);
+          })
         })
         // setMenuList(res.data);
       })
@@ -215,6 +226,7 @@ function Order(props) {
           >
             <MdAddCircle color="Primary" size="2rem" />
           </Link>
+          &nbsp;
           {isQuantity(item, size) ? (
             <Link
               to="#!"
@@ -262,7 +274,9 @@ function Order(props) {
               className=" flow-left"
             >
               <MdEventNote color="Primary" size="2rem" />
-            </Link> &nbsp;{item.name}
+            </Link>
+            &nbsp;
+            {item.name}
 
           </CardBody>
         </Card>

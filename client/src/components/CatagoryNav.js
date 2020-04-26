@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Language from './Language';
 import {
   Row,
   Col,
@@ -17,10 +18,11 @@ import access from '../util/access';
 import { useTranslation } from 'react-i18next';
 
 function CategoryNav(props) {
-  // debugger;
+  debugger;
   const shareContext = useContext(store);
   const { t } = useTranslation();
   const restaurant = shareContext.state.restaurant;
+  const username = shareContext.state.username;
   // const restaurant = props.restaurant;
   const restaurantId = restaurant.id;
   const fetchMenuList = props.fetchMenuList;
@@ -56,7 +58,7 @@ function CategoryNav(props) {
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
-          <Col sm="10">
+          <Col sm="9">
             <Button onClick={() => fetchMenuList("")}>{t("AllCategory")}</Button>
             {categoryList &&
               categoryList.map((item, index) => (
@@ -65,7 +67,14 @@ function CategoryNav(props) {
                 </Button>
               ))}
           </Col>
-          <Col sm="2">
+          <Col sm="1.5">
+            {username == 'demo' ?
+              <Language />
+              :
+              null
+            }
+          </Col>
+          <Col sm="1.5">
             <Link
               to="#!"
               onClick={() => setIsOrder(false)}

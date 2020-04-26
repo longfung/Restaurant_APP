@@ -82,6 +82,7 @@ function Login(props) {
           // setRestaurant(res1.data);
           shareContext.dispatch({ type: "setRestaurant", value: res1.data });
           shareContext.dispatch({ type: "setUserMode", value: 1 });
+          shareContext.dispatch({ type: 'setOwnerId', value: { id: res0.id, username: 'demo' } })
           return props.history.push("/order/id");
         });
       })
