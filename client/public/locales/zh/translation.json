@@ -7,6 +7,9 @@
     "City": "市",
     "State": "州",
     "ZipCode": "邮政编码",
+    "Phone": "电话",
+    "Email": "电子邮件",
+    "Password": "密码",
     "Save": "存档",
     "Home": "首页",
     "Restaurant": "餐厅",
@@ -41,5 +44,11 @@
     "S": "小",
     "M": "中",
     "L": "大",
-    "X": "特大"
+    "X": "特大",
+    "en": "英语",
+    "tw": "繁体",
+    "zh": "简体",
+    "MenuName": "单品称名",
+    "MenuDesc": " 单品描述",
+    "ChooseLanguage": "选择一种语言"
 }

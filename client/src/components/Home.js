@@ -1,5 +1,4 @@
 import React from "react";
-import NavTab from "./NavTab";
 import {
   Card,
   CardImg,
@@ -13,9 +12,6 @@ import {
 } from "reactstrap";
 
 function Home(props) {
-  debugger;
-  const setUserMode = props.setUserMode;
-  const setOwnerId = props.setUserMode;
   return (
     <div>
       <Card>

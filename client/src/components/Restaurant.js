@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import NavTab from "./NavTab";
-import axios from "axios";
 import access from "../util/access";
 import Select from "react-select";
 import {
@@ -14,16 +13,14 @@ import {
 } from "reactstrap";
 import { store } from "./Store";
 import { useTranslation } from "react-i18next";
+import { allowedLocale } from "../util/config.json";
 
 function Restaurant(props) { // console.log("In Restaurant");
     debugger;
+    console.log(allowedLocale);
     const { t } = useTranslation();
     const shareContext = useContext(store);
     const userId = shareContext.state.ownerId;
-
-    // const setRestaurantRoot = props.setRestaurantRoot;
-    // const userId = props.location.state.ownerId;
-    // const userId = props.ownerId.ownerId;
     const setMessage = props.setMessage;
     const [restaurant, setRestaurant] = useState({
         id: "",
@@ -38,19 +35,9 @@ function Restaurant(props) { // console.log("In Restaurant");
     });
 
     const [localeValue, setLocaleValue] = useState({});
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        // console.log("get List");
-        // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-        // if (shareContext.state.restaurant) {
-        // setRestaurant(shareContext.state.restaurant);
-        // setLocaleValue({
-        //     value: shareContext.state.locale,
-        //     label: shareContext.state.locale,
-        // });
-        // return;
-        // }
-
         const promise1 = access.fetchRestuarantByOwnerId(userId);
         Promise.resolve(promise1).then((res1) => {
             const rest = res1.data;
@@ -65,7 +52,6 @@ function Restaurant(props) { // console.log("In Restaurant");
                 locale: rest.locale,
                 ownerId: userId
             });
-            // shareContext.dispatch({ type: "setRestaurant", value: restaurant });
             setLocaleValue({ value: rest.locale, label: rest.locale });
             if (!shareContext.state.locale)
                 shareContext.dispatch({ type: "setLocale", value: rest.locale });
@@ -73,6 +59,7 @@ function Restaurant(props) { // console.log("In Restaurant");
 
 
         }).catch((error) => console.log(error));
+
     }, []);
 
     useEffect(() => {
@@ -83,11 +70,21 @@ function Restaurant(props) { // console.log("In Restaurant");
 
     }, [restaurant.id]);
 
-    // useEffect(() => {
-    // setRestaurant({ ...restaurant, locale: localeValue.value });
-    // }, [localeValue]);
+    useEffect(() => {
+        fetchLocaleList();
+    }, [shareContext.state.locale])
+
+    const fetchLocaleList = () => {
+        setOptions([])
+        const options = allowedLocale.map(v => ({
+            label: t(`${v}`),
+            value: v
+        }));
+        setOptions(options);
+    }
 
     const handlePostRestaurant = () => {
+        debugger;
         if (restaurant.id != "") {
             handleUpdateRestaurant();
         } else {
@@ -96,40 +93,22 @@ function Restaurant(props) { // console.log("In Restaurant");
     };
 
     const handleAddRestaurant = () => {
-        debugger;
+
         const data = moveCorrespond();
         const promise1 = access.addRestaurant(data);
         Promise.resolve(promise1).then((res) => {
-            // console.log("add!!");
-            // setRestaurantRoot(restaurant);
             shareContext.dispatch({ setRestaurant: restaurant });
             let m = restaurant.name + " is created Successfully !!!";
             setMessage({ status: 200, msg: m });
         }).catch((err) => {
             console.log(err);
         });
-        // console.log("In handleAddRestaurant");
-        // fetch('/api/restaurant', {
-        // method: 'post',
-        // headers: { 'Content-Type': 'application/json' },
-        // body: JSON.stringify({ name: node.name, zipCode: node.zipCode, state: node.state })
-        // })
-        // // .then(res => res.json())
-
-        // .then(res => {
-        // // console.log(res.data.json());
-        // invokeFetch();
-        // setRoot({ ...node, name: 'Enter Name', zipCode: '12345', state: 'CA' });
-
-        // });
     };
 
     const handleUpdateRestaurant = () => {
         const data = moveCorrespond();
         const promise1 = access.updateRestaurant(data);
         Promise.resolve(promise1).then((res) => {
-            // console.log("update!!");
-            // setRestaurantRoot(restaurant);
             shareContext.dispatch({ setRestaurant: restaurant });
             let m = restaurant.name + " is updated Successfully !!!";
             setMessage({ status: 200, msg: m });
@@ -142,10 +121,10 @@ function Restaurant(props) { // console.log("In Restaurant");
         const data = {
             id: restaurant.id,
             name: restaurant.name,
-            taxRate: restaurant.tax_rate,
+            taxRate: restaurant.taxRate,
             address: restaurant.address,
             city: restaurant.city,
-            zipCode: restaurant.zip_code,
+            zipCode: restaurant.zipCode,
             state: restaurant.state,
             locale: localeValue.value,
             ownerId: userId
@@ -196,26 +175,14 @@ function Restaurant(props) { // console.log("In Restaurant");
                     </Col>
 
                     <Col xs="6" sm="6">
+
                         <FormGroup>
                             <Label for="locale">
                                 {
                                     t("DefaultLanguage")
                                 }</Label>
                             <Select id="localeid"
-                                options={
-                                    [
-                                        {
-                                            label: "en",
-                                            value: "en"
-                                        }, {
-                                            label: "tw",
-                                            value: "tw"
-                                        }, {
-                                            label: "zh",
-                                            value: "zh"
-                                        },
-                                    ]
-                                }
+                                options={options}
                                 onChange={setLocaleValue}
                                 className="mb-3"
                                 placeholder="Select a default language"

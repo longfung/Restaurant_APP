@@ -11,35 +11,30 @@ import {
     Col,
     Button,
     FormGroup,
-    Label,
-    Card,
-    CardImg
+    Label
 } from "reactstrap";
 import { store } from "./Store";
 import "../index.css";
-import { storage } from "../firebase";
 import access from "../util/access";
 import { useTranslation } from 'react-i18next';
 import Editpan from "./Editpan";
 import Displaypan from "./DisplayPan";
 
 function EntityT(props) {
-    debugger;
     const shareContext = useContext(store);
     const { t } = useTranslation();
 
     const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
+    const defaultLanguage = shareContext.state.restaurant.locale;
     if (!restaurantId) {
         props.history.push("/Login");
     }
     const setMessage = props.setMessage;
-    // const restaurantId = props.restaurant_id;
-
     const [menuT, setMenuT] = useState({});
     const [menuTClone, setMenuTClone] = useState({});
     const [menuTList, setMenuTList] = useState([]);
     const [entity, setEntity] = useState(1);
-    const [lang, setLang] = useState('tw');
+    const [lang, setLang] = useState(null);
 
     useEffect(() => {
         getMenuTList(lang, entity);
@@ -61,21 +56,13 @@ function EntityT(props) {
     const postUpdateMenu = () => { // debugger;
         const data = {
             id: menuT.id,
-            namet: entity == 1 ? menuT.namet : menuT.description,
+            namet: entity == 3 ? menuT.description : menuT.namet,
             locale: lang,
             entityId: entity,
             restaurantId: restaurantId
         };
         const promise1 = access.updateEntityT(data);
         Promise.resolve(promise1).then((res) => {
-            // axios
-            // .put("/api/menu", data, {
-            //     headers: { "Content-Type": "application/json" }
-            // }).then((res) => {
-            // console.log(res.data.json());
-            // getMenuList();
-            // setNode({ ...node, id: '', category_name: '', category_description: '', restaurant_id: restaurantId });
-            // initialMenu();
             let m = menuT.name + " is updated Successfully !!!";
             setMessage({ status: 200, msg: m });
             getMenuTList(lang, entity);
@@ -101,8 +88,6 @@ function EntityT(props) {
     const setDelete = (obj) => {
         const promise1 = access.deleteMenuById(obj.id);
         Promise.resolve(promise1).then((res) => {
-            // axios
-            // .delete("/api/menu", { params: { id: obj.id } }).then((res) => { // console.log(res.data.json());
             let m = obj.name + " is deleted Successfully !!!";
             setMessage({ status: 200, msg: m });
             getMenuTList();
@@ -136,13 +121,6 @@ function EntityT(props) {
     const switchEntity = (elem) => {
         setEntity(elem);
         getMenuTList(lang, elem);
-        // switch (elem) {
-        //     case access.Entity.menu:
-        //         getMenuTList(lang, elem);
-        //         break;
-        //     case access.Entity.category:
-        //         getCategoryTList(lang)
-        // }
     }
 
 
@@ -150,35 +128,45 @@ function EntityT(props) {
         <div>
             <NavTab {...props} />
             <Form>
-                <Row form styple="display:inline;">
+                <Row form>
                     <Col sm="6">
-
-                        <Button onClick={
+                        <Button className={`${entity == 1 ? 'btn-outline-primary active' : null}`} onClick={
                             () => switchEntity(1)
                         }>
-                            Menu Name</Button>
+                            {t("MenuName")}</Button>
                             &nbsp;
-                        <Button onClick={
+                        <Button className={`${entity == 2 ? 'btn-outline-primary active' : null}`} onClick={
                             () => switchEntity(2)
                         }>
-                            Category</Button>
+                            {t("Category")}</Button>
                             &nbsp;
-                        <Button onClick={
+                        <Button className={`${entity == 3 ? 'btn-outline-primary active' : null}`} onClick={
                             () => switchEntity(3)
                         }>
-                            Menu Desc</Button>
+                            {t("MenuDesc")}</Button>
+                    </Col>
+                    <Col sm="6">
+                        <Button className={`${lang == 'tw' ? 'btn-outline-primary active' : null}`} onClick={
+                            () => switchLanguage('tw')
+                        }>
+                            {t("tw")}</Button>
+                            &nbsp;
+                        <Button className={`${lang == 'zh' ? 'btn-outline-primary active' : null}`} onClick={
+                            () => switchLanguage('zh')
+                        }>
+                            {t("zh")}</Button>
                     </Col>
                 </Row>
                 {entity == 3 ?
-                    <Row>
-
+                    <Row form>
                         <Col sm="6">
-                            <Label>  {t("DefaultLocale")}</Label>
-
+                            <Label>  {t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
                             <Displaypan setMenu={setMenuTClone} menu={menuTClone} />
                         </Col>
                         <Col sm="6">
-                            <Label>  {t("TargetLocale")}</Label>
+                            <Label>  {t("TargetLocale")}
+                            ({lang == null ? t("ChooseLanguage") : lang})
+                            </Label>
 
                             <Editpan setMenu={setMenuT} menu={menuT} />
                         </Col>
@@ -188,9 +176,9 @@ function EntityT(props) {
 
 
                     <Row form>
-                        <Col xs="6" sm="6">
-                            <FormGroup>
-                                <Label for="name">{t("DefaultLocale")}</Label>
+                        <Col sm="6">
+                            <FormGroup className="float-left">
+                                <Label for="name">{t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
                                 <Input disabled type="text"
                                     value={
                                         menuT.name
@@ -198,9 +186,11 @@ function EntityT(props) {
                                     id="name" />
                             </FormGroup>
                         </Col>
-                        <Col xs="6" sm="6">
-                            <FormGroup>
-                                <Label for="nameT">{t("TargetLocale")}</Label>
+                        <Col sm="6">
+                            <FormGroup className="float-left">
+                                <Label for="nameT">{t("TargetLocale")}
+                                ({lang == null ? t("ChooseLanguage") : lang})
+                                </Label>
                                 <Input type="text" id="nameT"
                                     value={
                                         menuT.namet
@@ -215,10 +205,10 @@ function EntityT(props) {
                         </Col>
                     </Row>
                 }
-                <Row>
+                <Row from>
                     <Col xs="6" sm="6">
                         <Button onClick={handleUpdateMenu}>
-                            Save
+                            {t("Save")}
                         </Button>
                     </Col>
                 </Row>
@@ -229,16 +219,7 @@ function EntityT(props) {
                     <Col sm="5">
                         <h2>{t("TranslationList")}</h2>
                     </Col>
-                    <Col sm="7">
-                        <Button onClick={
-                            () => switchLanguage('tw')
-                        }>
-                            繁體</Button>
-                        <Button onClick={
-                            () => switchLanguage('zh')
-                        }>
-                            简体</Button>
-                    </Col>
+
                 </Row>
                 <ul> {
                     menuTList && menuTList.map((item, idx) => (
@@ -257,12 +238,12 @@ function EntityT(props) {
                             <Col sm={1}>
                                 <Button onClick={
                                     () => setEdit(item)
-                                }>Edit</Button>
+                                }>{t("Edit")}</Button>
                             </Col>
                             <Col sm={1}>
                                 <Button onClick={
                                     () => setDelete(item)
-                                }>Delete</Button>
+                                }>{t("Delete")}</Button>
                             </Col>
                         </Row>
                     ))

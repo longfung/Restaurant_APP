@@ -1,13 +1,10 @@
 import React from 'react'
 import { MdAddCircle, MdRemoveCircle, MdArrowBack } from 'react-icons/md';
-import { Row, Col, NavLink } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 function Cart(props) {
-    // debugger;
-    // const newProps = props.location.cartProps;
-    // console.log("Here" + JSON.stringify(newProps));
     const { t } = useTranslation();
     const cartList = props.cartList;
     const isQuantity = props.isQuantity;

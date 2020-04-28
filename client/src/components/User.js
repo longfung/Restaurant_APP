@@ -1,14 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Form, FormGroup, Input, Row, Col, Button, Label } from "reactstrap";
-import axios from "axios";
 import { store } from "./Store";
+import NavTab from "./NavTab";
+import { useTranslation } from "react-i18next";
 import access from "../util/access";
+
 
 function User(props) {
   const [user, setUser] = useState({});
   const shareContext = useContext(store);
   const ownerId = shareContext.state.ownerId;
   const setMessage = props.setMessage;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!ownerId) return;
@@ -24,21 +27,6 @@ function User(props) {
       });
     });
   }, []);
-
-  const HandleCreateUser = () => {
-    let data = JSON.stringify(user);
-
-    // axios.post('/api/user', data, {
-    //     headers: {'Content-Type': 'application/json'}
-    axios
-      .post("/api/user", data, {
-        // headers: {'Content-Type': 'multipart/form-data' }
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => {
-        clearUserInput();
-      });
-  };
 
   const submit = () => {
     if (ownerId) updateUser();
@@ -73,11 +61,12 @@ function User(props) {
 
   return (
     <div>
+      <NavTab {...props} />
       <Form>
         <Row>
           <Col sm="6">
             <FormGroup>
-              <Label for="username">Username</Label>
+              <Label for="username">{t("Username")}</Label>
               <Input
                 type="text"
                 id="username"
@@ -88,7 +77,7 @@ function User(props) {
           </Col>
           <Col sm="6">
             <FormGroup>
-              <Label for="password">Password</Label>
+              <Label for="password">{t("Password")}</Label>
               <Input
                 type="text"
                 id="password"
@@ -99,7 +88,7 @@ function User(props) {
           </Col>
           <Col sm="6">
             <FormGroup>
-              <Label for="email">Email</Label>
+              <Label for="email">{t("Email")}</Label>
               <Input
                 type="text"
                 id="email"
@@ -110,7 +99,7 @@ function User(props) {
           </Col>
           <Col sm="6">
             <FormGroup>
-              <Label for="phone">phone</Label>
+              <Label for="phone">{t("Phone")}</Label>
               <Input
                 type="text"
                 id="phone"
@@ -123,7 +112,7 @@ function User(props) {
         <Row>
           <Col cm="10"></Col>
           <Col sm="2">
-            <Button onClick={submit}>Save</Button>
+            <Button onClick={submit}>{t("Save")}</Button>
           </Col>
         </Row>
       </Form>

@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import Language from './Language';
 import {
   Row,
   Col,
-  CardText,
-  NavLink,
-  NavbarBrand,
   Button,
-  Jumbotron,
-  InputGroup
+  Jumbotron
+
 } from "reactstrap";
 import { MdShoppingCart } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -23,16 +19,12 @@ function CategoryNav(props) {
   const { t } = useTranslation();
   const restaurant = shareContext.state.restaurant;
   const username = shareContext.state.username;
-  // const restaurant = props.restaurant;
   const restaurantId = restaurant.id;
   const fetchMenuList = props.fetchMenuList;
-  const isQuantity = props.isQuantity;
   const cartTotal = props.cartTotal;
-  const cartList = props.cartList;
   const setIsOrder = props.setIsOrder;
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
-    // const restaurantId = 45000
     console.log("in UseEffect");
     debugger;
     setCategoryList([]);
@@ -43,7 +35,6 @@ function CategoryNav(props) {
       .then(res => {
         debugger;
         res.data.map(item =>
-          // const dd = item.namet == null ? item.category_name : item.namet;
           setCategoryList(prevState => [
             ...prevState,
             { id: item.id, label: item.namet == null ? item.category_name : item.namet }
@@ -53,7 +44,6 @@ function CategoryNav(props) {
       .catch(error => console.log(error));
   }, [shareContext.state.locale]);
 
-  const setCategory = () => { };
   return (
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">

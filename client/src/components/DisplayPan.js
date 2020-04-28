@@ -2,25 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 // import { Editor, EditorState } from 'draft-js';
 import Draft from 'draft-js';
 import '../index.css';
-import {
-    Form,
-    Input,
-    Row,
-    Col,
-    Button,
-    FormGroup,
-    Label,
-    Card,
-    CardImg,
-} from "reactstrap";
-import { MdFormatBold, MdFormatItalic, MdFormatUnderlined, MdFormatListBulleted, MdFormatListNumbered, MdFormatAlignCenter, MdFormatAlignLeft, MdFormatAlignRight } from 'react-icons/md';
-import { convertToHTML } from 'draft-convert'
 const { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, ContentState, convertFromHTML } = Draft;
 
 const Immutable = require('immutable');
-
-// class Editpan extends React.Component {
-
 function Displaypan(props) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const setMenu = props.setMenu;
@@ -37,37 +21,16 @@ function Displaypan(props) {
     }, [editorState])
 
     useEffect(() => {
-        // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-        // const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-        debugger;
-
         if (menu.description == null || menu.description.length < 1) {
-
-            // const newState = convertFromRaw(JSON.parse(menu.description));
             setEditorState(EditorState.createEmpty());
         }
 
         else {
-            // const blocksFromHTML = convertFromHTML(menu.description);
-            // const newState = ContentState.createFromBlockArray(
-            //     blocksFromHTML.contentBlocks,
-            //     blocksFromHTML.entityMap,
-            // );
             const newState = convertFromRaw(JSON.parse(menu.description));
             // const state = ContentState.createFromBlockArray(blocksFromHTML);
             setEditorState(EditorState.createWithContent(newState));
         }
-
-        // setEditorState(newState);
     }, [menu.description])
-
-
-
-    // constructor(props) {
-    //     super(props);
-    //     this.state = { editorState: EditorState.createEmpty() };
-    //     this.focus = () => this.refs.editor.focus();
-    // }
     const refEditor = useRef()
     const focusEditorInput = () => refEditor.current.focus();
     const onChange = (newEditorState) => {
@@ -99,11 +62,6 @@ function Displaypan(props) {
             )
         )
     }
-    // render() {
-    // const { editorState } = this.state;
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor';
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
@@ -129,9 +87,7 @@ function Displaypan(props) {
                         customStyleMap={styleMap}
                         editorState={editorState}
                         onChange={(editorState) => onChange(editorState)}
-                        // placeholder="Tell a story..."
                         placeholder=""
-
                         blockRenderMap={extendedBlockRenderMap}
                     />
                 </div>
@@ -250,81 +206,6 @@ const BlockStyleControls = (props) => {
     );
 };
 
-var INLINE_STYLES = [
-
-
-];
-
-const InlineStyleControls = (props) => {
-    // var currentStyle = props.editorState.getCurrentInlineStyle();
-    // return (
-    //     <div className="RichEditor-controls">
-    //         {INLINE_STYLES.map(type =>
-    //             <StyleButton
-    //                 key={type.label}
-    //                 active={currentStyle.has(type.style)}
-    //                 label={type.label}
-    //                 icon={type.icon}
-    //                 onToggle={props.onToggle}
-    //                 style={type.style}
-    //             />
-    //         )}
-    //     </div>
-    // );
-};
-
-// ReactDOM.render(
-// 	<RichEditorExample />,
-// 	document.getElementById('target')
-// );
+var INLINE_STYLES = [];
 
 export default Displaypan;
-
-
-
-
-// import {
-//     styleMap,
-//     getBlockStyle,
-//     BLOCK_TYPES,
-//     BlockStyleControls
-// } from "./blockStyles/BlockStyles";
-// import StyleButton from "./blockStyles/BlockStyles"
-
-// function Editpan(props) {
-//     const [editorState, setEditorState] = useState(EditorState.createEmpty());
-//     const onChange = (newEditorState) => {
-//         const letter = getCurrentLetter(newEditorState);
-//         if (getCurrentBlock(newEditorState).getText().length > 9) {
-//             setEditorState(editorState);
-//             return;
-//         }
-//         setEditorState(newEditorState)
-//     }
-//     function getCurrentBlock(editorState) {
-//         const currentSelection = editorState.getSelection();
-//         const blockKey = currentSelection.getStartKey();
-//         return (editorState.getCurrentContent().getBlockForKey(blockKey));
-//     }
-
-//     function getCurrentLetter(editorState) {
-//         const currentBlock = getCurrentBlock(editorState);
-//         const blockText = currentBlock.getText();
-//         return blockText[editorState.getSelection().getStartOffset() - 1];
-//     }
-
-//     return (
-//         <div>
-//             <Editor
-//                 blockStyleFn={getBlockStyle}
-//                 editorState={editorState}
-//                 onChange={onChange}
-//             />
-//         </div>
-
-//     );
-// }
-
-// export default Editpan;
-
-

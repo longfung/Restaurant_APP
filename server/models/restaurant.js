@@ -40,6 +40,7 @@ class Restaurant {
   }
 
   static put(n, callback) {
+    console.log("put restaurant model " + n.name + n.taxRate)
     const d = new Date();
     //    db.query('select * from menu where restaurant_id = $1 and category_id = $2', [restaurantId, categoryId], function (err, res) {
     let l = n.locale == null ? "en" : n.locale;

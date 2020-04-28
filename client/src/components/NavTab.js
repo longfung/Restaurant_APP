@@ -14,18 +14,13 @@ import {
 import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
 import { useTranslation } from "react-i18next";
+import Language from './Language';
 
 function NavTab(props) {
     debugger;
     const shareContext = useContext(store);
     const username = shareContext.state.username;
-    const [localeClass, setLocaleClass] = useState(
-        {
-            // en: "text-secondary",
-            // tw: "text-primary",
-            // zh: "text-primary"
-        }
-    );
+    const [localeClass, setLocaleClass] = useState({});
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -40,8 +35,6 @@ function NavTab(props) {
         debugger;
         shareContext.dispatch({ type: "setLocale", value: locale });
         setLocaleUIClass(locale);
-
-        // i18next.changeLanguage(locale);
     };
 
     const setLocaleUIClass = (localeVal) => {
@@ -138,7 +131,6 @@ function NavTab(props) {
                                             t("Translator")
                                         } </Button>
                                 </NavItem>
-                                {" "}
                                 <NavItem className="mt-0 ">
                                     <NavLink className="border-info bg-light text-uppercase text-primary" href="/Login">
                                         {
@@ -154,39 +146,11 @@ function NavTab(props) {
                             </Nav>
                         </Col>
                         <Col sm="1.5">
-                            <Link to="#!"
-                                onClick={
-                                    () => setLanguage("en")
-                                }
-                                className={
-                                    `font-weight-bold ${
-                                    localeClass.en
-                                    }`
-                                }>
-                                EN
-                            </Link>
-                            <Link to="#!"
-                                onClick={
-                                    () => setLanguage("tw")
-                                }
-                                className={
-                                    `font-weight-bold ${
-                                    localeClass.tw
-                                    }`
-                                }>
-                                繁體
-                            </Link>
-                            <Link to="#!"
-                                onClick={
-                                    () => setLanguage("zh")
-                                }
-                                className={
-                                    `font-weight-bold ${
-                                    localeClass.zh
-                                    }`
-                                }>
-                                简体
-                            </Link>
+                            {username == 'demo' ?
+                                <Language />
+                                :
+                                null
+                            }
                         </Col>
                         <Col sm="1.5">
                             <Link to="#!"

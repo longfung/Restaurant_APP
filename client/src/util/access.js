@@ -15,20 +15,14 @@ async function fetchRestuarantByOwnerId(id) {
 }
 
 async function addRestaurant(rest) {
-  let data = JSON.stringify(rest);
-  return await axios.post("/api/restaurant", rest, {
-    headers: {
-      "Content-Text": "application/json",
-    },
+  return await axios.post("/api/restaurant", JSON.stringify(rest), {
+    headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateRestaurant(rest) {
-  let data = JSON.stringify(rest);
-  return await axios.put("/api/restaurant", rest, {
-    headers: {
-      "Content-Text": "application/json",
-    },
+  return await axios.put("/api/restaurant", JSON.stringify(rest), {
+    headers: { "Content-Type": "application/json" },
   });
 }
 
@@ -92,11 +86,11 @@ async function deleteMenuById(id) {
 
 async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: entityId };
-  if (entityId == Entity.category)
+  if (entityId === Entity.category)
     return await axios.get("/api/entityT/category", { params: data });
-  else if (entityId == Entity.menu)
+  else if (entityId === Entity.menu)
     return await axios.get("/api/entityT/menu", { params: data });
-  else if (entityId == Entity.desc)
+  else if (entityId === Entity.desc)
     return await axios.get("/api/entityT/desc", { params: data });
 }
 

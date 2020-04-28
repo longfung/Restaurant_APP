@@ -1,21 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import NavTab from "./NavTab";
 import { Form, Input, Row, Col, Button, FormGroup, Label } from "reactstrap";
 import { store } from "./Store";
 import access from "../util/access";
 import { useTranslation } from "react-i18next";
 
-// import {MyContext} from './MyContext';
-
-// import {
-//     Form,
-//     Input,
-//     InputGroupAddon,
-//     Button
-// } from 'reactstrap';
 function Category(props) {
-  // console.log("In Restaurant");
   const { t } = useTranslation();
   const shareContext = useContext(store);
   const restaurantId = shareContext.state.restaurant
@@ -25,43 +15,14 @@ function Category(props) {
     props.history.push("/Login");
   }
   const setMessage = props.setMessage;
-  debugger;
-  // const restaurantId = props.restaurant_id
-  // const restId = useContext(MyContext.restaurantId);
-  // console.log(restaurantId + " : ");
-  // debugger;
-  const [node, setNode] = useState({
-    // id: "",
-    // category_name: "",
-    // category_description: "",
-    // restaurant_id: restaurantId
-  });
+  const [node, setNode] = useState({});
   const [categoryList, setCategoryList] = useState([]);
 
-  // const showCategoryList = () => {
-  //    const lst = cagegoryList.map((rest, idx) => <h2 key = {idx} >
-  //        {rest.category_name}
-
-  //        </h2>);
-  //   //  console.log(node.restaurantList);
-  //    setCategoryList(lst);
-  // }
   useEffect(() => {
-    // console.log("get List");
-    // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
-      // axios
-      //   .get("/api/category", { params: { restaurant_id: restaurantId } })
-      // .then(res => res.json()),
       .then(res => {
-        // const d = res.data;
-        // debugger;
         setCategoryList(res.data);
-        // console.log(restaurantList)
-        // const d = res.data;
-        // setRestaurantList(d.map(item => {restaurantList(...restaurantList, item)}));
-        // setRestaurantList(res.data);
       })
       .catch(error => console.log(error));
   }, []);
@@ -71,11 +32,6 @@ function Category(props) {
       handleUpdateCategory();
       return;
     }
-    // let data = JSON.stringify({
-    //   category_name: node.category_name,
-    //   category_description: node.category_description,
-    //   restaurant_id: node.restaurant_id
-    // });
     let data = {
       category_name: node.category_name,
       locale: shareContext.state.restaurant.locale,
@@ -85,22 +41,11 @@ function Category(props) {
     };
     const promise1 = access.addCategory(data);
     Promise.resolve(promise1)
-      // axios.post('/api/category', data, {
-      //         headers: { 'Content-Type': 'application/json' }
-      //     } )
       .then(res => {
-        // console.log(res.data.json());
         let m = node.category_name + " is created Successfully !!!";
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
-        // setNode({
-        //   ...node,
-        //   id: "",
-        //   category_name: "",
-        //   category_description: "",
-        //   restaurant_id: restaurantId
-        // });
       });
   };
 
@@ -116,40 +61,20 @@ function Category(props) {
 
     const promise1 = access.updateCategory(data);
     Promise.resolve(promise1)
-      // axios.put('/api/category', data, {
-      //       headers: { 'Content-Type': 'application/json' }
-      //   } )
       .then(res => {
-        // console.log(res.data.json());
         let m = node.category_name + " is updated Successfully !!!";
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
-        // setNode({
-        //   ...node,
-        //   id: "",
-        //   category_name: "",
-        //   category_description: "",
-        //   restaurant_id: restaurantId
-        // });
       });
   };
 
   const getCategoryList = () => {
-    // debugger;
-    // console.log("get List action");
-    // axios.get('https://jsonplaceholder.typicode.com/posts?userId=1')
-    // axios
-    //   .get("/api/category", { params: { restaurant_id: restaurantId } })
-    // .then(res => {console.log(res)})
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       .then(res => {
         console.log(res);
         setCategoryList(res.data);
-        // console.log("ebd");
-        // setRoot({...node, name: 'dd'});
-        // setRoot({...node, restaurantList: [{name: 'c'}, {name: 'd'}] });
       })
       .catch(error => console.log("Error"));
   };
@@ -162,20 +87,11 @@ function Category(props) {
   const setDelete = obj => {
     const promise1 = access.deleteCategoryById(obj.id, restaurantId);
     Promise.resolve(promise1)
-      // axios
-      //   .delete("/api/category", { params: { id: obj.id } })
       .then(res => {
-        // console.log(res.data.json());
         let m = obj.category_name + " is deleted Successfully !!!";
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
-        // setNode({
-        //   ...node,
-        //   category_name: "",
-        //   category_description: "",
-        //   restaurant_id: restaurantId
-        // });
       })
       .catch(err => console.log(err.error));
   };

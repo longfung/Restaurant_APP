@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import axios from "axios";
 import NavTab from "./NavTab";
-// import img1 from "../images/img7.jpg"
-// import img1 from "../../../server/images/img3.jpg"
 import {
     Form,
     Input,
@@ -12,8 +10,7 @@ import {
     Button,
     FormGroup,
     Label,
-    Card,
-    CardImg,
+    Card
 } from "reactstrap";
 import { store } from "./Store";
 import "../index.css";
@@ -31,14 +28,11 @@ function Menu(props) {
         shareContext.state.restaurant != null
             ? shareContext.state.restaurant.id
             : null;
-    debugger;
     if (!restaurantId) {
         props.history.push("/Login");
     }
     const username = shareContext.state.username;
     const setMessage = props.setMessage;
-    // const restaurantId = props.restaurant_id;
-
     const [menu, setMenu] = useState({
         id: "",
         name: "",
@@ -56,13 +50,8 @@ function Menu(props) {
     const [menuList, setMenuList] = useState([]);
     const [image, setImage] = useState("");
     const [imageName, setImageName] = useState("Choose Image");
-    const [categoryList, setCategoryList] = useState([
-        // id: '',
-        // label: ''
-    ]);
-
+    const [categoryList, setCategoryList] = useState([]);
     const [category, setCategory] = useState({});
-    // const [desc, setDesc] = useState('');
 
     useEffect(() => {
         // const restaurantId = 45000
@@ -85,39 +74,6 @@ function Menu(props) {
             setImageName(image.name);
             firebaseUpload(image);
         }
-
-        // axios.post('/fileupload', formdata, {
-        //     // headers: {'Content-Type': 'multipart/form-data' }
-        //     headers: { 'Content-Type': 'multipart/form-data' }
-        // } )
-        //        .then(res => {
-
-        // axios
-        //   .post("/fileupload", formdata, {
-        //     headers: { "Content-Type": "multipart/form-data" }
-        //   })
-        //   .then(res => {
-        //     // menu.image_path = res.data.filename; })
-        //     setMenu(...menu, { image_path: res.data.filepath });
-        //   })
-        //   .catch(err => {
-        //     console.log("Error in file upload");
-        //   });
-
-        // use Festch
-        // fetch('/fileupload', {
-        //     method: 'post',
-        //     // headers: { 'Content-Type': 'multipart/form-data' },
-        //     body: formdata,
-        //   })
-        //   .then(res => {
-        //         // menu.image_path = res.data.filename;
-        //         menu.image_path = process.cwd() + 'server/images/img4.jpg';
-        //     // setMenu({...menu, image_path: res.data.filepath})
-        //         // handleCreateOrUpdateMenu()
-        //     })
-        //  .catch( error => {
-        //      console.log(error)})
     };
 
     const getMenuList = () => {
@@ -126,8 +82,6 @@ function Menu(props) {
             shareContext.state.locale
         );
         Promise.resolve(promise1)
-            // axios
-            //   .get("/api/Menu", { params: { restaurant_id: restaurantId } })
             .then((res) => {
                 //    console.log(res)
                 const obj = res.data.map((elem) =>
@@ -156,9 +110,6 @@ function Menu(props) {
     }
     // upload to client/public folder, not used now, using firebase instead
     const fileUpload = async (formdata) => {
-        // e.preventDefault();
-        // const formdata = new FormData();
-        // formdata.append('file', image);
         try {
             const res = await axios.post("/fileupload", formdata, {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -233,31 +184,6 @@ function Menu(props) {
         );
     };
 
-    // const handlePostMenu = () => {
-    //   if (image) {
-    //     var formdata = new FormData();
-    //     formdata.append("file", image);
-    //     axios
-    //       .post("/fileupload", formdata, {
-    //         headers: { "Content-Type": "multipart/form-data" }
-    //       })
-    //       .then(res => {
-    //         // debugger;
-    //         menu.image_path = res.data.filename;
-    //         // setMenu({...menu, image_path: res.data.filepath})
-    //         handleCreateOrUpdateMenu();
-    //       })
-    //       // console.log(res);})
-    //       .catch(err => {
-    //         debugger;
-    //         console.log("Error in file upload");
-    //       });
-    //   } else {
-    //     // debugger;
-    //     handleCreateOrUpdateMenu();
-    //   }
-    // };
-
     const handleCreateOrUpdateMenu = () => {
         if (menu.id != "") {
             postUpdateMenu();
@@ -286,16 +212,7 @@ function Menu(props) {
         };
         const promise1 = access.addMenu(data);
         Promise.resolve(promise1)
-            // axios
-            //   .post("/api/menu", data, {
-            //     // headers: {'Content-Type': 'multipart/form-data' }
-            //     headers: { "Content-Type": "application/json" }
-            //   })
             .then((res) => {
-                // debugger;
-                // console.log(res.data);
-                // invokeFetch();
-                // setMenu({ ...menu, name: '', price: 0, path: '' });
                 let m = menu.name + " is created Successfully !!!";
                 setMessage({ status: 200, msg: m });
                 getMenuList();
@@ -321,15 +238,7 @@ function Menu(props) {
         };
         const promise1 = access.updateMenu(data);
         Promise.resolve(promise1)
-            // axios
-            //   .put("/api/menu", data, {
-            //     headers: { "Content-Type": "application/json" }
-            //   })
             .then((res) => {
-                // console.log(res.data.json());
-                // getMenuList();
-                //   setNode({ ...node, id: '', category_name: '', category_description: '', restaurant_id: restaurantId });
-                // initialMenu();
                 let m = menu.name + " is updated Successfully !!!";
                 setMessage({ status: 200, msg: m });
                 getMenuList();
@@ -364,14 +273,11 @@ function Menu(props) {
     const setDelete = (obj) => {
         const promise1 = access.deleteMenuById(obj.id);
         Promise.resolve(promise1)
-            // axios
-            //   .delete("/api/menu", { params: { id: obj.id } })
             .then((res) => {
                 // console.log(res.data.json());
                 let m = obj.name + " is deleted Successfully !!!";
                 setMessage({ status: 200, msg: m });
                 getMenuList();
-                //   setMenu({ ...menu, name: '', price: 0, category_id: '', path: res.data.filepath });
                 initialMenu();
             })
 

@@ -59,24 +59,12 @@ function Detail(props) {
 
     }
 
-
-    // constructor(props) {
-    //     super(props);
-    //     this.state = { editorState: EditorState.createEmpty() };
-    //     this.focus = () => this.refs.editor.focus();
-    // }
     const refEditor = useRef()
     const focusEditorInput = () => refEditor.current.focus();
     const onChange = (newEditorState) => {
         console.log('kik', editorState.getCurrentInlineStyle())
         setEditorState(newEditorState)
     };
-
-    // render() {
-    // const { editorState } = this.state;
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
     let className = 'RichEditor-editor';
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
@@ -86,8 +74,6 @@ function Detail(props) {
     }
 
     return (
-
-
         <div className="RichEditor-root">
             <Row>
                 <Col sm="10">
