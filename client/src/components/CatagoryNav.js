@@ -7,7 +7,7 @@ import {
   Jumbotron
 
 } from "reactstrap";
-import { MdShoppingCart } from "react-icons/md";
+import { MdShoppingCart, MdSignalCellularConnectedNoInternet1Bar } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { store } from "./Store";
 import access from '../util/access';
@@ -26,14 +26,12 @@ function CategoryNav(props) {
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
     console.log("in UseEffect");
-    debugger;
     setCategoryList([]);
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       // axios
       //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       .then(res => {
-        debugger;
         res.data.map(item =>
           setCategoryList(prevState => [
             ...prevState,
@@ -48,7 +46,7 @@ function CategoryNav(props) {
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
-          <Col sm="9">
+          <Col sm={9}>
             <Button onClick={() => fetchMenuList("")}>{t("AllCategory")}</Button>
             {categoryList &&
               categoryList.map((item, index) => (
@@ -57,23 +55,24 @@ function CategoryNav(props) {
                 </Button>
               ))}
           </Col>
-          <Col sm="1.5">
-            {username == 'demo' ?
+          <Col sm={3} >
+            {shareContext.state.userMode == 2 ?
               <Language />
               :
               null
             }
-          </Col>
-          <Col sm="1.5">
-            <Link
-              to="#!"
-              onClick={() => setIsOrder(false)}
-              className="font-weight-bold text-Dark"
-            >
-              <MdShoppingCart color="gold" size="2.2rem" /> $
+
+            <Col sm={6} className="float-left">
+              <Link
+                to="#!"
+                onClick={() => setIsOrder(false)}
+                className="font-weight-bold text-white"
+              >
+                <MdShoppingCart color="gold" size="2rem" /> $
               {cartTotal.toFixed(2)}
-            </Link>
-          </Col>
+              </Link>
+            </Col>
+          </Col >
         </Row>
       </Jumbotron>
     </div>

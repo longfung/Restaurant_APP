@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const access = require("../util/access.js");
 
 function Login(props) {
-  debugger;
   const { t } = useTranslation();
   const shareContext = useContext(store);
   const setMessage = props.setMessage;
@@ -22,9 +21,13 @@ function Login(props) {
     Promise.resolve(promise0)
       .then((res0) => {
         const promise1 = access.fetchRestuarantByOwnerId(res0.data.id);
-        Promise.resolve(promise1).then((res1) => {
-          shareContext.dispatch({ type: "setRestaurant", value: res1.data });
-          shareContext.dispatch({ type: "setUserMode", value: 1 });
+        Promise.resolve(promise1).then((rest) => {
+          shareContext.dispatch({
+            type: "setRestaurant",
+            value: rest.data
+          });
+          shareContext.dispatch({ type: "setLocale", value: rest.data.locale });
+          shareContext.dispatch({ type: "setUserMode", value: 2 });
           shareContext.dispatch({ type: 'setOwnerId', value: { id: res0.id, username: 'demo' } })
           return props.history.push("/order/id");
         });
@@ -37,6 +40,7 @@ function Login(props) {
       });
   }
   const submit = () => {
+    debugger;
     const promise1 = access.performLogin(username, password);
     Promise.resolve(promise1)
       .then((res) => {
@@ -45,7 +49,7 @@ function Login(props) {
           type: "setOwnerId",
           value: { id: res.data.id, username: res.data.username },
         });
-        shareContext.dispatch({ type: "setUserMode", value: 2 });
+        shareContext.dispatch({ type: "setUserMode", value: 1 });
         props.history.push("/restaurant");
       })
       .catch((err) => {

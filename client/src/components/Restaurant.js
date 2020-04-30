@@ -12,7 +12,7 @@ import {
     Label
 } from "reactstrap";
 import { store } from "./Store";
-import { useTranslation } from "react-i18next";
+import { useTranslation, setDefaults } from "react-i18next";
 import { allowedLocale } from "../util/config.json";
 
 function Restaurant(props) { // console.log("In Restaurant");
@@ -31,10 +31,12 @@ function Restaurant(props) { // console.log("In Restaurant");
         state: "",
         taxRate: 0,
         locale: "",
+        supportLocale: "",
         ownerId: userId,
     });
 
     const [localeValue, setLocaleValue] = useState({});
+    const [supportLocale, setSupportLocale] = useState([]);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
@@ -50,41 +52,54 @@ function Restaurant(props) { // console.log("In Restaurant");
                 zipCode: rest.zip_code,
                 state: rest.state,
                 locale: rest.locale,
+                supportLocale: rest.support_locale,
                 ownerId: userId
             });
-            setLocaleValue({ value: rest.locale, label: rest.locale });
-            if (!shareContext.state.locale)
+            debugger;
+            // if (!shareContext.state.restaurant)
+            shareContext.dispatch({ type: "setRestaurant", value: rest });
+            buildLocaleList(rest);
+
+            if (shareContext.state.locale == null)
                 shareContext.dispatch({ type: "setLocale", value: rest.locale });
-
-
 
         }).catch((error) => console.log(error));
 
     }, []);
 
-    useEffect(() => {
-        if (restaurant.id)
-            shareContext.dispatch({ type: "setRestaurant", value: restaurant });
-
-
-
-    }, [restaurant.id]);
+    // useEffect(() => {
+    //     if (restaurant.id)
+    //         shareContext.dispatch({ type: "setRestaurant", value: restaurant });
+    // }, [restaurant.id]);
 
     useEffect(() => {
         fetchLocaleList();
+        // setLocaleValue("");
+        // setSupportLocale([]);
     }, [shareContext.state.locale])
+
+    const buildLocaleList = (rest) => {
+        debugger;
+        const arr = rest.support_locale.split(',')
+        const options = arr.map(v => ({
+            value: v,
+            label: t(`${v}`)
+        }));
+        setSupportLocale(options);
+        setLocaleValue({ value: rest.locale, label: rest.locale });
+    }
 
     const fetchLocaleList = () => {
         setOptions([])
         const options = allowedLocale.map(v => ({
-            label: t(`${v}`),
-            value: v
+            value: v,
+            label: t(`${v}`)
+
         }));
         setOptions(options);
     }
 
     const handlePostRestaurant = () => {
-        debugger;
         if (restaurant.id != "") {
             handleUpdateRestaurant();
         } else {
@@ -118,6 +133,11 @@ function Restaurant(props) { // console.log("In Restaurant");
     };
 
     const moveCorrespond = () => {
+        debugger;
+        let temp = '';
+        supportLocale.map(elem => {
+            temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
+        });
         const data = {
             id: restaurant.id,
             name: restaurant.name,
@@ -127,6 +147,7 @@ function Restaurant(props) { // console.log("In Restaurant");
             zipCode: restaurant.zipCode,
             state: restaurant.state,
             locale: localeValue.value,
+            supportLocale: temp,
             ownerId: userId
         };
         return data;
@@ -174,21 +195,7 @@ function Restaurant(props) { // console.log("In Restaurant");
                         </FormGroup>
                     </Col>
 
-                    <Col xs="6" sm="6">
 
-                        <FormGroup>
-                            <Label for="locale">
-                                {
-                                    t("DefaultLanguage")
-                                }</Label>
-                            <Select id="localeid"
-                                options={options}
-                                onChange={setLocaleValue}
-                                className="mb-3"
-                                placeholder="Select a default language"
-                                value={localeValue} />
-                        </FormGroup>
-                    </Col>
                     <Col xs="6" sm="6">
                         <FormGroup>
                             <Label for="address">
@@ -259,6 +266,38 @@ function Restaurant(props) { // console.log("In Restaurant");
                                         zipCode: e.target.value
                                     })
                                 } />
+                        </FormGroup>
+                    </Col>
+                    <Col xs="6" sm="6">
+
+                        <FormGroup>
+                            <Label for="localeid">
+                                {
+                                    t("DefaultLanguage")
+                                }</Label>
+                            <Select id="localeid"
+                                options={options}
+                                onChange={setLocaleValue}
+                                className="mb-3"
+                                placeholder="Select a default language"
+                                value={localeValue} />
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs="6" sm="6">
+
+                        <FormGroup>
+                            <Label for="localeSupp">
+                                {
+                                    t("SupportLanguage")
+                                }</Label>
+                            <Select id="localeSupp"
+                                isMulti
+                                options={options}
+                                onChange={setSupportLocale}
+                                className="mb-3"
+                                placeholder="Select support language"
+                                value={supportLocale} />
                         </FormGroup>
                     </Col>
                     <Button type="button"

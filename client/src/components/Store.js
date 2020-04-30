@@ -12,7 +12,6 @@ const { Provider } = store;
 
 const StateProvider = ({ children }) => {
   const reducer = (state, action) => {
-    debugger;
     switch (action.type) {
       case "setOwnerId":
         return {

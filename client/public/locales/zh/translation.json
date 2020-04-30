@@ -3,6 +3,7 @@
     "RestaurantName": "餐厅名称",
     "TaxRate": "稅率",
     "DefaultLanguage": "预设语言",
+    "SupportLanguage": "支持其他语言",
     "Address": "地址",
     "City": "市",
     "State": "州",

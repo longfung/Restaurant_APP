@@ -5,96 +5,48 @@ import {
 } from "reactstrap";
 import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
+import { useTranslation } from 'react-i18next';
+
 
 function Language(props) {
     const shareContext = useContext(store);
+    const { t } = useTranslation();
     const username = shareContext.state.username;
-    const [localeClass, setLocaleClass] = useState({});
+    const [supportLocale, setSupportLocale] = useState([]);
+    const [rId, setRid] = useState(0);
+
+    if (rId == 0 && shareContext.state.restaurant)
+        setRid(shareContext.state.restaurant.id);
 
     useEffect(() => {
-        setLocaleUIClass(shareContext.state.locale);
-    }, [shareContext.state.locale])
+        debugger;
+        if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
+            const arr = shareContext.state.restaurant.support_locale.split(',')
+            setSupportLocale(arr);
+        }
+
+    }, [rId])
 
     const setLanguage = (locale) => {
         shareContext.dispatch({ type: "setLocale", value: locale });
-        setLocaleUIClass(locale);
-    };
-
-    const setLocaleUIClass = (localeVal) => {
-        switch (localeVal) {
-            case "en":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-white",
-                    tw: "text-secondary",
-                    zh: "text-secondary"
-                });
-                break;
-            case "tw":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-secondary",
-                    tw: "text-white",
-                    zh: "text-secondary"
-                });
-                break;
-            case "zh":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-secondary",
-                    tw: "text-secondary",
-                    zh: "text-white"
-                });
-                break;
-            default:
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-primary",
-                    tw: "text-primary",
-                    zh: "text-primary"
-                });
-        }
     };
 
     return (
-        <div>
-            <Col >
-                <Link to="#!"
+
+        <Col sm={6} className="float-left">
+            {supportLocale.map(elem => {
+                return (<Link to="#!"
                     onClick={
-                        () => setLanguage("en")
+                        () => setLanguage(elem)
                     }
-                    className={
-                        `font-weight-bold ${
-                        localeClass.en
-                        }`
-                    }>
-                    EN
-                            </Link>
-                            &nbsp;
-                <Link to="#!"
-                    onClick={
-                        () => setLanguage("tw")
-                    }
-                    className={
-                        `font-weight-bold ${
-                        localeClass.tw
-                        }`
-                    }>
-                    繁體
-                            </Link>
-                            &nbsp;
-                <Link to="#!"
-                    onClick={
-                        () => setLanguage("zh")
-                    }
-                    className={
-                        `font-weight-bold ${
-                        localeClass.zh
-                        }`
-                    }>
-                    简体
-                            </Link>
-                {username == 'demo' ?
+                    className={shareContext.state.locale == elem ? 'btn-primary text-white' : 'text-white'}>
+                    {t(elem)}
+                        &nbsp;
+                </Link>
+                )
+            })}
+
+            {/* {shareContext.state.userMode != 2 ?
                     null
                     :
                     <Link to="#!"
@@ -103,11 +55,11 @@ function Language(props) {
                         }
                         className="font-weight-bold text-Dark">
                         <MdAccountCircle color="gold" size="2.2rem" /> {username} </Link>
-                }
+                } */}
 
 
-            </Col>
-        </div>
+        </Col>
+
     );
 }
 

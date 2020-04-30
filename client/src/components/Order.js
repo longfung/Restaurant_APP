@@ -286,7 +286,7 @@ function Order(props) {
 
   return (
     <div>
-      {userMode == 2 ? <NavTab {...props} /> : null}
+      {userMode != 2 ? <NavTab {...props} /> : null}
       {isOrder ? (
         detail.isDetail == true ?
           <div>
@@ -308,7 +308,7 @@ function Order(props) {
           <Cart
             addToOrder={addToOrder}
             removeFromOrder={removeFromOrder}
-            taxRate={restaurant.taxRate}
+            taxRate={restaurant.tax_rate}
             cartTotal={cartTotal}
             isQuantity={isQuantity}
             cartList={cartList}

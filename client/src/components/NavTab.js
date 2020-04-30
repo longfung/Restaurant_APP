@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, } from "react-router-dom";
 import {
     Nav,
     NavItem,
     Navbar,
     NavLink,
-    NavbarBrand,
     Button,
     Row,
     Col,
@@ -17,60 +16,12 @@ import { useTranslation } from "react-i18next";
 import Language from './Language';
 
 function NavTab(props) {
-    debugger;
     const shareContext = useContext(store);
     const username = shareContext.state.username;
-    const [localeClass, setLocaleClass] = useState({});
     const { t } = useTranslation();
-
-    useEffect(() => {
-        setLocaleUIClass(shareContext.state.locale);
-    }, [shareContext.state.locale])
 
     const goComponent = (target) => {
         props.history.push(target);
-    };
-
-    const setLanguage = (locale) => {
-        debugger;
-        shareContext.dispatch({ type: "setLocale", value: locale });
-        setLocaleUIClass(locale);
-    };
-
-    const setLocaleUIClass = (localeVal) => {
-        switch (localeVal) {
-            case "en":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-white",
-                    tw: "text-secondary",
-                    zh: "text-secondary"
-                });
-                break;
-            case "tw":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-secondary",
-                    tw: "text-white",
-                    zh: "text-secondary"
-                });
-                break;
-            case "zh":
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-secondary",
-                    tw: "text-secondary",
-                    zh: "text-white"
-                });
-                break;
-            default:
-                setLocaleClass({
-                    ...localeClass,
-                    en: "text-primary",
-                    tw: "text-primary",
-                    zh: "text-primary"
-                });
-        }
     };
 
     return (
@@ -145,20 +96,18 @@ function NavTab(props) {
                                 </NavItem>
                             </Nav>
                         </Col>
-                        <Col sm="1.5">
-                            {username == 'demo' ?
-                                <Language />
-                                :
-                                null
-                            }
-                        </Col>
-                        <Col sm="1.5">
-                            <Link to="#!"
-                                onClick={
-                                    () => props.history.push("/user")
-                                }
-                                className="font-weight-bold text-Dark">
-                                <MdAccountCircle color="gold" size="2.2rem" /> {username} </Link>
+                        <Col sm="3" >
+                            <Language />
+
+                            <Col sm="6" className="float-left text-left text-nowrap">
+                                <Link to="#!"
+                                    onClick={
+                                        () => props.history.push("/user")
+                                    }
+                                    className="font-weight-bold text-Dark">
+                                    <MdAccountCircle color="gold" size="2rem" /> {username}
+                                </Link>
+                            </Col>
                         </Col>
                     </Row>
                 </Jumbotron>
