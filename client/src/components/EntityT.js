@@ -19,6 +19,9 @@ import access from "../util/access";
 import { useTranslation } from 'react-i18next';
 import Editpan from "./Editpan";
 import Displaypan from "./DisplayPan";
+import ScrollShadow from 'react-scroll-shadow';
+import { Card } from '../styleds';
+
 
 function EntityT(props) {
     const shareContext = useContext(store);
@@ -126,129 +129,142 @@ function EntityT(props) {
 
     return (
         <div>
-            <NavTab {...props} />
-            <Form>
-                <Row form>
-                    <Col sm="6">
-                        <Button className={`${entity == 1 ? 'btn-outline-primary active' : null}`} onClick={
-                            () => switchEntity(1)
-                        }>
-                            {t("MenuName")}</Button>
-                            &nbsp;
-                        <Button className={`${entity == 2 ? 'btn-outline-primary active' : null}`} onClick={
-                            () => switchEntity(2)
-                        }>
-                            {t("Category")}</Button>
-                            &nbsp;
-                        <Button className={`${entity == 3 ? 'btn-outline-primary active' : null}`} onClick={
-                            () => switchEntity(3)
-                        }>
-                            {t("MenuDesc")}</Button>
-                    </Col>
-                    <Col sm="6">
-                        <Button className={`${lang == 'tw' ? 'btn-outline-primary active' : null}`} onClick={
-                            () => switchLanguage('tw')
-                        }>
-                            {t("tw")}</Button>
-                            &nbsp;
-                        <Button className={`${lang == 'zh' ? 'btn-outline-primary active' : null}`} onClick={
-                            () => switchLanguage('zh')
-                        }>
-                            {t("zh")}</Button>
-                    </Col>
-                </Row>
-                {entity == 3 ?
+            <div>
+
+
+                <NavTab {...props} />
+                <Form>
                     <Row form>
                         <Col sm="6">
-                            <Label>  {t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
-                            <Displaypan setMenu={setMenuTClone} menu={menuTClone} />
+                            <Button className={`${entity == 1 ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchEntity(1)
+                            }>
+                                {t("MenuName")}</Button>
+                            &nbsp;
+                        <Button className={`${entity == 2 ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchEntity(2)
+                            }>
+                                {t("Category")}</Button>
+                            &nbsp;
+                        <Button className={`${entity == 3 ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchEntity(3)
+                            }>
+                                {t("MenuDesc")}</Button>
                         </Col>
                         <Col sm="6">
-                            <Label>  {t("TargetLocale")}
+                            <Button className={`${lang == 'tw' ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchLanguage('tw')
+                            }>
+                                {t("tw")}</Button>
+                            &nbsp;
+                        <Button className={`${lang == 'zh' ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchLanguage('zh')
+                            }>
+                                {t("zh")}</Button>
+                        </Col>
+                    </Row>
+                    {entity == 3 ?
+                        <Row form>
+                            <Col sm="6">
+                                <Label>  {t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
+                                <Displaypan setMenu={setMenuTClone} menu={menuTClone} />
+                            </Col>
+                            <Col sm="6">
+                                <Label>  {t("TargetLocale")}
                             ({lang == null ? t("ChooseLanguage") : lang})
                             </Label>
 
-                            <Editpan setMenu={setMenuT} menu={menuT} />
-                        </Col>
+                                <Editpan setMenu={setMenuT} menu={menuT} />
+                            </Col>
 
-                    </Row>
-                    :
+                        </Row>
+                        :
 
 
-                    <Row form>
-                        <Col sm="6">
-                            <FormGroup className="float-left">
-                                <Label for="name">{t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
-                                <Input disabled type="text"
-                                    value={
-                                        menuT.name
-                                    }
-                                    id="name" />
-                            </FormGroup>
-                        </Col>
-                        <Col sm="6">
-                            <FormGroup className="float-left">
-                                <Label for="nameT">{t("TargetLocale")}
+                        <Row form>
+                            <Col sm="6">
+                                <FormGroup className="float-left">
+                                    <Label for="name">{t("DefaultLocale")}&nbsp;({defaultLanguage})</Label>
+                                    <Input disabled type="text"
+                                        value={
+                                            menuT.name
+                                        }
+                                        id="name" />
+                                </FormGroup>
+                            </Col>
+                            <Col sm="6">
+                                <FormGroup className="float-left">
+                                    <Label for="nameT">{t("TargetLocale")}
                                 ({lang == null ? t("ChooseLanguage") : lang})
                                 </Label>
-                                <Input type="text" id="nameT"
-                                    value={
-                                        menuT.namet
-                                    }
-                                    onChange={
-                                        (e) => setMenuT({
-                                            ...menuT,
-                                            namet: e.target.value
-                                        })
-                                    } />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                }
-                <Row from>
-                    <Col xs="6" sm="6">
-                        <Button onClick={handleUpdateMenu}>
-                            {t("Save")}
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
-            <hr></hr>
-            <div>
-                <Row>
-                    <Col sm="5">
-                        <h2>{t("TranslationList")}</h2>
-                    </Col>
-
-                </Row>
-                <ul> {
-                    menuTList && menuTList.map((item, idx) => (
-                        <Row key={idx}>
-                            <Col sm="5">
-                                {entity == 3 ?
-                                    item.description ? item.description.substring(0, 24) : null
-                                    :
-                                    (item.name)
-                                }
-                            </Col>
-                            <Col sm={5}>
-                                {
-                                    item.namet ? item.namet.substring(0, 24) : null
-                                }</Col>
-                            <Col sm={1}>
-                                <Button onClick={
-                                    () => setEdit(item)
-                                }>{t("Edit")}</Button>
-                            </Col>
-                            <Col sm={1}>
-                                <Button onClick={
-                                    () => setDelete(item)
-                                }>{t("Delete")}</Button>
+                                    <Input type="text" id="nameT"
+                                        value={
+                                            menuT.namet
+                                        }
+                                        onChange={
+                                            (e) => setMenuT({
+                                                ...menuT,
+                                                namet: e.target.value
+                                            })
+                                        } />
+                                </FormGroup>
                             </Col>
                         </Row>
-                    ))
-                } </ul>
+                    }
+                    <Row from>
+                        <Col xs="6" sm="6">
+                            <Button onClick={handleUpdateMenu}>
+                                {t("Save")}
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form>
             </div>
+
+            <Row>
+                <Col sm={12}>
+
+
+                    <Card>
+                        <ScrollShadow isShadow={true} scrollWidth={10} scrollPadding={5}>
+                            <Row>
+                                <Col sm="5">
+                                    <h2>{t("TranslationList")}</h2>
+                                </Col>
+
+                            </Row>
+                            <ul> {
+                                menuTList && menuTList.map((item, idx) => (
+                                    <Row key={idx}>
+                                        <Col sm="5">
+                                            {entity == 3 ?
+                                                item.description ? item.description.substring(0, 24) : null
+                                                :
+                                                (item.name)
+                                            }
+                                        </Col>
+                                        <Col sm={5}>
+                                            {
+                                                item.namet ? item.namet.substring(0, 24) : null
+                                            }</Col>
+                                        <Col sm={1}>
+                                            <Button onClick={
+                                                () => setEdit(item)
+                                            }>{t("Edit")}</Button>
+                                        </Col>
+                                        <Col sm={1}>
+                                            <Button onClick={
+                                                () => setDelete(item)
+                                            }>{t("Delete")}</Button>
+                                        </Col>
+                                    </Row>
+                                ))
+                            } </ul>
+                        </ScrollShadow>
+                    </Card>
+                </Col>
+            </Row>
+
         </div>
     );
 }

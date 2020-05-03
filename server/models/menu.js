@@ -6,11 +6,12 @@ class Menu {
     const locale = query.locale;
     const entityId = query.entityId;
     db.query(
-      //   "select * from menu where restaurant_id = $1",
       "select m.id, m.name, m.description, m.price_s, m.price_m, m.price_l, m.price_x, \
-        m.image_path, m.category_id, m.restaurant_id, t.text as name_t from menu m \
-        left join entity_t t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
-      [locale, entityId, restaurantId],
+      m.image_path, m.category_id, m.restaurant_id, t1.text as name_t, t2.text as description_t from menu m \
+      left join entity_t as t1 on m.id = t1.id and t1.lang = $1 and t1.entity_id = 1  \
+      left join entity_t as t2 on m.id = t2.id and t2.lang = $1 and t2.entity_id = 3  \
+      where m.restaurant_id = $2",
+      [locale, restaurantId],
       function (err, res) {
         if (err.error) return callback(err);
         callback(err, res);
@@ -36,7 +37,7 @@ class Menu {
           callback(err, res);
         }
       );
-    } else Menu.retrieveByRestaurant(restaurantId, callback);
+    } else Menu.retrieveByRestaurant(query, callback);
   }
 
   static insert(node, callback) {

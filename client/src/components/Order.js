@@ -61,9 +61,9 @@ function Order(props) {
 
   useEffect(() => {
     // const restaurantId = 45000
-    console.log("in UseEffect");
+    console.log("in Order UseEffect");
     debugger;
-    fetchMenuList();
+    fetchMenuList(0);
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -87,8 +87,13 @@ function Order(props) {
   const fetchMenuList = (categoryId) => {
     debugger;
     let promise1 = '';
-    if (categoryId)
-      promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, categoryId, shareContext.state.locale);
+    let catId = '';
+    if (categoryId == 0)
+      catId = shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? '' : shareContext.state.categoryId;
+    else
+      catId = categoryId;
+    if (catId)
+      promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, catId, shareContext.state.locale);
     else
       promise1 = access.fetchMenuByRestaurantId(restaurantId, shareContext.state.locale)
     Promise.resolve(promise1)
@@ -111,10 +116,10 @@ function Order(props) {
           setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
-            console.log("before" + elem.name);
+            // console.log("before" + elem.name);
             if (elem.id == item.id)
               elem.name = item.name;
-            console.log("after" + elem.name);
+            // console.log("after" + elem.name);
           })
         })
         // setMenuList(res.data);

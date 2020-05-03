@@ -88,3 +88,14 @@ div.ToolbarContainer {
   box-shadow: 0px 0px 3px 1px rgba(15, 15, 15, 0.17);  
 }
 
+div.ScrollBar {
+  padding: 180px;
+  margin-top: 10px;
+}
+
+div.NoScrollBar {
+  overflow: hidden;
+  top: 0;
+  width: 100%;
+}
+

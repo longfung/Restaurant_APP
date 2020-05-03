@@ -42,15 +42,27 @@ function CategoryNav(props) {
       .catch(error => console.log(error));
   }, [shareContext.state.locale]);
 
+  const handleSelected = id => {
+    fetchMenuList(id);
+    debugger;
+    shareContext.dispatch({
+      type: 'setCategoryId',
+      value: id == "" ? 0 : id
+    })
+  }
+
   return (
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
           <Col sm={9}>
-            <Button onClick={() => fetchMenuList("")}>{t("AllCategory")}</Button>
+            <Button onClick={() => handleSelected("")}
+              className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
+              {t("AllCategory")}</Button>
             {categoryList &&
               categoryList.map((item, index) => (
-                <Button key={item.id} onClick={() => fetchMenuList(item.id)}>
+                <Button key={item.id} onClick={() => handleSelected(item.id)}
+                  className={shareContext.state.categoryId == item.id ? 'btn btn-danger active' : 'btn btn-secondary'}>
                   {item.label}
                 </Button>
               ))}
