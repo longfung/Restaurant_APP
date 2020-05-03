@@ -289,6 +289,37 @@ function Order(props) {
     );
   };
 
+  const dishList = (item) => {
+    return (
+      <Col sm="6" key={item.id}>
+        <Card>
+          <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
+            <Link
+              to="#!"
+              onClick={(e) => setDetail({
+                isDetail: true,
+                menu: item
+              })}
+              className=" flow-left"
+            >
+              <MdEventNote color="Primary" size="2rem" />
+            </Link>
+            &nbsp;
+            {item.name}
+
+          </CardBody>
+          <CardBody className="text-left py-0 by-0 pl-0 bl-0">
+            {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+            {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+            {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+            {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+          </CardBody>
+
+        </Card>
+      </Col>
+    );
+  };
+
   return (
     <div>
       {userMode != 2 ? <NavTab {...props} /> : null}
@@ -306,7 +337,13 @@ function Order(props) {
                 cartTotal={cartTotal}
                 setIsOrder={setIsOrder}
               />
-              <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
+              {shareContext.state.menuFormat != 2 ?
+                <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
+                :
+                <Row>{menuList && menuList.map((item) => dishList(item))}</Row>
+              }
+
+
             </div>
           )
       ) : (

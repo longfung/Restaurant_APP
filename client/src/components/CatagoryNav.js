@@ -24,6 +24,8 @@ function CategoryNav(props) {
   const cartTotal = props.cartTotal;
   const setIsOrder = props.setIsOrder;
   const [categoryList, setCategoryList] = useState([]);
+  const [menuFormat, setMenuFormat] = useState(1);  // 1 with photo, 2 without format list format
+
   useEffect(() => {
     console.log("in UseEffect");
     setCategoryList([]);
@@ -51,11 +53,18 @@ function CategoryNav(props) {
     })
   }
 
+  const switchMenuFormat = id => {
+    shareContext.dispatch({
+      type: 'setMenuFormat',
+      value: id
+    })
+  }
+
   return (
     <div>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
-          <Col sm={9}>
+          <Col sm={8}>
             <Button onClick={() => handleSelected("")}
               className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
               {t("AllCategory")}</Button>
@@ -66,6 +75,16 @@ function CategoryNav(props) {
                   {item.label}
                 </Button>
               ))}
+          </Col>
+          <Col sm="1">
+            <Link to="#!" onClick={() => switchMenuFormat(1)}
+              className={shareContext.state.menuFormat == null || shareContext.state.menuFormat == 1 ? 'btn-outline-danger active' : 'text-white'}>
+              {t("CardFormat")}</Link>
+              &nbsp;
+            <Link to="#!" onClick={() => switchMenuFormat(2)}
+              className={shareContext.state.menuFormat == 2 ? 'btn-outline-danger active' : 'text-white'}>
+              {t("ListFormat")}</Link>
+
           </Col>
           <Col sm={3} >
             {shareContext.state.userMode == 2 ?

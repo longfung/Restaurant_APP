@@ -34,6 +34,8 @@
     "SubTotal": "小计",
     "Total": "总计",
     "Tax": "税额",
+    "CardFormat": "复",
+    "ListFormat": "简",
     "TranslationList": "翻译清单",
     "TargetLocale": "翻译文字",
     "DefaultLocale": "原版文字",

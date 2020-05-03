@@ -33,6 +33,8 @@
     "SubTotal": "小計",
     "Total": "總計",
     "Tax": "稅額",
+    "CardFormat": "複",
+    "ListFormat": "簡",
     "TranslationList": "翻譯清單",
     "TargetLocale": "翻譯文字",
     "DefaultLocale": "原版文字",

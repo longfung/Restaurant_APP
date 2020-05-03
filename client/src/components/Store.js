@@ -25,6 +25,8 @@ const StateProvider = ({ children }) => {
         return { ...state, restaurant: action.value };
       case "setCategoryId":
         return { ...state, categoryId: action.value };
+      case "setMenuFormat":
+        return { ...state, menuFormat: action.value };
       case "setLocale":
         i18next.changeLanguage(action.value);
         return { ...state, locale: action.value };

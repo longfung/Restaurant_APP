@@ -34,6 +34,8 @@
     "SubTotal": "Sub Total",
     "Total": "Total",
     "Tax": "Tax",
+    "CardFormat": "C",
+    "ListFormat": "L",
     "TranslationList": "Translation List",
     "TargetLocale": "Target Language",
     "DefaultLocale": "Default Language",
