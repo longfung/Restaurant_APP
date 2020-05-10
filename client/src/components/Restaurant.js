@@ -13,11 +13,12 @@ import {
 } from "reactstrap";
 import { store } from "./Store";
 import { useTranslation, setDefaults } from "react-i18next";
-import { allowedLocale } from "../util/config.json";
+// import { allowedLocale } from "../util/config.json";
+const config = require("../util/config.json");
 
 function Restaurant(props) { // console.log("In Restaurant");
     debugger;
-    console.log(allowedLocale);
+
     const { t } = useTranslation();
     const shareContext = useContext(store);
     const userId = shareContext.state.ownerId;
@@ -91,7 +92,7 @@ function Restaurant(props) { // console.log("In Restaurant");
 
     const fetchLocaleList = () => {
         setOptions([])
-        const options = allowedLocale.map(v => ({
+        const options = config.allowedLocale.map(v => ({
             value: v,
             label: t(`${v}`)
 

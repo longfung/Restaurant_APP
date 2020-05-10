@@ -3,7 +3,8 @@ const axios = require("axios");
 const Entity = {
   menu: 1,
   category: 2,
-  desc: 3
+  desc: 3,
+  topping: 4
 }
 
 async function fetchRestuarantByOwnerId(id) {
@@ -57,6 +58,28 @@ async function deleteCategoryById(id, restaurantId) {
   return await axios.delete("/api/category", { params: data });
 }
 
+async function fetchToppingByRestaurantId(restaurantId, lang) {
+  let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.topping };
+  return await axios.get("/api/topping", { params: data });
+}
+
+async function addTopping(topping) {
+  return await axios.post("/api/topping", JSON.stringify(topping), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function updateTopping(topping) {
+  return await axios.put("/api/topping", JSON.stringify(topping), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function deleteToppingById(id, restaurantId) {
+  let data = { id: id, entityId: Entity.category, restaurantId: restaurantId };
+  return await axios.delete("/api/topping", { params: data });
+}
+
 async function fetchMenuByRestaurantId(restaurantId, lang) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.menu };
   return await axios.get("/api/menu", { params: data });
@@ -92,6 +115,8 @@ async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
     return await axios.get("/api/entityT/menu", { params: data });
   else if (entityId === Entity.desc)
     return await axios.get("/api/entityT/desc", { params: data });
+  else if (entityId === Entity.topping)
+    return await axios.get("/api/entityT/topping", { params: data });
 }
 
 async function addEntityT(entityT) {
@@ -135,6 +160,10 @@ module.exports = {
   performLogin,
   addRestaurant,
   updateRestaurant,
+  fetchToppingByRestaurantId,
+  addTopping,
+  updateTopping,
+  deleteToppingById,
   fetchCategoryByRestaurantId,
   addCategory,
   updateCategory,

@@ -21,6 +21,7 @@ app.use("/api/restaurant", require("./api/restaurant"));
 app.use("/api/menu", require("./api/menu"));
 app.use("/api/entityT", require("./api/entityT"));
 app.use("/api/category", require("./api/category"));
+app.use("/api/topping", require("./api/topping"));
 app.use("/api/user", require("./api/user"));
 // app.use('/api/fileupload', require('./api/fileupload'));
 app.post("/fileupload", (req, res) => {

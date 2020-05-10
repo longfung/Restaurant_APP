@@ -11,6 +11,8 @@ import {
   Row,
   Col,
   Button,
+  ButtonGroup,
+  FormGroup,
   Label,
   Card,
   CardImg,
@@ -20,6 +22,7 @@ import {
   CardImgOverlay,
   CardFooter,
 } from "reactstrap";
+import { Radio, RadioGroup } from 'react-radio-group'
 import CategoryNav from "./CatagoryNav";
 import Detail from "./Detail";
 import { Link } from "react-router-dom";
@@ -50,6 +53,10 @@ function Order(props) {
   // debugger;
 
   const [categoryList, setCategoryList] = useState([]);
+  const [toppingMap, setToppingMap] = useState({});   // all toppings with [namet, toppingGroup]
+  const [toppingGroupMap, setToppingGroupMap] = useState({});  // all toppingGroup with [items...]
+  const [toppingApplyOrder, setToppingApplyOrder] = useState([]); // list of order toppings [G1, item..., G2...]
+  const [toppingOrderResult, setToppingOrderResult] = useState([])
   const [menuList, setMenuList] = useState([]);
   const [cartList, setCartList] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
@@ -64,6 +71,7 @@ function Order(props) {
     console.log("in Order UseEffect");
     debugger;
     fetchMenuList(0);
+    getToppingList();
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -126,6 +134,60 @@ function Order(props) {
       })
       .catch();
   };
+
+  const getToppingList = () => {
+    const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
+    Promise.resolve(promise1)
+      // axios
+      //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+      .then((res) => {
+        setupToppingMap(res.data);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  const setupToppingMap = oList => {
+    let tMap = {};
+    let gMap = {};
+    let tList = [];
+    let rList = [];
+    let cnt = 0;
+    debugger;
+    oList.map((item, idx) => {
+      let n = item.namet == null ? item.name : item.namet;
+      if (!tMap.hasOwnProperty(item.id)) {
+        const arr1 = [n, item.topping_group];
+        tMap[item.id] = arr1;
+      }
+      if (gMap.hasOwnProperty(item.topping_group)) {
+        let arr2 = gMap[item.topping_group];
+        if (item.apply_default)
+          arr2.unshift(item.id);
+        else
+          arr2.push(item.id);
+      } else {
+        let arr3 = [item.id];
+        gMap[item.topping_group] = arr3;
+      }
+      if (item.apply_order) {
+        if (item.topping_group == 'G0') {
+          tList.push(item.id);
+          rList[cnt] = false;
+          cnt++;
+        } else {
+          if (item.apply_default) {
+            tList.unshift(item.id);
+            rList.unshift(item.name);
+            cnt++;
+          }
+        }
+      }
+    });
+    setToppingMap(tMap);
+    setToppingGroupMap(gMap);
+    setToppingApplyOrder(tList)
+    setToppingOrderResult(rList);
+  }
 
   const addToOrder = (event, item, price, size) => {
     event.preventDefault();
@@ -212,6 +274,21 @@ function Order(props) {
     });
     setCartList([...nCartList]);
   };
+
+  const setOrderToppingRadio = (e, idx) => {
+    debugger;
+
+    // toppingOrderResult[idx] = e;
+    setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e : elem))
+  }
+
+  const setOrderToppingBox = (e, idx) => {
+    debugger;
+
+    // toppingOrderResult[idx] = e;
+    setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e.target.checked : elem))
+    // setToppingOrderResult[idx] = e.target.checked;
+  }
 
   const dishPrice = (item, price, size, symbol) => {
     return (
@@ -337,6 +414,49 @@ function Order(props) {
                 cartTotal={cartTotal}
                 setIsOrder={setIsOrder}
               />
+              <Row form>
+                <Col sm="6">
+                  {toppingApplyOrder.map((elem, idx) => {
+                    const g = (toppingMap[elem])[1];
+                    if (g == 'G0') {
+                      return (
+                        <FormGroup className="float-left">
+
+                          <Input className="form-control" type="checkbox" id="applyOrder" classname="margin-left"
+                            checked={
+                              toppingOrderResult[idx]
+                            }
+                            onChange={e => setOrderToppingBox(e, idx)}
+                          />
+                          <Label for="applyOrder" className="indented-checkbox-text">
+                            {(toppingMap[elem])[0]}
+                          </Label>
+                        </FormGroup>)
+                    } else {
+                      const g = (toppingMap[elem])[1];
+                      const gItemArr = toppingGroupMap[g];
+                      return <RadioGroup name={g} className="radio-button-background" onChange={e => setOrderToppingRadio(e, idx)}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {gItemArr.map(elem => {
+                        return (
+                          <span>
+                            &nbsp;
+                            <Radio value={(toppingMap[elem])[0]}
+                              className="radio-button"
+                              checked={toppingOrderResult[idx] === (toppingMap[elem])[0]}
+                            />
+
+                            {(toppingMap[elem])[0]}
+                            &nbsp;&nbsp;&nbsp;
+                          </span>
+                        )
+                      })}
+                      </RadioGroup>
+
+                    }
+                  })}
+                </Col>
+              </Row>
               {shareContext.state.menuFormat != 2 ?
                 <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
                 :

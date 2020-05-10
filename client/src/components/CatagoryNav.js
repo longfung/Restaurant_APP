@@ -14,7 +14,6 @@ import access from '../util/access';
 import { useTranslation } from 'react-i18next';
 
 function CategoryNav(props) {
-  debugger;
   const shareContext = useContext(store);
   const { t } = useTranslation();
   const restaurant = shareContext.state.restaurant;

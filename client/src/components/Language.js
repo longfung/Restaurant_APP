@@ -6,6 +6,7 @@ import {
 import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
 import { useTranslation } from 'react-i18next';
+import "../index.css"
 
 
 function Language(props) {

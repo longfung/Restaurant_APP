@@ -99,3 +99,31 @@ div.NoScrollBar {
   width: 100%;
 }
 
+label.indented-checkbox-text
+{
+  
+  display: block;
+  position: relative;
+  margin-left: 3rem;
+  /* margin-top: -1.4em;  /* make this margin match whatever your line-height is */
+  /* line-height: 1.4em;  /* can be set here, or elsewehere */
+}
+
+FormGroup.margin-left 
+{
+
+  float: left;
+  margin-left: 0em;
+}
+
+input[type="checkbox"]{
+  width: 20px; /*Desired width*/
+  height: 20px; /*Desired height*/
+  margin-left: 1rem;
+ 
+}
+
+input[type=radio]{
+  transform:scale(1.5);
+  margin-right: 1rem;
+}

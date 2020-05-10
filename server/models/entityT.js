@@ -48,6 +48,23 @@ class EntityT {
       }
     );
   }
+
+  static retrieveToppingTByRestaurant(query, callback) {
+    const restaurantId = query.restaurantId;
+    const locale = query.locale;
+    const entityId = query.entityId;
+    db.query(
+      //   "select * from menu where restaurant_id = $1",
+      "select c.id, c.name, t.lang, t.text as namet from topping as c \
+        left join entity_t as t on c.id = t.id and t.lang = $1 and t.entity_id = $2 where c.restaurant_id = $3",
+      [locale, entityId, restaurantId],
+      function (err, res) {
+        if (err.error) return callback(err);
+        callback(err, res);
+      }
+    );
+  }
+
   static insert(node, callback) {
     db.query(
       "INSERT INTO entity_t (id, lang, text, entity_id, restaurant_id) VALUES ($1, $2, $3, $4)",

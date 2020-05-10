@@ -7,7 +7,7 @@ import Home from "./components/Home";
 import Restaurant from "./components/Restaurant";
 import Menu from "./components/Menu";
 import Category from "./components/Category";
-import NavTab from "./components/NavTab";
+import Topping from "./components/Topping";
 import Order from "./components/Order";
 import Login from "./components/Login";
 import User from "./components/User";
@@ -82,6 +82,11 @@ function App(props) {
               )}
             />
             <Route
+              path="/topping"
+              render={(props) => (
+                <Topping {...props} setMessage={setMessage} />
+              )}
+            />            <Route
               exact
               path="/order/:id"
               render={(props) => <Order {...props} setMessage={setMessage} />}

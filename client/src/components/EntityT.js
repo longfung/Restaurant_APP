@@ -150,6 +150,11 @@ function EntityT(props) {
                                 () => switchEntity(3)
                             }>
                                 {t("MenuDesc")}</Button>
+                                &nbsp;
+                        <Button className={`${entity == 4 ? 'btn-outline-primary active' : null}`} onClick={
+                                () => switchEntity(4)
+                            }>
+                                {t("TopppingDesc")}</Button>
                         </Col>
                         <Col sm="6">
                             <Button className={`${lang == 'tw' ? 'btn-outline-primary active' : null}`} onClick={

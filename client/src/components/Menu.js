@@ -51,6 +51,9 @@ function Menu(props) {
     const [image, setImage] = useState("");
     const [imageName, setImageName] = useState("Choose Image");
     const [categoryList, setCategoryList] = useState([]);
+    const [toppingList, setToppingList] = useState([]);
+    const [toppingSelected, setToppingSelected] = useState([])
+    const [toppingMap, setToppingMap] = useState({});
     const [category, setCategory] = useState({});
 
     useEffect(() => {
@@ -58,6 +61,7 @@ function Menu(props) {
         console.log("in UseEffect");
         getMenuList();
         getCategoryList();
+        getToppingList();
     }, [shareContext.state.locale]);
 
     const handleSelector = (e) => {
@@ -108,6 +112,42 @@ function Menu(props) {
             })
             .catch((error) => console.log(error));
     }
+
+    const getToppingList = () => {
+        const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
+        Promise.resolve(promise1)
+            // axios
+            //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+            .then((res) => {
+                setToppingList([]);
+                arrangeToppingSelect(res.data);
+
+            })
+            .catch((error) => console.log(error));
+    }
+
+    const arrangeToppingSelect = oList => {
+        let m = {};
+        oList.map((item) => {
+            if (item.apply_item) {
+                if (item.topping_group == 'G0' || item.apply_default) {
+                    let label = item.namet == null ? item.name : item.namet;
+                    if (item.topping_group != 'G0')
+                        label = item.topping_group + ':' + label;
+                    setToppingList((prevState) => [
+                        ...prevState,
+                        { value: item.id, label: label },
+                    ])
+
+                    m[item.id] = label;
+
+                }
+            }
+
+        });
+        setToppingMap(m);
+    }
+
     // upload to client/public folder, not used now, using firebase instead
     const fileUpload = async (formdata) => {
         try {
@@ -196,20 +236,21 @@ function Menu(props) {
 
     const postCreateMenu = () => {
         debugger;
-        let data = {
-            name: menu.name,
-            description: menu.description,
-            // intend to do so, only allow default language to update the name, use translation tool for other locale input
-            locale: shareContext.state.locale,
-            entityId: access.Entity.menu,
-            price_s: menu.price_s,
-            price_m: menu.price_m,
-            price_l: menu.price_l,
-            price_x: menu.price_x,
-            image_path: menu.image_path,
-            restaurant_id: restaurantId,
-            category_id: category.id,
-        };
+        // let data = {
+        //     name: menu.name,
+        //     description: menu.description,
+        //     // intend to do so, only allow default language to update the name, use translation tool for other locale input
+        //     locale: shareContext.state.locale,
+        //     entityId: access.Entity.menu,
+        //     price_s: menu.price_s,
+        //     price_m: menu.price_m,
+        //     price_l: menu.price_l,
+        //     price_x: menu.price_x,
+        //     image_path: menu.image_path,
+        //     restaurant_id: restaurantId,
+        //     category_id: category.id,
+        // };
+        const data = moveCorrespond();
         const promise1 = access.addMenu(data);
         Promise.resolve(promise1)
             .then((res) => {
@@ -221,7 +262,35 @@ function Menu(props) {
 
     const postUpdateMenu = () => {
         debugger;
-        const dd = access.Entity;
+        // let data = {
+        //     id: menu.id,
+        //     name: menu.name,
+        //     locale: shareContext.state.locale,
+        //     description: menu.description,
+        //     entityId: access.Entity.menu,
+        //     price_s: menu.price_s,
+        //     price_m: menu.price_m,
+        //     price_l: menu.price_l,
+        //     price_x: menu.price_x,
+        //     image_path: menu.image_path,
+        //     restaurant_id: restaurantId,
+        //     category_id: category.id,
+        // };
+        const data = moveCorrespond();
+        const promise1 = access.updateMenu(data);
+        Promise.resolve(promise1)
+            .then((res) => {
+                let m = menu.name + " is updated Successfully !!!";
+                setMessage({ status: 200, msg: m });
+                getMenuList();
+            });
+    };
+
+    const moveCorrespond = () => {
+        let temp = '';
+        toppingSelected.map(elem => {
+            temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
+        });
         let data = {
             id: menu.id,
             name: menu.name,
@@ -235,15 +304,10 @@ function Menu(props) {
             image_path: menu.image_path,
             restaurant_id: restaurantId,
             category_id: category.id,
+            topping: temp
         };
-        const promise1 = access.updateMenu(data);
-        Promise.resolve(promise1)
-            .then((res) => {
-                let m = menu.name + " is updated Successfully !!!";
-                setMessage({ status: 200, msg: m });
-                getMenuList();
-            });
-    };
+        return data;
+    }
 
     const setEdit = (obj) => {
         for (var i = 0; i < categoryList.length; i++) {
@@ -268,7 +332,20 @@ function Menu(props) {
             category_id: obj.category_id,
             image_path: obj.image_path,
         });
+        buildToppingSelectedd(obj.topping);
     };
+
+    const buildToppingSelectedd = (selected) => {
+        debugger;
+        if (selected) {
+            const arr = selected.split(',')
+            const options = arr.map(v => ({
+                value: v,
+                label: t(`${toppingMap[v]}`)
+            }));
+            setToppingSelected(options)
+        }
+    }
 
     const setDelete = (obj) => {
         const promise1 = access.deleteMenuById(obj.id);
@@ -303,11 +380,13 @@ function Menu(props) {
             price_x: 0,
             category_id: "",
             image_path: "",
+            topping: ""
         });
         setCategory({
             id: "",
             label: "",
         });
+        setToppingSelected([]);
     };
 
     const fetchCategoryName = cid => {
@@ -353,7 +432,7 @@ function Menu(props) {
                 </Row>
                 <Row>
                     <Col xs="3" sm="3">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="price_s">{t("Price")}({t("Regular")})</Label>
                             <Input
                                 type="text"
@@ -425,8 +504,21 @@ function Menu(props) {
                         <Editpan setMenu={setMenu} menu={menu} />
 
                     </Col>
-                </Row>
-                <Row>
+                    <Col xs="6" sm="6">
+                        <FormGroup className="float-left">
+                            <Label for="toppingSelect">
+                                {
+                                    t("ToppingList")
+                                }</Label>
+                            <Select id="toppingSelect"
+                                isMulti
+                                options={toppingList}
+                                onChange={setToppingSelected}
+                                className="mb-3"
+                                placeholder={t("SelectToppingGroup")}
+                                value={toppingSelected} />
+                        </FormGroup>
+                    </Col>
                     <Col xs="6" sm="6">
                         <Button onClick={handleCreateOrUpdateMenu}>{t("Save")} </Button>
                     </Col>

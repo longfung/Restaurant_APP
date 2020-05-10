@@ -56,15 +56,21 @@ function Home(props) {
             <CardBody>
               <CardTitle> Demo</CardTitle>
               <CardText>
-                run a demo to see how restaurant guest conduct ordering based on
-                dish menu
+                run a demo1 to see how restaurant guest conduct ordering based on
+                dish menu and demo2 for Coffee House
               </CardText>
               <NavItem className="mt-0">
                 <NavLink
                   className="border-info bg-light text-uppercase text-primary"
-                  href="/login?userMode=2"
+                  href="/login?userMode=2&u=demo"
                 >
-                  Demo
+                  Demo_restaurant
+                </NavLink>
+                <NavLink
+                  className="border-info bg-light text-uppercase text-primary"
+                  href="/login?userMode=2&u=demo2"
+                >
+                  Demo_Coffee
                 </NavLink>
               </NavItem>
             </CardBody>

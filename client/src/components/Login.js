@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { store } from "./Store";
 
 import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";
@@ -12,33 +12,43 @@ function Login(props) {
   const setMessage = props.setMessage;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [usermode, setUsermode] = useState(0);
 
   const urlParams = new URLSearchParams(props.location.search);
-  const userMode = urlParams.get("userMode");
+  const uMode = urlParams.get("userMode");
+  debugger;
+  if (uMode == 2) {
+    //   setUsermode(uMode);
 
-  if (userMode == 2) {
-    const promise0 = access.performLogin("demo", "demo");
-    Promise.resolve(promise0)
-      .then((res0) => {
-        const promise1 = access.fetchRestuarantByOwnerId(res0.data.id);
-        Promise.resolve(promise1).then((rest) => {
-          shareContext.dispatch({
-            type: "setRestaurant",
-            value: rest.data
+    // useEffect(() => {
+    //   debugger;
+    if (uMode == 2) {
+      const uName = urlParams.get("u");
+      const promise0 = access.performLogin(uName, "demo");
+      Promise.resolve(promise0)
+        .then((res0) => {
+          const promise1 = access.fetchRestuarantByOwnerId(res0.data.id);
+          Promise.resolve(promise1).then((rest) => {
+            shareContext.dispatch({
+              type: "setRestaurant",
+              value: rest.data
+            });
+            shareContext.dispatch({ type: "setLocale", value: rest.data.locale });
+            shareContext.dispatch({ type: "setUserMode", value: 2 });
+            shareContext.dispatch({ type: 'setOwnerId', value: { id: res0.id, username: 'demo' } })
+            return props.history.push("/order/id");
           });
-          shareContext.dispatch({ type: "setLocale", value: rest.data.locale });
-          shareContext.dispatch({ type: "setUserMode", value: 2 });
-          shareContext.dispatch({ type: 'setOwnerId', value: { id: res0.id, username: 'demo' } })
-          return props.history.push("/order/id");
+        })
+        .catch((err) => {
+          setMessage({
+            status: err.response.status,
+            msg: err.response.data.error,
+          });
         });
-      })
-      .catch((err) => {
-        setMessage({
-          status: err.response.status,
-          msg: err.response.data.error,
-        });
-      });
+    }
   }
+  // }, [usermode])
+
   const submit = () => {
     debugger;
     const promise1 = access.performLogin(username, password);

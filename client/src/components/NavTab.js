@@ -67,6 +67,14 @@ function NavTab(props) {
                                 <NavItem>
                                     <Button className="border-info mb-0 bg-light text-dark text-uppercase"
                                         onClick={
+                                            () => goComponent("/Topping")
+                                        }>
+                                        {
+                                            t("ToppingName")
+                                        } </Button>
+                                </NavItem>                                <NavItem>
+                                    <Button className="border-info mb-0 bg-light text-dark text-uppercase"
+                                        onClick={
                                             () => goComponent("/Order")
                                         }>
                                         {

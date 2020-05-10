@@ -55,6 +55,23 @@ router.get("/category", (req, res) => {
   });
 });
 
+router.get("/topping", (req, res) => {
+  console.log("in MenuT Get topping");
+
+  // var node = req.query;
+  var node = req.query;
+  // var categoryId = req.query.categoryId;
+
+  // var categoryId = req.query.categoryId;
+  EntityT.retrieveToppingTByRestaurant(node, (err, menu) => {
+    // console.log(err);
+    // console.log(res);
+    if (!err) return res.json(err);
+    // console.log(rest).
+    return res.json(menu);
+  });
+});
+
 router.post("/", (req, res) => {
   // var name = req.body.name;
   // if(req.files == null) {
