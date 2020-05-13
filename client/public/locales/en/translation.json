@@ -63,5 +63,6 @@
     "zh": "ZH",
     "MenuName": "Dish Name",
     "MenuDesc": " Dish Description",
-    "ChooseLanguage": "Choose a language"
+    "ChooseLanguage": "Choose a language",
+    "Note": "NOTE"
 }

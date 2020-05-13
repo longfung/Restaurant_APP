@@ -62,5 +62,6 @@
     "zh": "简體",
     "MenuName": "單品名稱",
     "MenuDesc": "單品描述",
-    "ChooseLanguage": "選擇一種語言"
+    "ChooseLanguage": "選擇一種語言",
+    "Note": "注記"
 }

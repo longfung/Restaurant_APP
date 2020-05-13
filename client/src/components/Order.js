@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Cart from "./Cart";
+import Toppingline from "./Toppingline";
+import Toppingmenuline from "./Toppingmenuline";
 import Select from "react-select";
 import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote } from "react-icons/md";
 import access from '../util/access';
@@ -34,7 +36,6 @@ import { useTranslation } from 'react-i18next';
 function Order(props) {
   const { t } = useTranslation();
   const shareContext = useContext(store);
-  debugger;
   const restaurant = shareContext.state.restaurant;
   const restaurantId = restaurant != null ? restaurant.id : null;
   if (!restaurantId) {
@@ -65,13 +66,14 @@ function Order(props) {
     isDetail: false,
     menu: ''
   });
+  const toppingMapRef = useRef([]);
 
   useEffect(() => {
     // const restaurantId = 45000
-    console.log("in Order UseEffect");
     debugger;
-    fetchMenuList(0);
     getToppingList();
+    fetchMenuList(0);
+
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -87,6 +89,19 @@ function Order(props) {
       })
       .catch((error) => console.log(error));
   }, [shareContext.state.locale]);
+
+  // useEffect(() => {
+  //   debugger;
+  //   const nMenuList = menuList.filter((elem) => {
+  //     if (elem.topping) {
+  //       elem['toppingArray'] = elem.topping.split();
+  //       elem['toppingResult'] = setupToppingApplyMenu(elem);
+  //       return elem;
+  //     }
+  //     return elem;
+  //   });
+  //   setMenuList([...nMenuList]);
+  // }, [toppingApplyOrder])
 
   useEffect(() => {
     calculateCartTotal();
@@ -112,7 +127,7 @@ function Order(props) {
       .then((res) => {
         debugger;
         setMenuList([]);
-        res.data && res.data.forEach(item => {
+        const newMenuList = res.data.map(item => {
           if (item.name_t != null) item.name = item.name_t;
           if (item.description_t != null) item.description = item.description_t;
           let cnt = 0;
@@ -121,7 +136,10 @@ function Order(props) {
           if (item.price_l > 0) cnt++;
           if (item.price_x > 0) cnt++;
           item['isMultiple'] = cnt > 1 ? true : false;
-          setMenuList(prevState => [...prevState, item])
+          item['toppingArray'] = item.topping != null ? item.topping.split(',') : [];
+          item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+
+          // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
             // console.log("before" + elem.name);
@@ -129,8 +147,9 @@ function Order(props) {
               elem.name = item.name;
             // console.log("after" + elem.name);
           })
+          return item;
         })
-        // setMenuList(res.data);
+        setMenuList(newMenuList);
       })
       .catch();
   };
@@ -184,9 +203,39 @@ function Order(props) {
       }
     });
     setToppingMap(tMap);
+    toppingMapRef.current = tMap;
     setToppingGroupMap(gMap);
     setToppingApplyOrder(tList)
     setToppingOrderResult(rList);
+  }
+
+  const setupToppingApplyMenu = obj => {
+    let rList = [];
+    let cnt = 0;
+    const tMap = toppingMapRef.current;
+    debugger;
+    const toppingArray = obj.topping.split(',');
+    toppingArray.map((elem, idx) => {
+      const item = tMap[elem];
+      if (item[1] == 'G0') {
+        rList[cnt] = false;
+        cnt++;
+      } else {
+        rList.unshift(item[0]);
+        cnt++;
+      }
+
+    });
+    return rList;
+    // const nMenuList = menuList.filter((elem) => {
+    //   if (elem.id === obj.id) {
+    //     elem.toppingResult = rList;
+    //     elem.toppingArray = toppingArray;
+    //     return elem;
+    //   }
+    //   return elem;
+    // });
+    // setMenuList([...nMenuList]);
   }
 
   const addToOrder = (event, item, price, size) => {
@@ -209,6 +258,8 @@ function Order(props) {
       const tmpCart = {
         id: item.id,
         name: item.name,
+        toppingArray: item.topping ? item.topping.split(',') : null,
+        toppingResult: item.toppingResult,
         isMultiple: item.isMultiple,
         price: price,
         size: size,
@@ -287,12 +338,34 @@ function Order(props) {
 
     // toppingOrderResult[idx] = e;
     setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e.target.checked : elem))
-    // setToppingOrderResult[idx] = e.target.checked;
+    // setToppingOrderResult[idx] = e.target.checked; 
+  }
+
+  const setMenuToppingRadio = (e, idx, id, result) => {
+    debugger;
+    let nResult = result;
+    nResult[idx] = e;
+    setMenuList(menuList.map(elem => elem.id === id ? { ...elem, toppingResult: nResult } : elem));
+
+    // toppingOrderResult[idx] = e;
+    // setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e : elem))
+  }
+
+  const setMenuToppingBox = (e, idx, id, result) => {
+    debugger;
+
+    // toppingOrderResult[idx] = e;
+    let nResult = result;
+    nResult[idx] = e.target.checked;
+    setMenuList(menuList.map(elem => elem.id === id ? { ...elem, toppingResult: nResult } : elem));
+    // setDatas(datas.map(item => item.id === index ? {...item, someProp : "changed"} : item )))
+
+    // setToppingOrderResult[idx] = e.target.checked; 
   }
 
   const dishPrice = (item, price, size, symbol) => {
     return (
-      <Row>
+      <Row className="text-left my-0 py-0 pl-0 ml-0">
         <Col sm="4">
           <CardText className="d-inline bg-dark font-weight-bold text-light">
             ${price}
@@ -359,6 +432,19 @@ function Order(props) {
             </Link>
             &nbsp;
             {item.name}
+            {item.topping != null ?
+              <Toppingmenuline
+                itemId={item.id}
+                toppingApplyOrder={item.toppingArray}
+                toppingGroupMap={toppingGroupMap}
+                toppingMap={toppingMap}
+                toppingOrderResult={item.toppingResult}
+                setMenuToppingBox={setMenuToppingBox}
+                setMenuToppingRadio={setMenuToppingRadio}
+              />
+              :
+              null
+            }
 
           </CardBody>
         </Card>
@@ -368,9 +454,12 @@ function Order(props) {
 
   const dishList = (item) => {
     return (
-      <Col sm="6" key={item.id}>
+      <Col sm="6" key={item.id} >
         <Card>
-          <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
+
+
+
+          <CardBody className="text-left my-0 py-0 pl-0 ml-0">
             <Link
               to="#!"
               onClick={(e) => setDetail({
@@ -384,8 +473,26 @@ function Order(props) {
             &nbsp;
             {item.name}
 
+
+            {item.topping != null ?
+              <Toppingmenuline
+                itemId={item.id}
+                toppingApplyOrder={item.toppingArray}
+                toppingGroupMap={toppingGroupMap}
+                toppingMap={toppingMap}
+                toppingOrderResult={item.toppingResult}
+                setMenuToppingBox={setMenuToppingBox}
+                setMenuToppingRadio={setMenuToppingRadio}
+              />
+              :
+              null
+            }
+
+
           </CardBody>
-          <CardBody className="text-left py-0 by-0 pl-0 bl-0">
+
+
+          <CardBody className="text-left my-0 py-0 pl-0 ml-0">
             {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
             {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
             {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
@@ -414,49 +521,16 @@ function Order(props) {
                 cartTotal={cartTotal}
                 setIsOrder={setIsOrder}
               />
-              <Row form>
-                <Col sm="6">
-                  {toppingApplyOrder.map((elem, idx) => {
-                    const g = (toppingMap[elem])[1];
-                    if (g == 'G0') {
-                      return (
-                        <FormGroup className="float-left">
-
-                          <Input className="form-control" type="checkbox" id="applyOrder" classname="margin-left"
-                            checked={
-                              toppingOrderResult[idx]
-                            }
-                            onChange={e => setOrderToppingBox(e, idx)}
-                          />
-                          <Label for="applyOrder" className="indented-checkbox-text">
-                            {(toppingMap[elem])[0]}
-                          </Label>
-                        </FormGroup>)
-                    } else {
-                      const g = (toppingMap[elem])[1];
-                      const gItemArr = toppingGroupMap[g];
-                      return <RadioGroup name={g} className="radio-button-background" onChange={e => setOrderToppingRadio(e, idx)}>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        {gItemArr.map(elem => {
-                        return (
-                          <span>
-                            &nbsp;
-                            <Radio value={(toppingMap[elem])[0]}
-                              className="radio-button"
-                              checked={toppingOrderResult[idx] === (toppingMap[elem])[0]}
-                            />
-
-                            {(toppingMap[elem])[0]}
-                            &nbsp;&nbsp;&nbsp;
-                          </span>
-                        )
-                      })}
-                      </RadioGroup>
-
-                    }
-                  })}
-                </Col>
-              </Row>
+              {toppingOrderResult && toppingOrderResult.length > 0 ?
+                <Toppingline
+                  toppingApplyOrder={toppingApplyOrder}
+                  toppingGroupMap={toppingGroupMap}
+                  toppingMap={toppingMap}
+                  toppingOrderResult={toppingOrderResult}
+                  setOrderToppingBox={setOrderToppingBox}
+                  setOrderToppingRadio={setOrderToppingRadio}
+                />
+                : null}
               {shareContext.state.menuFormat != 2 ?
                 <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
                 :
@@ -475,6 +549,9 @@ function Order(props) {
             isQuantity={isQuantity}
             cartList={cartList}
             setIsOrder={setIsOrder}
+            toppingApplyOrder={toppingApplyOrder}
+            toppingMap={toppingMap}
+            toppingOrderResult={toppingOrderResult}
           />
         )}
     </div>
