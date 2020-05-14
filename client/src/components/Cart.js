@@ -46,10 +46,12 @@ function Cart(props) {
                                     return <span>{n}</span>
                             }
                         } else {
+                            debugger;
+                            const res = toppingMap[toppingOrderResult[idx]];
                             if (idx < resultCount)
-                                return <span>{toppingOrderResult[idx]},&nbsp;&nbsp;</span>
+                                return <span>{res[0]},&nbsp;&nbsp;</span>
                             else
-                                return <span>{toppingOrderResult[idx]}</span>
+                                return <span>{res[0]}</span>
                         }
 
                     })}
@@ -78,10 +80,11 @@ function Cart(props) {
                                                     return <span class="SmallFont">{n}</span>
                                             }
                                         } else {
+                                            const res = toppingMap[toppingOrderResult[idx]];
                                             if (idx != 0)
-                                                return <span class="SmallFont">,&nbsp;&nbsp;{elem.toppingResult[idx]}</span>
+                                                return <span class="SmallFont">,&nbsp;&nbsp;{res[0]}</span>
                                             else
-                                                return <span class="SmallFont">{elem.toppingResult[idx]}</span>
+                                                return <span class="SmallFont">{res[0]}</span>
                                         }
 
                                     })}

@@ -44,12 +44,12 @@ function CategoryNav(props) {
   }, [shareContext.state.locale]);
 
   const handleSelected = id => {
-    fetchMenuList(id);
     debugger;
     shareContext.dispatch({
       type: 'setCategoryId',
-      value: id == "" ? 0 : id
+      value: id === 0 ? 0 : id
     })
+    fetchMenuList(id);
   }
 
   const switchMenuFormat = id => {
@@ -64,7 +64,7 @@ function CategoryNav(props) {
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
           <Col sm={8}>
-            <Button onClick={() => handleSelected("")}
+            <Button onClick={() => handleSelected(0)}
               className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
               {t("AllCategory")}</Button>
             {categoryList &&
@@ -78,16 +78,16 @@ function CategoryNav(props) {
           <Col sm="1">
             <Link to="#!" onClick={() => switchMenuFormat(1)}
               className={shareContext.state.menuFormat == null || shareContext.state.menuFormat == 1 ? 'btn-outline-danger active' : 'text-white'}>
-              {t("CardFormat")}</Link>
+              <span class="LargeFont">{t("CardFormat")}</span></Link>
               &nbsp;
             <Link to="#!" onClick={() => switchMenuFormat(2)}
               className={shareContext.state.menuFormat == 2 ? 'btn-outline-danger active' : 'text-white'}>
-              {t("ListFormat")}</Link>
+              <span class="LargeFont">{t("ListFormat")}</span></Link>
 
           </Col>
           <Col sm={3} >
             {shareContext.state.userMode == 2 ?
-              <Language />
+              <span class="LargeFont"><Language /></span>
               :
               null
             }

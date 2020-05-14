@@ -71,9 +71,6 @@ function Order(props) {
   useEffect(() => {
     // const restaurantId = 45000
     debugger;
-    getToppingList();
-    fetchMenuList(0);
-
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -88,6 +85,7 @@ function Order(props) {
         );
       })
       .catch((error) => console.log(error));
+    getToppingList();
   }, [shareContext.state.locale]);
 
   // useEffect(() => {
@@ -110,15 +108,19 @@ function Order(props) {
   const fetchMenuList = (categoryId) => {
     debugger;
     let promise1 = '';
-    let catId = '';
-    if (categoryId == 0)
-      catId = shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? '' : shareContext.state.categoryId;
-    else
-      catId = categoryId;
-    if (catId)
-      promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, catId, shareContext.state.locale);
-    else
+    // let catId = '';
+    // if (categoryId == 0)
+    //   catId = shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? '' : shareContext.state.categoryId;
+    // else
+    //   catId = categoryId;
+    // if (catId)
+    //   promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, catId, shareContext.state.locale);
+    // else
+    //   promise1 = access.fetchMenuByRestaurantId(restaurantId, shareContext.state.locale)
+    if (categoryId === 0)
       promise1 = access.fetchMenuByRestaurantId(restaurantId, shareContext.state.locale)
+    else
+      promise1 = access.fetchMenuByRestaurantCategoryId(restaurantId, categoryId, shareContext.state.locale);
     Promise.resolve(promise1)
       // axios
       //   .get("/api/menu/category", {
@@ -161,6 +163,8 @@ function Order(props) {
       //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       .then((res) => {
         setupToppingMap(res.data);
+        const cId = shareContext.state.categoryId == null ? 0 : shareContext.state.categoryId;
+        fetchMenuList(cId);
       })
       .catch((error) => console.log(error));
   }
@@ -196,7 +200,7 @@ function Order(props) {
         } else {
           if (item.apply_default) {
             tList.unshift(item.id);
-            rList.unshift(item.name);
+            rList.unshift(item.id);
             cnt++;
           }
         }
@@ -215,13 +219,14 @@ function Order(props) {
     const tMap = toppingMapRef.current;
     debugger;
     const toppingArray = obj.topping.split(',');
-    toppingArray.map((elem, idx) => {
+    toppingArray.forEach((elem, idx) => {
       const item = tMap[elem];
       if (item[1] == 'G0') {
         rList[cnt] = false;
         cnt++;
       } else {
-        rList.unshift(item[0]);
+        // rList.unshift(item[0]);
+        rList.unshift(elem);
         cnt++;
       }
 
@@ -365,7 +370,7 @@ function Order(props) {
 
   const dishPrice = (item, price, size, symbol) => {
     return (
-      <Row className="text-left my-0 py-0 pl-0 ml-0">
+      <Row className="text-left my-0 py-0 pl-0 ml-0 ">
         <Col sm="4">
           <CardText className="d-inline bg-dark font-weight-bold text-light">
             ${price}
@@ -456,9 +461,6 @@ function Order(props) {
     return (
       <Col sm="6" key={item.id} >
         <Card>
-
-
-
           <CardBody className="text-left my-0 py-0 pl-0 ml-0">
             <Link
               to="#!"
@@ -472,8 +474,6 @@ function Order(props) {
             </Link>
             &nbsp;
             {item.name}
-
-
             {item.topping != null ?
               <Toppingmenuline
                 itemId={item.id}
@@ -487,11 +487,7 @@ function Order(props) {
               :
               null
             }
-
-
           </CardBody>
-
-
           <CardBody className="text-left my-0 py-0 pl-0 ml-0">
             {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
             {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}

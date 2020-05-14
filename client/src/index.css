@@ -106,6 +106,12 @@ span.SmallFont {
 
 }
 
+span.LargeFont {
+  font-size: 130%;
+
+
+}
+
 label.indented-checkbox-text
 {
   

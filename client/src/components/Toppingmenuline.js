@@ -20,7 +20,7 @@ function Toppingmenuline(props) {
     const setMenuToppingRadio = props.setMenuToppingRadio;
 
     return (
-        <Row calssName="text-left my-0 py-0 pl-0 ml-0">
+        <Row >
             <Col sm="12">
                 {toppingApplyOrder && toppingApplyOrder.map((elem, idx) => {
                     // debugger;
@@ -42,16 +42,16 @@ function Toppingmenuline(props) {
                     } else {
                         const g = (toppingMap[elem])[1];
                         const gItemArr = toppingGroupMap[g];
-                        debugger;
+                        // debugger;
                         return <RadioGroup name={itemId} className="radio-button-background" onChange={e => setMenuToppingRadio(e, idx, itemId, toppingOrderResult)}>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                 {gItemArr.map(elem => {
                             return (
                                 <span>
                                     &nbsp;
-                                    <Radio value={(toppingMap[elem])[0]}
+                                    <Radio value={elem}
                                         className="radio-button"
-                                        checked={toppingOrderResult[idx] === (toppingMap[elem])[0]}
+                                        checked={toppingOrderResult[idx] == elem}
                                     />
 
                                     {(toppingMap[elem])[0]}

@@ -41,15 +41,16 @@ function Toppingline(props) {
                     } else {
                         const g = (toppingMap[elem])[1];
                         const gItemArr = toppingGroupMap[g];
+                        debugger;
                         return <RadioGroup name={g} className="radio-button-background" onChange={e => setOrderToppingRadio(e, idx)}>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                 {gItemArr.map(elem => {
                             return (
                                 <span>
                                     &nbsp;
-                                    <Radio value={(toppingMap[elem])[0]}
+                                    <Radio value={elem}
                                         className="radio-button"
-                                        checked={toppingOrderResult[idx] == (toppingMap[elem])[0]}
+                                        checked={toppingOrderResult[idx] == elem}
                                     />
 
                                     {(toppingMap[elem])[0]}
