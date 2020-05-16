@@ -139,7 +139,7 @@ function Menu(props) {
                         { value: item.id, label: label },
                     ])
 
-                    m[item.id] = label;
+                    m[item.id] = { label: label, group: item.topping_group };
 
                 }
             }
@@ -287,10 +287,20 @@ function Menu(props) {
     };
 
     const moveCorrespond = () => {
-        let temp = '';
-        toppingSelected.map(elem => {
-            temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
-        });
+        // let temp = '';
+        let g0 = [];
+        let g1 = [];
+        toppingSelected.forEach(elem => {
+            if ((toppingMap[elem.value]).group == 'G0')
+                g0.push(elem.value);
+            else
+                g1.push(elem.value);
+        })
+        g1 = g1.concat(g0);
+        debugger;
+        // toppingSelected.map(elem => {
+        //     temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
+        // });
         let data = {
             id: menu.id,
             name: menu.name,
@@ -304,7 +314,7 @@ function Menu(props) {
             image_path: menu.image_path,
             restaurant_id: restaurantId,
             category_id: category.id,
-            topping: temp
+            topping: g1.toString()
         };
         return data;
     }
@@ -338,10 +348,10 @@ function Menu(props) {
     const buildToppingSelectedd = (selected) => {
         debugger;
         if (selected) {
-            const arr = selected.split(',')
+            const arr = selected.split(',').map(str => parseInt(str));
             const options = arr.map(v => ({
                 value: v,
-                label: t(`${toppingMap[v]}`)
+                label: t(`${toppingMap[v].label}`)
             }));
             setToppingSelected(options)
         }

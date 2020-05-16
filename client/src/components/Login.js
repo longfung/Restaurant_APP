@@ -16,7 +16,7 @@ function Login(props) {
 
   const urlParams = new URLSearchParams(props.location.search);
   const uMode = urlParams.get("userMode");
-  debugger;
+  // debugger;
   if (uMode == 2) {
     //   setUsermode(uMode);
 

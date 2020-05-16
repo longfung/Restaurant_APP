@@ -10,30 +10,30 @@ import {
 } from "reactstrap";
 function Toppingmenuline(props) {
     const { t } = useTranslation();
-    // debugger;
+    debugger;
     const itemId = props.itemId;
-    const toppingApplyOrder = props.toppingApplyOrder;
+    const toppingApplyMenu = props.toppingApplyMenu;
     const toppingGroupMap = props.toppingGroupMap;
     const toppingMap = props.toppingMap;
-    const toppingOrderResult = props.toppingOrderResult;
+    const toppingMenuResult = props.toppingMenuResult;
     const setMenuToppingBox = props.setMenuToppingBox;
     const setMenuToppingRadio = props.setMenuToppingRadio;
 
     return (
         <Row >
             <Col sm="12">
-                {toppingApplyOrder && toppingApplyOrder.map((elem, idx) => {
+                {toppingApplyMenu && toppingApplyMenu.map((elem, idx) => {
                     // debugger;
                     const g = (toppingMap[elem])[1];
                     if (g == 'G0') {
                         return (
-                            <FormGroup className="float-left my-0 py-0 pl-0 ml-0">
+                            <FormGroup className="float-left my-0 py-0 pl-0 ml-0" key={idx}>
 
-                                <Input className="form-control" type="checkbox" id="applyOrder" classname="margin-left"
+                                <Input className="form-control margin-left" type="checkbox" id="applyOrder"
                                     checked={
-                                        toppingOrderResult[idx]
+                                        toppingMenuResult[idx]
                                     }
-                                    onChange={e => setMenuToppingBox(e, idx, itemId, toppingOrderResult)}
+                                    onChange={e => setMenuToppingBox(e, idx, itemId, toppingMenuResult)}
                                 />
                                 <Label for="applyOrder" className="indented-checkbox-text">
                                     {(toppingMap[elem])[0]}
@@ -42,20 +42,21 @@ function Toppingmenuline(props) {
                     } else {
                         const g = (toppingMap[elem])[1];
                         const gItemArr = toppingGroupMap[g];
-                        // debugger;
-                        return <RadioGroup name={itemId} className="radio-button-background" onChange={e => setMenuToppingRadio(e, idx, itemId, toppingOrderResult)}>
+                        const gn = g + itemId;
+                        debugger;
+                        return <RadioGroup name={gn} key={g} className="radio-button-background" onChange={e => setMenuToppingRadio(e, idx, itemId, toppingMenuResult)}>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                {gItemArr.map(elem => {
+                            {gItemArr.map((elem, gIdx) => {
                             return (
-                                <span>
+                                <span key={gIdx}>
                                     &nbsp;
                                     <Radio value={elem}
                                         className="radio-button"
-                                        checked={toppingOrderResult[idx] == elem}
+                                        checked={toppingMenuResult[idx] == elem}
                                     />
 
                                     {(toppingMap[elem])[0]}
-                    &nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;
                                 </span>
                             )
                         })}

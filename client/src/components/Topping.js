@@ -181,7 +181,7 @@ function Topping(props) { // console.log("In Restaurant");
                     <Col xs="6" sm="6">
                         <FormGroup className="float-left">
 
-                            <Input className="form-control" type="checkbox" id="applyOrder" classname="margin-left"
+                            <Input className="form-control margin-left" type="checkbox" id="applyOrder"
                                 // <MdAccountCircle color="gold" size="2rem" />
                                 checked={
                                     topping.apply_order

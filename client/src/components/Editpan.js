@@ -208,7 +208,7 @@ class StyleButton extends React.Component {
                 &nbsp;
                 {this.props.icon != undefined ?
                     < this.props.icon color={actColor} size='1.2rem' />
-                    : this.props.active ? <strong>{this.props.label}</strong> : <weak>{this.props.label}</weak>}
+                    : this.props.active ? <strong>{this.props.label}</strong> : <span>{this.props.label}</span>}
                 {/* : <strong>{this.props.label}</strong>} */}
             </span>
         );

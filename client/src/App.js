@@ -86,7 +86,8 @@ function App(props) {
               render={(props) => (
                 <Topping {...props} setMessage={setMessage} />
               )}
-            />            <Route
+            />
+            <Route
               exact
               path="/order/:id"
               render={(props) => <Order {...props} setMessage={setMessage} />}

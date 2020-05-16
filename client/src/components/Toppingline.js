@@ -26,9 +26,9 @@ function Toppingline(props) {
                     const g = (toppingMap[elem])[1];
                     if (g == 'G0') {
                         return (
-                            <FormGroup className="float-left">
+                            <FormGroup className="float-left" key={idx}>
 
-                                <Input className="form-control" type="checkbox" id="applyOrder" classname="margin-left"
+                                <Input className="form-control margin-left" type="checkbox" id="applyOrder"
                                     checked={
                                         toppingOrderResult[idx]
                                     }
@@ -41,12 +41,12 @@ function Toppingline(props) {
                     } else {
                         const g = (toppingMap[elem])[1];
                         const gItemArr = toppingGroupMap[g];
-                        debugger;
-                        return <RadioGroup name={g} className="radio-button-background" onChange={e => setOrderToppingRadio(e, idx)}>
+                        // debugger;
+                        return <RadioGroup name={g} key={g} className="radio-button-background" onChange={e => setOrderToppingRadio(e, idx)}>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                {gItemArr.map(elem => {
+                {gItemArr.map((elem, gIdx) => {
                             return (
-                                <span>
+                                <span key={gIdx}>
                                     &nbsp;
                                     <Radio value={elem}
                                         className="radio-button"

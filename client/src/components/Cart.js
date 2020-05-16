@@ -41,17 +41,17 @@ function Cart(props) {
                         if (g == 'G0') {
                             if (toppingOrderResult[idx] == true) {
                                 if (idx < resultCount)
-                                    return <span>{n},&nbsp;&nbsp;</span>
+                                    return <span key={idx}>{n},&nbsp;&nbsp;</span>
                                 else
-                                    return <span>{n}</span>
+                                    return <span key={idx}>{n}</span>
                             }
                         } else {
                             debugger;
                             const res = toppingMap[toppingOrderResult[idx]];
                             if (idx < resultCount)
-                                return <span>{res[0]},&nbsp;&nbsp;</span>
+                                return <span key={idx}>{res[0]},&nbsp;&nbsp;</span>
                             else
-                                return <span>{res[0]}</span>
+                                return <span key={idx}>{res[0]}</span>
                         }
 
                     })}
@@ -65,7 +65,7 @@ function Cart(props) {
                             <b>{elem.name}</b>
                             {elem.toppingResult && elem.toppingResult.length > 0 ?
                                 <Col sm="12" >
-                                    <span class="SmallFont">{t("Note")}:&nbsp;&nbsp;</span>
+                                    <span className="SmallFont">{t("Note")}:&nbsp;&nbsp;</span>
                                     {elem.toppingArray && elem.toppingArray.map((item, idx) => {
                                         const g = (toppingMap[item])[1];
                                         const n = (toppingMap[item])[0]
@@ -75,16 +75,16 @@ function Cart(props) {
                                         if (g == 'G0') {
                                             if (elem.toppingResult[idx] == true) {
                                                 if (idx != 0)
-                                                    return <span class="SmallFont">,&nbsp;&nbsp;{n}</span>
+                                                    return <span className="SmallFont" key={idx}>,&nbsp;&nbsp;{n}</span>
                                                 else
-                                                    return <span class="SmallFont">{n}</span>
+                                                    return <span className="SmallFont" key={idx}>{n}</span>
                                             }
                                         } else {
-                                            const res = toppingMap[toppingOrderResult[idx]];
+                                            const res = toppingMap[elem.toppingResult[idx]];
                                             if (idx != 0)
-                                                return <span class="SmallFont">,&nbsp;&nbsp;{res[0]}</span>
+                                                return <span className="SmallFont" key={idx}>,&nbsp;&nbsp;{res[0]}</span>
                                             else
-                                                return <span class="SmallFont">{res[0]}</span>
+                                                return <span className="SmallFont" key={idx}>{res[0]}</span>
                                         }
 
                                     })}
@@ -124,7 +124,7 @@ function Cart(props) {
             <hr />
             <Row>
                 <Col sm='8'>
-                    <p>{t("SubTotal")}:</p>
+                    <b>{t("SubTotal")}:</b>
                 </Col>
                 <Col sm='4'>
                     {cartTotal.toFixed(2)}
@@ -132,7 +132,7 @@ function Cart(props) {
             </Row>
             <Row>
                 <Col sm='8'>
-                    <p>{t("Tax")}:</p>
+                    <b>{t("Tax")}:</b>
                 </Col>
                 <Col sm='4'>
                     {(cartTotal * taxRate / 100).toFixed(2)}
@@ -141,7 +141,7 @@ function Cart(props) {
             <hr />
             <Row>
                 <Col sm='8'>
-                    <p>{t("Total")}:</p>
+                    <b>{t("Total")}:</b>
                 </Col>
                 <Col sm='4'>
                     {(cartTotal + (cartTotal * taxRate / 100)).toFixed(2)}

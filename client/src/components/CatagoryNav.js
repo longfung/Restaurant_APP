@@ -26,7 +26,6 @@ function CategoryNav(props) {
   const [menuFormat, setMenuFormat] = useState(1);  // 1 with photo, 2 without format list format
 
   useEffect(() => {
-    console.log("in UseEffect");
     setCategoryList([]);
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
@@ -78,16 +77,16 @@ function CategoryNav(props) {
           <Col sm="1">
             <Link to="#!" onClick={() => switchMenuFormat(1)}
               className={shareContext.state.menuFormat == null || shareContext.state.menuFormat == 1 ? 'btn-outline-danger active' : 'text-white'}>
-              <span class="LargeFont">{t("CardFormat")}</span></Link>
+              <span className="LargeFont">{t("CardFormat")}</span></Link>
               &nbsp;
             <Link to="#!" onClick={() => switchMenuFormat(2)}
               className={shareContext.state.menuFormat == 2 ? 'btn-outline-danger active' : 'text-white'}>
-              <span class="LargeFont">{t("ListFormat")}</span></Link>
+              <span className="LargeFont">{t("ListFormat")}</span></Link>
 
           </Col>
           <Col sm={3} >
             {shareContext.state.userMode == 2 ?
-              <span class="LargeFont"><Language /></span>
+              <span className="LargeFont"><Language /></span>
               :
               null
             }

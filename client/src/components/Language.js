@@ -35,8 +35,8 @@ function Language(props) {
     return (
 
         <Col sm={6} className="float-left">
-            {supportLocale.map(elem => {
-                return (<Link to="#!"
+            {supportLocale.map((elem, idx) => {
+                return (<Link key={idx} to="#!"
                     onClick={
                         () => setLanguage(elem)
                     }

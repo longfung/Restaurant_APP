@@ -138,9 +138,9 @@ function Order(props) {
           if (item.price_l > 0) cnt++;
           if (item.price_x > 0) cnt++;
           item['isMultiple'] = cnt > 1 ? true : false;
-          item['toppingArray'] = item.topping != null ? item.topping.split(',') : [];
+          item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
           item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
-
+          // debugger;
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
@@ -220,13 +220,14 @@ function Order(props) {
     debugger;
     const toppingArray = obj.topping.split(',');
     toppingArray.forEach((elem, idx) => {
-      const item = tMap[elem];
+      const rId = parseInt(elem);
+      const item = tMap[rId];
       if (item[1] == 'G0') {
         rList[cnt] = false;
         cnt++;
       } else {
         // rList.unshift(item[0]);
-        rList.unshift(elem);
+        rList.push(rId);
         cnt++;
       }
 
@@ -437,13 +438,13 @@ function Order(props) {
             </Link>
             &nbsp;
             {item.name}
-            {item.topping != null ?
+            {item.toppingResult && item.toppingResult.length > 0 ?
               <Toppingmenuline
                 itemId={item.id}
-                toppingApplyOrder={item.toppingArray}
+                toppingApplyMenu={item.toppingArray}
                 toppingGroupMap={toppingGroupMap}
                 toppingMap={toppingMap}
-                toppingOrderResult={item.toppingResult}
+                toppingMenuResult={item.toppingResult}
                 setMenuToppingBox={setMenuToppingBox}
                 setMenuToppingRadio={setMenuToppingRadio}
               />
@@ -474,13 +475,13 @@ function Order(props) {
             </Link>
             &nbsp;
             {item.name}
-            {item.topping != null ?
+            {item.toppingResult && item.toppingResult.length > 0 ?
               <Toppingmenuline
                 itemId={item.id}
-                toppingApplyOrder={item.toppingArray}
+                toppingApplyMenu={item.toppingArray}
                 toppingGroupMap={toppingGroupMap}
                 toppingMap={toppingMap}
-                toppingOrderResult={item.toppingResult}
+                toppingMenuResult={item.toppingResult}
                 setMenuToppingBox={setMenuToppingBox}
                 setMenuToppingRadio={setMenuToppingRadio}
               />

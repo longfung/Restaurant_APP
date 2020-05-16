@@ -2,9 +2,7 @@ import React, { useReducer } from "react";
 import i18next from "i18next";
 
 const initialState = {
-  ownerId: 0,
-  restaurant: null,
-  userMode: 1,
+
 };
 
 const store = React.createContext(initialState);

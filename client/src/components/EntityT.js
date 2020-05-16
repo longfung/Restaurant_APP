@@ -216,7 +216,7 @@ function EntityT(props) {
                             </Col>
                         </Row>
                     }
-                    <Row from>
+                    <Row form>
                         <Col xs="6" sm="6">
                             <Button onClick={handleUpdateMenu}>
                                 {t("Save")}
