@@ -26,9 +26,10 @@ import { Card } from '../styleds';
 function EntityT(props) {
     const shareContext = useContext(store);
     const { t } = useTranslation();
-
+    debugger;
     const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
     const defaultLanguage = shareContext.state.restaurant.locale;
+    const support_locale = shareContext.state.restaurant.support_locale.split(',');
     if (!restaurantId) {
         props.history.push("/Login");
     }
@@ -157,15 +158,17 @@ function EntityT(props) {
                                 {t("TopppingDesc")}</Button>
                         </Col>
                         <Col sm="6">
-                            <Button className={`${lang == 'tw' ? 'btn-outline-primary active' : null}`} onClick={
-                                () => switchLanguage('tw')
-                            }>
-                                {t("tw")}</Button>
-                            &nbsp;
-                        <Button className={`${lang == 'zh' ? 'btn-outline-primary active' : null}`} onClick={
-                                () => switchLanguage('zh')
-                            }>
-                                {t("zh")}</Button>
+                            {support_locale && support_locale.map(elem =>
+                                elem !== defaultLanguage ?
+                                    <span>
+                                        <Button className={`${lang == elem ? 'btn-outline-primary active' : null}`} onClick={
+                                            () => switchLanguage(elem)
+                                        }>
+                                            {t(elem)}</Button>
+                                &nbsp;
+                                </span> : null
+
+                            )}
                         </Col>
                     </Row>
                     {entity == 3 ?

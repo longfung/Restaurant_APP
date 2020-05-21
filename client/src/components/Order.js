@@ -3,7 +3,7 @@ import Cart from "./Cart";
 import Toppingline from "./Toppingline";
 import Toppingmenuline from "./Toppingmenuline";
 import Select from "react-select";
-import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote } from "react-icons/md";
+import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete } from "react-icons/md";
 import access from '../util/access';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -67,6 +67,7 @@ function Order(props) {
     menu: ''
   });
   const toppingMapRef = useRef([]);
+  let catId = 0;
 
   useEffect(() => {
     // const restaurantId = 45000
@@ -140,6 +141,7 @@ function Order(props) {
           item['isMultiple'] = cnt > 1 ? true : false;
           item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
           item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+          item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
           // debugger;
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
@@ -151,6 +153,12 @@ function Order(props) {
           })
           return item;
         })
+        if (categoryId === 0) {
+          newMenuList.sort((a, b) => {
+            return a.category_id - b.category_id;
+          })
+        }
+
         setMenuList(newMenuList);
       })
       .catch();
@@ -179,7 +187,7 @@ function Order(props) {
     oList.map((item, idx) => {
       let n = item.namet == null ? item.name : item.namet;
       if (!tMap.hasOwnProperty(item.id)) {
-        const arr1 = [n, item.topping_group];
+        const arr1 = [n, item.topping_group, item.price];
         tMap[item.id] = arr1;
       }
       if (gMap.hasOwnProperty(item.topping_group)) {
@@ -214,6 +222,8 @@ function Order(props) {
   }
 
   const setupToppingApplyMenu = obj => {
+    if (obj.topping == "")
+      return;
     let rList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
@@ -253,7 +263,7 @@ function Order(props) {
     let bFound = false;
     // search dish has been ordered yet
     const nCartList = cartList.filter((elem) => {
-      if (elem.id === item.id && elem.size == size) {
+      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence && elem.size == size) {
         bFound = true;
         elem.quantity++;
         return elem;
@@ -263,6 +273,7 @@ function Order(props) {
     if (!bFound) {
       const tmpCart = {
         id: item.id,
+        cloneSequence: item.cloneSequence,
         name: item.name,
         toppingArray: item.topping ? item.topping.split(',') : null,
         toppingResult: item.toppingResult,
@@ -281,7 +292,7 @@ function Order(props) {
   const isQuantity = (item, size) => {
     let bResult = false;
     for (let i = 0; i < cartList.length; i++) {
-      if (cartList[i].id === item.id && cartList[i].size == size) {
+      if (cartList[i].id === item.id && cartList[i].cloneSequence === item.cloneSequence && cartList[i].size == size) {
         bResult = cartList[i].quantity > 0;
         break;
       }
@@ -290,10 +301,22 @@ function Order(props) {
   };
 
   const calculateCartTotal = () => {
+    debugger;
     let sum = 0;
     for (let i = 0; i < cartList.length; i++) {
       if (cartList[i].quantity !== 0) {
         sum += cartList[i].quantity * cartList[i].price;
+      }
+      // calculate topping is added and priced
+      const resultArr = cartList[i].toppingResult;
+      const toppingArr = cartList[i].toppingArray;
+      if (resultArr) {
+        resultArr.forEach((elem, idx) => {
+          if (elem == true) {
+            const p = (toppingMap[toppingArr[idx]])[2];
+            sum += p * cartList[i].quantity;
+          }
+        })
       }
     }
     // sum += sum * taxRate / 100;
@@ -303,7 +326,7 @@ function Order(props) {
   const getQuantity = (item, size) => {
     var q = 0;
     for (let i = 0; i < cartList.length; i++) {
-      if (cartList[i].id === item.id && cartList[i].size == size) {
+      if (cartList[i].id === item.id && cartList[i].cloneSequence === item.cloneSequence && cartList[i].size == size) {
         q = cartList[i].quantity;
         break;
       }
@@ -322,7 +345,7 @@ function Order(props) {
     event.preventDefault();
 
     const nCartList = cartList.filter((elem) => {
-      if (elem.id === item.id && elem.size === size) {
+      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence && elem.size === size) {
         elem.quantity--;
         if (elem.quantity !== 0) return elem;
         else return null;
@@ -347,26 +370,86 @@ function Order(props) {
     // setToppingOrderResult[idx] = e.target.checked; 
   }
 
-  const setMenuToppingRadio = (e, idx, id, result) => {
+  const setMenuToppingRadio = (e, idx, id, seq, result) => {
     debugger;
     let nResult = result;
     nResult[idx] = e;
-    setMenuList(menuList.map(elem => elem.id === id ? { ...elem, toppingResult: nResult } : elem));
+    setMenuList(menuList.map(elem => elem.id === id && elem.cloneSequence === seq ? { ...elem, toppingResult: nResult } : elem));
 
     // toppingOrderResult[idx] = e;
     // setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e : elem))
   }
 
-  const setMenuToppingBox = (e, idx, id, result) => {
+  const setMenuToppingBox = (e, idx, id, seq, result) => {
     debugger;
 
     // toppingOrderResult[idx] = e;
     let nResult = result;
     nResult[idx] = e.target.checked;
-    setMenuList(menuList.map(elem => elem.id === id ? { ...elem, toppingResult: nResult } : elem));
+    setMenuList(menuList.map(elem => elem.id === id && elem.cloneSequence === seq ? { ...elem, toppingResult: nResult } : elem));
+    calculateCartTotal();
     // setDatas(datas.map(item => item.id === index ? {...item, someProp : "changed"} : item )))
 
     // setToppingOrderResult[idx] = e.target.checked; 
+  }
+
+  const cloneMenuItem = (item) => {
+    debugger;
+    let cloneItem = { ...item }
+    let isFound = false;
+    let insertIdx = 0;
+    let seq = 0;
+    menuList.some((elem, idx) => {
+      if (cloneItem.id == elem.id) {
+        if (isFound) {
+          insertIdx = idx;
+          seq++;
+        } else {
+          isFound = true;
+          insertIdx = idx;
+          seq++;
+        }
+      } else {
+        if (isFound)
+          return true;
+      }
+    })
+    cloneItem.cloneSequence = seq;
+    cloneItem['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
+    cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+    // cloneItem.toppingResult = [];
+    insertIdx++;
+    menuList.splice(insertIdx, 0, cloneItem);
+
+    debugger;
+  }
+
+  const removeCloneMenuItem = item => {
+    // remove ordered items from cart
+    const nCartList = cartList.filter((elem) => {
+      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence)
+        return null;
+      else
+        return elem;
+    });
+    setCartList([...nCartList]);
+    // remove item from menuList
+    let nextSeq = 0;
+    const nMenuList = menuList.filter((elem) => {
+      if (elem.id === item.id) {
+        if (elem.cloneSequence == item.cloneSequence) {
+          nextSeq = item.cloneSequence;
+          return null
+        } else if (nextSeq != 0) {
+          elem.cloneSequence = nextSeq;
+          nextSeq++;
+        } else
+          return elem;
+      } else
+        return elem;
+    });
+    setMenuList([...nMenuList]);
+    // adjust cloneSequence in menuList
   }
 
   const dishPrice = (item, price, size, symbol) => {
@@ -426,6 +509,24 @@ function Order(props) {
             {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
           </CardBody>
           <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
+            {item.cloneSequence === 0 ?
+              <Link
+                to="#!"
+                onClick={(e) => cloneMenuItem(item)}
+                className=" flow-left"
+              >
+                <MdContentCopy color="Primary" size="2rem" />
+              </Link>
+              :
+              <Link
+                to="#!"
+                onClick={(e) => removeCloneMenuItem(item)}
+                className=" flow-left"
+              >
+                <MdDelete color="Primary" size="2rem" />
+              </Link>
+            }
+
             <Link
               to="#!"
               onClick={(e) => setDetail({
@@ -440,7 +541,7 @@ function Order(props) {
             {item.name}
             {item.toppingResult && item.toppingResult.length > 0 ?
               <Toppingmenuline
-                itemId={item.id}
+                item={item}
                 toppingApplyMenu={item.toppingArray}
                 toppingGroupMap={toppingGroupMap}
                 toppingMap={toppingMap}
@@ -458,46 +559,77 @@ function Order(props) {
     );
   };
 
+  const fetchCategoryName = (id) => {
+    if (id !== catId) {
+      catId = id;
+      let catName;
+      categoryList.forEach(cate => {
+        if (cate.id == id) {
+          catName = cate.label;
+          return true;
+        }
+      })
+      return (
+        <Col sm="12" key={id} >
+          <Card>
+            <CardBody className="text-left my-0 py-0 pl-0 ml-0 bg-dark w-100 text-white">
+              <b>{catName}</b>
+            </CardBody>
+
+          </Card>
+        </Col>)
+    }
+
+  }
+
   const dishList = (item) => {
     return (
-      <Col sm="6" key={item.id} >
-        <Card>
-          <CardBody className="text-left my-0 py-0 pl-0 ml-0">
-            <Link
-              to="#!"
-              onClick={(e) => setDetail({
-                isDetail: true,
-                menu: item
-              })}
-              className=" flow-left"
-            >
-              <MdEventNote color="Primary" size="2rem" />
-            </Link>
-            &nbsp;
-            {item.name}
-            {item.toppingResult && item.toppingResult.length > 0 ?
-              <Toppingmenuline
-                itemId={item.id}
-                toppingApplyMenu={item.toppingArray}
-                toppingGroupMap={toppingGroupMap}
-                toppingMap={toppingMap}
-                toppingMenuResult={item.toppingResult}
-                setMenuToppingBox={setMenuToppingBox}
-                setMenuToppingRadio={setMenuToppingRadio}
-              />
-              :
-              null
-            }
-          </CardBody>
-          <CardBody className="text-left my-0 py-0 pl-0 ml-0">
-            {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
-            {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
-            {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
-            {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
-          </CardBody>
+      <>
 
-        </Card>
-      </Col>
+
+        {fetchCategoryName(item.category_id)}
+
+
+
+        <Col sm="6" key={item.id} >
+          <Card>
+            <CardBody className="text-left my-0 py-0 pl-0 ml-0">
+              <Link
+                to="#!"
+                onClick={(e) => setDetail({
+                  isDetail: true,
+                  menu: item
+                })}
+                className=" flow-left"
+              >
+                <MdEventNote color="Primary" size="2rem" />
+              </Link>
+            &nbsp;
+            <b>{item.name}</b>
+              {item.toppingResult && item.toppingResult.length > 0 ?
+                <Toppingmenuline
+                  item={item}
+                  toppingApplyMenu={item.toppingArray}
+                  toppingGroupMap={toppingGroupMap}
+                  toppingMap={toppingMap}
+                  toppingMenuResult={item.toppingResult}
+                  setMenuToppingBox={setMenuToppingBox}
+                  setMenuToppingRadio={setMenuToppingRadio}
+                />
+                :
+                null
+              }
+            </CardBody>
+            <CardBody className="text-left my-0 py-0 pl-0 ml-0">
+              {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+              {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+              {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+              {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+            </CardBody>
+
+          </Card>
+        </Col>
+      </ >
     );
   };
 

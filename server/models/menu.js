@@ -43,7 +43,7 @@ class Menu {
   static insert(node, callback) {
     db.query(
       "INSERT INTO menu (name, price_s, price_m, price_l, price_x, image_path, restaurant_id, category_id, description, topping) \
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id",
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning id",
       [
         node.name,
         node.price_s,

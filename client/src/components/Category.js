@@ -19,6 +19,7 @@ function Category(props) {
   const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
+    initializeCategory();
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       .then(res => {
