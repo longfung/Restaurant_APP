@@ -98,6 +98,50 @@ class Menu {
     ));
   }
 
+  static updateNameT(node) {
+    return new Promise((resolve, rejsct) => db.query(
+      "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
+      [node.name, node.id, node.locale, node.restaurant_id, 1],
+      (err, res) => {
+        if (err.error) return callback(err);
+        if (res.length == 0) {
+          db.query(
+            "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+            [node.id, node.name, node.locale, node.restaurant_id, 1],
+            (err, res) => {
+              if (err.error) return rejsct(err);
+              resolve(res);
+            }
+          );
+        } else {
+          resolve(res);
+        }
+      }
+    ));
+  }
+
+  static updateDescT(node) {
+    return new Promise((resolve, rejsct) => db.query(
+      "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
+      [node.description, node.id, node.locale, node.restaurant_id, 3],
+      (err, res) => {
+        if (err.error) return callback(err);
+        if (res.length == 0) {
+          db.query(
+            "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
+            [node.id, node.description, node.locale, node.restaurant_id, 3],
+            (err, res) => {
+              if (err.error) return rejsct(err);
+              resolve(res);
+            }
+          );
+        } else {
+          resolve(res);
+        }
+      }
+    ));
+  }
+
   static async insertDescT(nId, node) {
     console.log("in insertDescT" + nId);
     return new Promise((resolve, rejsct) => db.query(
@@ -119,25 +163,12 @@ class Menu {
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);
-        db.query(
-          "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
-          [node.name, node.id, node.locale, node.restaurant_id, node.entityId],
-          (err, res) => {
-            if (err.error) return callback(err);
-            if (res.length == 0) {
-              db.query(
-                "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
-                [node.id, node.name, node.locale, node.restaurant_id, node.entityId],
-                (err, res) => {
-                  if (err.error) return callback(err);
-                  callback(res);
-                }
-              );
-            } else {
-              callback(res);
-            }
-          }
-        );
+        const promise1 = Menu.updateNameT(node);
+        const promise2 = Menu.updateDescT(node);
+        Promise.resolve(promise1, promise2).then(res => {
+          callback(res);
+        })
+          .catch((err) => callback(err))
       }
     );
   }

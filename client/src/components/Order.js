@@ -66,6 +66,7 @@ function Order(props) {
     isDetail: false,
     menu: ''
   });
+  const [chosenToppingMap, setChosenToppingMap] = useState({});
   const toppingMapRef = useRef([]);
   let catId = 0;
 
@@ -153,13 +154,16 @@ function Order(props) {
           })
           return item;
         })
-        if (categoryId === 0) {
-          newMenuList.sort((a, b) => {
-            return a.category_id - b.category_id;
-          })
-        }
-
-        setMenuList(newMenuList);
+        // if (categoryId === 0) {
+        // newMenuList.sort((a, b) => {
+        //   return a.category_id - b.category_id;
+        // })
+        // }
+        const completedMenu = mergeChoiceToppingToMenu(newMenuList);
+        completedMenu.sort((a, b) => {
+          return a.id - b.id;
+        })
+        setMenuList([...completedMenu]);
       })
       .catch();
   };
@@ -343,7 +347,7 @@ function Order(props) {
   const removeFromOrder = (event, item, size) => {
     // search dish has been ordered yet
     event.preventDefault();
-
+    debugger;
     const nCartList = cartList.filter((elem) => {
       if (elem.id === item.id && elem.cloneSequence == item.cloneSequence && elem.size === size) {
         elem.quantity--;
@@ -398,16 +402,15 @@ function Order(props) {
     let cloneItem = { ...item }
     let isFound = false;
     let insertIdx = 0;
-    let seq = 0;
+    let seq = 1;
     menuList.some((elem, idx) => {
       if (cloneItem.id == elem.id) {
         if (isFound) {
           insertIdx = idx;
-          seq++;
+          seq = elem.cloneSequence + 1;
         } else {
           isFound = true;
           insertIdx = idx;
-          seq++;
         }
       } else {
         if (isFound)
@@ -417,37 +420,91 @@ function Order(props) {
     cloneItem.cloneSequence = seq;
     cloneItem['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
     cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+
     // cloneItem.toppingResult = [];
     insertIdx++;
     menuList.splice(insertIdx, 0, cloneItem);
+    insertCloneItem(cloneItem);
+    setMenuList([...menuList]);
 
+  }
+
+  const insertCloneItem = elem => {
     debugger;
+    if (chosenToppingMap && chosenToppingMap.hasOwnProperty(elem.id))
+      chosenToppingMap[elem.id].push(elem.cloneSequence)
+    else {
+      chosenToppingMap[elem.id] = [elem.cloneSequence];
+
+      setChosenToppingMap(chosenToppingMap)
+    }
+
+
+  }
+
+  const removeCloneItem = elem => {
+    debugger;
+    let chosenTopping;
+    if (chosenToppingMap.hasOwnProperty(elem.id)) {
+      chosenTopping = chosenToppingMap[elem.id].filter(seqId => {
+        if (seqId == elem.cloneSequence)
+          return null;
+        else
+          return seqId
+      });
+    }
+    chosenToppingMap[elem.id] = chosenTopping;
+    setChosenToppingMap(chosenToppingMap);
+  }
+
+  const mergeChoiceToppingToMenu = menuList => {
+    debugger;
+    if (chosenToppingMap == null)
+      return menuList;
+    const completedMenu = menuList.reduce((acc, item) => {
+      if (chosenToppingMap.hasOwnProperty(item.id)) {
+        acc.push(item);
+        const arr1 = chosenToppingMap[item.id];
+        arr1.forEach(seqId => {
+          let cloneItem = { ...item };
+          cloneItem.cloneSequence = seqId;
+          cloneItem['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
+          cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+          acc.push(cloneItem);
+        })
+        return acc;
+      } else
+        acc.push(item);
+      return acc;
+    }, [])
+    return completedMenu;
   }
 
   const removeCloneMenuItem = item => {
+    //remove from chosen Topping List
+    removeCloneItem(item);
     // remove ordered items from cart
     const nCartList = cartList.filter((elem) => {
-      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence)
-        return null;
+      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence) {
+        elem.toppingArray = [];
+        elem.toppingResult = [];
+        return false;
+      }
       else
-        return elem;
+        return true;
     });
     setCartList([...nCartList]);
     // remove item from menuList
-    let nextSeq = 0;
-    const nMenuList = menuList.filter((elem) => {
-      if (elem.id === item.id) {
-        if (elem.cloneSequence == item.cloneSequence) {
-          nextSeq = item.cloneSequence;
-          return null
-        } else if (nextSeq != 0) {
-          elem.cloneSequence = nextSeq;
-          nextSeq++;
-        } else
-          return elem;
-      } else
-        return elem;
-    });
+    const nMenuList = menuList.reduce((acc, elem) => {
+      if (elem.id === item.id && elem.cloneSequence == item.cloneSequence) {
+        elem.toppingArray = [];
+        elem.toppingResult = [];
+        return acc;
+      } else {
+        acc.push(elem);
+        return acc
+      }
+    }, []);
     setMenuList([...nMenuList]);
     // adjust cloneSequence in menuList
   }
@@ -488,10 +545,11 @@ function Order(props) {
     )
   };
 
-  const dishCard = (item) => {
+  const dishCard = (item, idx) => {
+    // debugger;
     return (
-      <Col sm="4" key={item.id}>
-        <Card>
+      <Col sm="4" key={idx}>
+        <Card className="border-0">
           <div className="imgblock">
             <CardImg
               top
@@ -582,7 +640,8 @@ function Order(props) {
 
   }
 
-  const dishList = (item) => {
+  const dishList = (item, idx) => {
+    debugger;
     return (
       <>
 
@@ -591,8 +650,8 @@ function Order(props) {
 
 
 
-        <Col sm="6" key={item.id} >
-          <Card>
+        <Col sm="6" key={idx} >
+          <Card className="border-0">
             <CardBody className="text-left my-0 py-0 pl-0 ml-0">
               <Link
                 to="#!"
@@ -661,9 +720,9 @@ function Order(props) {
                 />
                 : null}
               {shareContext.state.menuFormat != 2 ?
-                <Row>{menuList && menuList.map((item) => dishCard(item))}</Row>
+                <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
                 :
-                <Row>{menuList && menuList.map((item) => dishList(item))}</Row>
+                <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
               }
 
 

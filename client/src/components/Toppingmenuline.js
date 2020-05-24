@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 function Toppingmenuline(props) {
     const { t } = useTranslation();
-    debugger;
+    // debugger;
     const itemId = props.item.id;
     const itemSeq = props.item.cloneSequence;
     const toppingApplyMenu = props.toppingApplyMenu;
@@ -38,14 +38,14 @@ function Toppingmenuline(props) {
                                     onChange={e => setMenuToppingBox(e, idx, itemId, itemSeq, toppingMenuResult)}
                                 />
                                 <Label for="applyOrder" className="indented-checkbox-text">
-                                    {(toppingMap[elem])[0]}{p !== 0 ? '$(' + p + ")" : null}
+                                    {(toppingMap[elem])[0]}{p > 0 ? '$(' + p + ")" : null}
                                 </Label>
                             </FormGroup>)
                     } else {
                         const g = (toppingMap[elem])[1];
                         const gItemArr = toppingGroupMap[g];
                         const gn = g + itemId + itemSeq;
-                        debugger;
+                        // debugger;
                         return <RadioGroup name={gn} key={g} className="radio-button-background" onChange={e => setMenuToppingRadio(e, idx, itemId, itemSeq, toppingMenuResult)}>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             {gItemArr.map((elem, gIdx) => {

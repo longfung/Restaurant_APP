@@ -312,4 +312,4 @@ function Restaurant(props) { // console.log("In Restaurant");
     );
 }
 
-export default Restaurant;
+export default Restaurant; 
