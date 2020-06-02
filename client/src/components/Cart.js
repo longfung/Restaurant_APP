@@ -74,7 +74,7 @@ function Cart(props) {
                                 <b>{elem.name}</b>
                                 {elem.toppingResult && elem.toppingResult.length > 0 ?
                                     <Col sm="12" >
-                                        <span className="SmallFont font-weight-bold">{t(" Note")}:&nbsp;&nbsp;</span>
+                                        <span className="SmallFont font-weight-bold">{t("Note")}:&nbsp;&nbsp;</span>
                                         {elem.toppingArray && elem.toppingArray.map((item, idx) => {
                                             const g = (toppingMap[item])[1];
                                             const n = (toppingMap[item])[0];

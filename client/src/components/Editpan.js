@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 // import { Editor, EditorState } from 'draft-js';
 import Draft from 'draft-js';
+import { store } from "./Store";
 import '../index.css';
 import {
     Form,
@@ -19,32 +20,39 @@ const { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, ContentSta
 
 const Immutable = require('immutable');
 
+const EMPTY_EDITOR_STATE = EditorState.createEmpty();
+
 // class Editpan extends React.Component {
 
-function Editpan(props) {
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const setMenu = props.setMenu;
-    const menu = props.menu;
+function Editpan({ menu, setMenu }) {
+    const [draftMenu, setDraftMenu] = useState(menu);
+
+    const [editorState, setEditorState] = useState(EMPTY_EDITOR_STATE);
+    const shareContext = useContext(store);
 
     useEffect(() => {
-        debugger;
+        // debugger;
         const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-        const val = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-        if (val != undefined && val != null && val != "\n") {
+        const val = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n').trim();
+        if (val != null) {
             const val = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-            setMenu({ ...menu, description: val });
+            setDraftMenu(draftMenu => ({ ...draftMenu, description: val }));
+            shareContext.dispatch({
+                type: "setMenuDescription",
+                value: val
+            });
         }
     }, [editorState])
 
     useEffect(() => {
         // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
         // const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-        debugger;
+        // debugger;
 
-        if (menu.description == null || menu.description.length < 1) {
+        if (menu.description == '' || menu.description.trim().length < 1) {
 
             // const newState = convertFromRaw(JSON.parse(menu.description));
-            setEditorState(EditorState.createEmpty());
+            setEditorState(EMPTY_EDITOR_STATE);
         }
 
         else {

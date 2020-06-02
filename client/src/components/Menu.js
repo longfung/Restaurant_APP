@@ -47,6 +47,7 @@ function Menu(props) {
         // image_path: `${process.cwd()}/public/images/img1.jpg`
         image_path: "",
     });
+    const [description, setDescription] = useState('');
     const [menuList, setMenuList] = useState([]);
     const [image, setImage] = useState("");
     const [imageName, setImageName] = useState("Choose Image");
@@ -191,7 +192,7 @@ function Menu(props) {
                             .getDownloadURL()
                             .then((url) => {
                                 console.log(url);
-                                setMenu({ ...menu, image_path: url });
+                                setMenu(prevMenu => ({ ...menu, image_path: url }));
                             });
                     }
                 );
@@ -218,7 +219,7 @@ function Menu(props) {
                     .getDownloadURL()
                     .then((url) => {
                         console.log(url);
-                        setMenu({ ...menu, image_path: url });
+                        setMenu(prevMenu => ({ ...prevMenu, image_path: url }));
                     });
             }
         );
@@ -305,7 +306,7 @@ function Menu(props) {
             id: menu.id,
             name: menu.name,
             locale: shareContext.state.locale,
-            description: menu.description,
+            description: shareContext.state.menuDescription,
             entityId: access.Entity.menu,
             price_s: menu.price_s,
             price_m: menu.price_m,
@@ -341,6 +342,10 @@ function Menu(props) {
             rest_id: obj.restaurant_id,
             category_id: obj.category_id,
             image_path: obj.image_path,
+        });
+        shareContext.dispatch({
+            type: "setMenuDescription",
+            value: obj.description
         });
         buildToppingSelectedd(obj.topping);
     };
@@ -378,11 +383,11 @@ function Menu(props) {
     };
 
     const initialMenu = () => {
-        setMenu({
-            ...menu,
+        setMenu(prev => ({
+            ...prev,
             id: "",
             name: "",
-            description: "",
+            description: menu.description == "" ? " " : "",
             locale: shareContext.state.locale,
             price_s: 0,
             price_m: 0,
@@ -391,6 +396,10 @@ function Menu(props) {
             category_id: "",
             image_path: "",
             topping: ""
+        }));
+        shareContext.dispatch({
+            type: "setMenuDescription",
+            value: ''
         });
         setCategory({
             id: "",
@@ -531,6 +540,8 @@ function Menu(props) {
                     </Col>
                     <Col xs="6" sm="6">
                         <Button onClick={handleCreateOrUpdateMenu}>{t("Save")} </Button>
+                        &nbsp;
+                        <Button onClick={initialMenu}>{t("Cancel")} </Button>
                     </Col>
                 </Row>
             </Form>

@@ -23,6 +23,8 @@ const StateProvider = ({ children }) => {
         return { ...state, restaurant: action.value };
       case "setCategoryId":
         return { ...state, categoryId: action.value };
+      case "setMenuDescription":
+        return { ...state, menuDescription: action.value };
       case "setMenuFormat":
         return { ...state, menuFormat: action.value };
       case "setLocale":

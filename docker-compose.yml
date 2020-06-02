@@ -1,0 +1,34 @@
+Version: '3'
+
+services:
+# setup server container
+  server:
+    build: /server
+    expose:
+      - ${APP_SERVER_PORT}
+    environment:
+      API_HOST: ${API_HOST}
+      APP_SERVER_PORT: ${APP_SERVER_PORT}
+    ports:
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+    volumns:
+      - ./server/api:/srv/app/server/api
+      - ./server/database:/srv/app/server/database
+      - ./server/models:/srv/app/server/models
+      - ./server:/srv/app/server
+    command: npm run dev
+
+#setup client container
+
+  client:
+    build: /client
+    environment:
+      - $REACT_APP_PORT:${REACT_APP_PORT}
+    expose:
+      - ${REACT_APP_PORT}
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumns:
+      - ./client/src:/srv/app/client/src
+      - ./client/public:/srv/app/client/public
+    command: npm run start

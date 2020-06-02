@@ -20,15 +20,15 @@ function Detail(props) {
     const menu = props.menu;
     const setDetail = props.setDetail;
 
-    useEffect(() => {
-        // debugger;
-        // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-        // const val = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-        // if (val != undefined && val != null && val != "\n") {
-        //     const val = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-        //     setMenu({ ...menu, description: val });
-        // }
-    }, [editorState])
+    // useEffect(() => {
+    //     // debugger;
+    //     // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    //     // const val = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+    //     // if (val != undefined && val != null && val != "\n") {
+    //     //     const val = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    //     //     setMenu({ ...menu, description: val });
+    //     // }
+    // }, [editorState])
 
     useEffect(() => {
         // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
@@ -59,8 +59,8 @@ function Detail(props) {
 
     }
 
-    const refEditor = useRef()
-    const focusEditorInput = () => refEditor.current.focus();
+    // const refEditor = useRef()
+    // const focusEditorInput = () => refEditor.current.focus();
     const onChange = (newEditorState) => {
         console.log('kik', editorState.getCurrentInlineStyle())
         setEditorState(newEditorState)
@@ -99,7 +99,7 @@ function Detail(props) {
             <div className={className}>
                 <Editor
                     readOnly={true}
-                    ref={refEditor}
+                    // ref={refEditor}
                     editorState={editorState}
                     onChange={(editorState) => onChange(editorState)}
                     // placeholder="Tell a story..."
