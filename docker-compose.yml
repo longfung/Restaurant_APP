@@ -1,34 +1,50 @@
-Version: '3'
+version: '3.7'
 
 services:
+# set up database container
+  pgdb:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: Welcome1
+      POSTGRES_USER: postgres
+      POSTGRES_DB: restaurant-db
+    container_name: postgres
+    ports:
+      - $PG_PORT:${PG_PORT}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db_dump:/docker-entrypoint-initdb.d
+
 # setup server container
   server:
-    build: /server
-    expose:
-      - ${APP_SERVER_PORT}
+    build: .
+    depends_on:
+      - pgdb  
     environment:
-      API_HOST: ${API_HOST}
-      APP_SERVER_PORT: ${APP_SERVER_PORT}
+      DB_HOST: pgdb
+      DB_USER: postgres
+      DB_NAME: restaurant-db
+      DATABASE_URL: postgres://postgres:Welcome1@pgdb:5432/restaurant-db
     ports:
-      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
-    volumns:
-      - ./server/api:/srv/app/server/api
-      - ./server/database:/srv/app/server/database
-      - ./server/models:/srv/app/server/models
-      - ./server:/srv/app/server
-    command: npm run dev
+      - '8080:8080'
+      - '9229:9229'
+    tty: true
 
 #setup client container
 
   client:
-    build: /client
-    environment:
-      - $REACT_APP_PORT:${REACT_APP_PORT}
-    expose:
-      - ${REACT_APP_PORT}
+    build: ./client
+
     ports:
-      - ${REACT_APP_PORT}:${REACT_APP_PORT}
-    volumns:
+      - '3000:3000'
+    volumes:
       - ./client/src:/srv/app/client/src
       - ./client/public:/srv/app/client/public
-    command: npm run start
+    links:
+      - server
+    depends_on:
+      - server
+    tty: true
+volumes:
+  pgdata:    
+

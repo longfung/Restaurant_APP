@@ -1,5 +1,6 @@
 const axios = require("axios");
-
+const adapter = require('axios/lib/adapters/http');
+const apiUrl = `http://localhost:8080`;
 const Entity = {
   menu: 1,
   category: 2,
@@ -7,29 +8,31 @@ const Entity = {
   topping: 4
 }
 
+// axios.defaults.port = 5000;
+
 async function fetchRestuarantByOwnerId(id) {
   let data = {
     ownerId: id,
   };
-  return await axios.get("/api/restaurant/:ownerId", { params: data });
+  return await axios.get(apiUrl + "/api/restaurant/:ownerId", { params: data });
   // .catch(err => console.log(err.error));
 }
 
 async function addRestaurant(rest) {
-  return await axios.post("/api/restaurant", JSON.stringify(rest), {
+  return await axios.post(apiUrl + "/api/restaurant", JSON.stringify(rest), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateRestaurant(rest) {
-  return await axios.put("/api/restaurant", JSON.stringify(rest), {
+  return await axios.put(apiUrl + "/api/restaurant", JSON.stringify(rest), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function performLogin(username, password) {
   let data = JSON.stringify({ username: username, password: password });
-  return await axios.post("/api/user/login", data, {
+  return await axios.post(apiUrl + "/api/user/login", data, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -38,118 +41,118 @@ async function performLogin(username, password) {
 
 async function fetchCategoryByRestaurantId(restaurantId, lang) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.category };
-  return await axios.get("/api/category", { params: data });
+  return await axios.get(apiUrl + "api/category", { params: data });
 }
 
 async function addCategory(category) {
-  return await axios.post("/api/category", JSON.stringify(category), {
+  return await axios.post(apiUrl + "/api/category", JSON.stringify(category), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateCategory(category) {
-  return await axios.put("/api/category", JSON.stringify(category), {
+  return await axios.put(apiUrl + "/api/category", JSON.stringify(category), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function deleteCategoryById(id, restaurantId) {
   let data = { id: id, entityId: Entity.category, restaurantId: restaurantId };
-  return await axios.delete("/api/category", { params: data });
+  return await axios.delete(apiUrl + "/api/category", { params: data });
 }
 
 async function fetchToppingByRestaurantId(restaurantId, lang) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.topping };
-  return await axios.get("/api/topping", { params: data });
+  return await axios.get(apiUrl + "/api/topping", { params: data });
 }
 
 async function addTopping(topping) {
-  return await axios.post("/api/topping", JSON.stringify(topping), {
+  return await axios.post(apiUrl + "/api/topping", JSON.stringify(topping), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateTopping(topping) {
-  return await axios.put("/api/topping", JSON.stringify(topping), {
+  return await axios.put(apiUrl + "/api/topping", JSON.stringify(topping), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function deleteToppingById(id, restaurantId) {
   let data = { id: id, entityId: Entity.category, restaurantId: restaurantId };
-  return await axios.delete("/api/topping", { params: data });
+  return await axios.delete(apiUrl + "/api/topping", { params: data });
 }
 
 async function fetchMenuByRestaurantId(restaurantId, lang) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.menu };
-  return await axios.get("/api/menu", { params: data });
+  return await axios.get(apiUrl + "/api/menu", { params: data });
 }
 
 async function fetchMenuByRestaurantCategoryId(restaurantId, categoryId, lang) {
   let data = { restaurantId: restaurantId, categoryId: categoryId, locale: lang, entityId: Entity.menu };
-  return await axios.get("/api/menu/category", { params: data });
+  return await axios.get(apiUrl + "/api/menu/category", { params: data });
 }
 
 async function addMenu(menu) {
-  return await axios.post("/api/menu", JSON.stringify(menu), {
+  return await axios.post(apiUrl + "/api/menu", JSON.stringify(menu), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateMenu(menu) {
-  return await axios.put("/api/menu", JSON.stringify(menu), {
+  return await axios.put(apiUrl + "/api/menu", JSON.stringify(menu), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function deleteMenuById(id) {
   let data = { id: id };
-  return await axios.delete("/api/menu", { params: data });
+  return await axios.delete(apiUrl + "/api/menu", { params: data });
 }
 
 async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: entityId };
   if (entityId === Entity.category)
-    return await axios.get("/api/entityT/category", { params: data });
+    return await axios.get(apiUrl + "/api/entityT/category", { params: data });
   else if (entityId === Entity.menu)
-    return await axios.get("/api/entityT/menu", { params: data });
+    return await axios.get(apiUrl + "/api/entityT/menu", { params: data });
   else if (entityId === Entity.desc)
-    return await axios.get("/api/entityT/desc", { params: data });
+    return await axios.get(apiUrl + "/api/entityT/desc", { params: data });
   else if (entityId === Entity.topping)
-    return await axios.get("/api/entityT/topping", { params: data });
+    return await axios.get(apiUrl + "/api/entityT/topping", { params: data });
 }
 
 async function addEntityT(entityT) {
-  return await axios.post("/api/entityT", JSON.stringify(entityT), {
+  return await axios.post(apiUrl + "/api/entityT", JSON.stringify(entityT), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateEntityT(entityT) {
-  return await axios.put("/api/entityT", JSON.stringify(entityT), {
+  return await axios.put(apiUrl + "/api/entityT", JSON.stringify(entityT), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function deleteEntityTById(id, lang) {
   let data = { id: id, locale: lang };
-  return await axios.delete("/api/entityT", { params: data });
+  return await axios.delete(apiUrl + "/api/entityT", { params: data });
 }
 
 async function fetchUserById(id) {
   let data = { userId: id };
-  return await axios.get("/api/user/:id", { params: data });
+  return await axios.get(apiUrl + "/api/user/:id", { params: data });
 }
 
 async function addUser(user) {
-  return await axios.post("/api/user", JSON.stringify(user), {
+  return await axios.post(apiUrl + "/api/user", JSON.stringify(user), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 async function updateUser(user) {
   let data = JSON.stringify(user);
-  return await axios.put("/api/user", data, {
+  return await axios.put(apiUrl + "/api/user", data, {
     headers: { "Content-Type": "application/json" },
   });
 }

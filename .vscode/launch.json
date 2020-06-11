@@ -7,29 +7,16 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}",
-      "skipFiles": ["<node_internals>/**"]
+      "name": "Attach",
+      "port": 9229
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "program": "${workspaceFolder}\\server\\index.js"
     }
   ]
