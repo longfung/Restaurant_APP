@@ -8,7 +8,8 @@
     "client": "npm start --prefix client",
     "server": "nodemon server --ignore client",
     "devdebug": "concurrently \"npm run debug\" \"npm run client\"",
-    "debug": "node --inspect=0.0.0.0:9229 ./server/index.js"
+    "debug": "node --inspect=0.0.0.0:9229 ./server/index.js",
+    "dockerdebug": "node --inspect=0.0.0.0:9229 ./index.js"
   },
   "repository": {
     "type": "git",

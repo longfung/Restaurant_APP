@@ -41,7 +41,7 @@ async function performLogin(username, password) {
 
 async function fetchCategoryByRestaurantId(restaurantId, lang) {
   let data = { restaurantId: restaurantId, locale: lang, entityId: Entity.category };
-  return await axios.get(apiUrl + "api/category", { params: data });
+  return await axios.get(apiUrl + "/api/category", { params: data });
 }
 
 async function addCategory(category) {
