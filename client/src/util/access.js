@@ -1,7 +1,15 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
 // const apiUrl = `http://localhost:8080`;
-const apiUrl = `http://server:8080`;
+let apiUrl = '';
+if (process.env.DB_HOST)
+  console.log("dbhost" + process.env.DB_HOST);
+else {
+  apiUrl = `http://localhost:8080`
+  console.log("no DB_HOST defined")
+}
+
+// const apiUrl = ``;
 const Entity = {
   menu: 1,
   category: 2,
