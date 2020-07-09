@@ -1,9 +1,9 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
 // const apiUrl = `http://localhost:8080`;
-let apiUrl = '';
-if (process.env.DB_HOST)
-  console.log("dbhost" + process.env.DB_HOST);
+let apiUrl = ``;
+if (process.env.REACT_APP_DB_HOST)
+  console.log("dbhost " + process.env.REACT_APP_DB_HOST);
 else {
   apiUrl = `http://localhost:8080`
   console.log("no DB_HOST defined")

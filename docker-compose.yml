@@ -36,6 +36,8 @@ services:
 
   client:
     build: ./client
+    environment:
+      REACT_APP_DB_HOST: pgdb
     container_name: client_container
     ports:
       - '3000:3000'
