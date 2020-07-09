@@ -1,6 +1,7 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
-const apiUrl = `http://localhost:8080`;
+// const apiUrl = `http://localhost:8080`;
+const apiUrl = `http://server:8080`;
 const Entity = {
   menu: 1,
   category: 2,
