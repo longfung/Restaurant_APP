@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.3'
 
 services:
 # set up database container
@@ -25,6 +25,7 @@ services:
       DB_USER: postgres
       DB_NAME: restaurant-db
       DATABASE_URL: postgres://postgres:Welcome1@pgdb:5432/restaurant-db
+    container_name: server_container
     ports:
       - '8080:8080'
       - '9229:9229'
@@ -35,7 +36,7 @@ services:
 
   client:
     build: ./client
-
+    container_name: client_container
     ports:
       - '3000:3000'
     volumes:
