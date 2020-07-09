@@ -28,8 +28,8 @@ services:
     container_name: server_container
     ports:
       - '8080:8080'
-      - '9229:9229'
-    # command: ["./wait-for-it.sh", "pgdb:5432", "--", "npm", "run", "dockerdebug"]  
+      - '9229:9229' 
+    command: ["./wait-for-it.sh", "pgdb:5432", "--", "npm", "run", "dockerdebug"]  
     tty: true
 
 #setup client container
