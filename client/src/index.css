@@ -99,6 +99,11 @@ div.NoScrollBar {
   width: 100%;
 }
 
+div.StickHD {
+  position: sticky;
+  top: 0;
+}
+
 span.SmallFont {
   font-size: 90%;
   margin-top: 0px;

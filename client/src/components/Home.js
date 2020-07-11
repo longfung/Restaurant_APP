@@ -13,7 +13,7 @@ import {
 
 function Home(props) {
   return (
-    <div>
+    <div >
       <Card>
         <CardImg
           top

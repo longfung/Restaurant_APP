@@ -512,14 +512,14 @@ function Order(props) {
   const dishPrice = (item, price, size, symbol) => {
     return (
       <Row className="text-left my-0 py-0 pl-0 ml-0 ">
-        <Col sm="4">
+        <Col sm="4" xs="4">
           <CardText className="d-inline bg-dark font-weight-bold text-light">
             ${price}
           </CardText>
           &nbsp;
           {item.isMultiple == true ? t(symbol) : null}
         </Col>
-        <Col>
+        <Col sm="4" xs="4">
           <Link
             to="#!"
             onClick={(e) => addToOrder(e, item, price, size)}
@@ -538,7 +538,7 @@ function Order(props) {
             </Link>
           ) : null}
         </Col>
-        <Col>
+        <Col sm="4" xs="4">
           <i>{getQuantity(item, size)}</i>
         </Col>
       </Row>

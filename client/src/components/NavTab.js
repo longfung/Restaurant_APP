@@ -14,6 +14,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
 import { useTranslation } from "react-i18next";
 import Language from './Language';
+import "../index.css";
 
 function NavTab(props) {
     const shareContext = useContext(store);
@@ -30,7 +31,7 @@ function NavTab(props) {
                 <Jumbotron fluid className="my-0 py-1 bg-info w-100">
                     <Row>
                         <Col sm="9">
-                            <Nav className="mr-auto px-1 bx-1 py-0 my-0" tabs pills>
+                            <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto px-1 bx-1 py-0 my-0" tabs pills>
                                 <NavItem className="mt-0 ">
                                     <NavLink className="border-info bg-light text-uppercase text-primary" href="/">
                                         {
