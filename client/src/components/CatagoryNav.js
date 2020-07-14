@@ -10,12 +10,13 @@ import {
   Jumbotron
 
 } from "reactstrap";
-import { MdShoppingCart, MdSignalCellularConnectedNoInternet1Bar } from "react-icons/md";
+import { MdShoppingCart, MdDehaze, MdSignalCellularConnectedNoInternet1Bar } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { store } from "./Store";
 import access from '../util/access';
 import { useTranslation } from 'react-i18next';
-import Select from "react-select";
+import Select, { components } from "react-select";
+import { isUndefined } from "axios/lib/utils";
 
 function CategoryNav(props) {
   const shareContext = useContext(store);
@@ -28,7 +29,7 @@ function CategoryNav(props) {
   const setIsOrder = props.setIsOrder;
   const [categoryList, setCategoryList] = useState([]);
   const [catOptions, setCatOptions] = useState([]);
-  const [catValue, setCatValue] = useState({});
+  const [catValue, setCatValue] = useState({ value: 0, label: null });
   const [menuFormat, setMenuFormat] = useState(1);  // 1 with photo, 2 without format list format
 
   useEffect(() => {
@@ -44,12 +45,26 @@ function CategoryNav(props) {
             { id: item.id, label: item.namet == null ? item.category_name : item.namet }
           ])
         );
+        debugger;
         setCatOptions([])
-        const catOptions = res.data.map(item => ({
+        let catOpt = res.data.map(item => ({
           value: item.id,
           label: item.namet == null ? item.category_name : item.namet
         }));
-        setCatOptions(catOptions);
+        const temp = t("AllCategory");
+        const tempObj = { value: 0, label: temp };
+        catOpt.unshift(tempObj);
+        // setCatValue(catOptions);
+        if (catValue == null || catValue == 0) {
+          setCatValue(catOpt[0]);
+        } else {
+          catOpt.forEach((elem) => {
+            if (elem.value == catValue.value) {
+              catValue.label = elem.label;
+            }
+          })
+        }
+        setCatOptions(catOpt);
       })
       .catch(error => console.log(error));
   }, [shareContext.state.locale]);
@@ -87,13 +102,62 @@ function CategoryNav(props) {
     })
   }
 
+  const customStyles = {
+    container: (base, state) => ({
+      ...base,
+      border: state.isFocused ? null : null,
+      width: "150px",
+      transition:
+        "border-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease",
+      "&:hover": {
+        boxShadow: "0 2px 4px 0 rgba(41, 56, 78, 0.1)"
+      }
+    }),
+    control: base => ({
+      ...base,
+      background: "#152033"
+    }),
+    singleValue: base => ({
+      ...base,
+      color: "#fff"
+    }),
+    input: base => ({
+      ...base,
+      color: "#fff"
+    })
+  };
+
+
+  const customTheme = theme => {
+    return {
+      ...theme,
+      colors: {
+        ...theme.colors,
+        primary25: 'orange',
+        primary: 'green',
+      },
+    }
+  }
+
+  const CaretDownIcon = () => {
+    return <MdDehaze color="Primary" size="1rem" />;
+  };
+
+  const DropdownIndicator = props => {
+    return (
+      <components.DropdownIndicator {...props}>
+        <CaretDownIcon />
+      </components.DropdownIndicator>
+    );
+  };
+
   return (
     <div>
       <Navbar color="light" light expand="md"></Navbar>
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
           <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
-            {window.innerWidth > 500 ?
+            {window.innerWidth < 500 ?
               <Col sm={8}>
                 <Button onClick={() => handleSelected(0)}
                   className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
@@ -107,14 +171,20 @@ function CategoryNav(props) {
                   ))}
 
               </Col> :
+
               <Col sm="8">
-                <div style={{ width: '100px' }}>
-                  <Select id="localeid"
-                    options={catOptions}
-                    onChange={handleCatOption}
-                    className="mb-3"
-                    value={catValue} />
-                </div>
+
+                <Select id="localeid"
+                  // className="abc"
+                  components={{ DropdownIndicator }}
+                  theme={customTheme}
+                  styles={customStyles}
+                  // className='react-select-container'
+                  options={catOptions}
+                  onChange={handleCatOption}
+                  // className="mb-3"
+                  value={catValue} />
+
               </Col>
             }
 

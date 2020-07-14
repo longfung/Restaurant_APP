@@ -102,6 +102,10 @@ div.NoScrollBar {
 div.StickHD {
   position: sticky;
   top: 0;
+  background: white;
+}
+div.padding70 {
+  padding-top: 35px;
 }
 
 span.SmallFont {
@@ -150,3 +154,15 @@ input[type=radio]{
   padding-bottom: 0rem;
 }
 
+.abc {
+  color: red;
+  background-color: 'blue';
+  height: 4vh;
+  width:100px;
+  borderBottom: '10px dotted pink';
+}
+
+.react-select-container {
+  background-color: 'red';
+  color: red;
+}
