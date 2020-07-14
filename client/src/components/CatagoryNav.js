@@ -157,7 +157,7 @@ function CategoryNav(props) {
       <Jumbotron fluid className="my-0 py-1 bg-info w-100">
         <Row>
           <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
-            {window.innerWidth < 500 ?
+            {window.innerWidth > 500 ?
               <Col sm={8}>
                 <Button onClick={() => handleSelected(0)}
                   className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
