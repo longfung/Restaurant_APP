@@ -30,6 +30,10 @@ function CategoryNav(props) {
   const [categoryList, setCategoryList] = useState([]);
   const [catOptions, setCatOptions] = useState([]);
   const [catValue, setCatValue] = useState({ value: 0, label: null });
+  const [formatOptions, setFormatOptions] = useState([]);
+  const [formatValue, setFormatValue] = useState({ value: 1, label: null });
+  const [langOptions, setLangOptions] = useState([]);
+  const [langValue, setLangValue] = useState({ value: null, label: null });
   const [menuFormat, setMenuFormat] = useState(1);  // 1 with photo, 2 without format list format
 
   useEffect(() => {
@@ -65,6 +69,38 @@ function CategoryNav(props) {
           })
         }
         setCatOptions(catOpt);
+        // format options
+        let formatOpt = [];
+        setFormatOptions([])
+        const temp1 = t("CardFormat");
+        const temp1Obj = { value: 1, label: temp1 };
+        formatOpt.push(temp1Obj);
+        const temp2 = t("ListFormat");
+        const temp2Obj = { value: 2, label: temp2 };
+        formatOpt.push(temp2Obj);
+        // setCatValue(catOptions);
+        if (formatValue == null || formatValue.value == 1) {
+          setFormatValue(temp1Obj);
+        } else {
+          setFormatValue(temp2Obj);
+        }
+        setFormatOptions(formatOpt);
+        // Language switch
+        if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
+          const arr = shareContext.state.restaurant.support_locale.split(',')
+          let formatOpt = [];
+          setLangOptions([])
+          let langOpt = arr.map(lang => ({
+            value: lang,
+            label: t(lang)
+          }));
+          // setCatValue(catOptions);
+          const temp3 = t(shareContext.state.locale);
+          const temp3Obj = { value: shareContext.state.locale, label: temp3 };
+          setLangValue(temp3Obj);
+          setLangOptions(langOpt);
+        }
+
       })
       .catch(error => console.log(error));
   }, [shareContext.state.locale]);
@@ -102,11 +138,69 @@ function CategoryNav(props) {
     })
   }
 
+  const switchMenuFormat2 = e => {
+    const id = e.value;
+    setFormatValue(e);
+    shareContext.dispatch({
+      type: 'setMenuFormat',
+      value: id
+    })
+  }
+
   const customStyles = {
     container: (base, state) => ({
       ...base,
       border: state.isFocused ? null : null,
-      width: "150px",
+      width: "120px",
+      transition:
+        "border-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease",
+      "&:hover": {
+        boxShadow: "0 2px 4px 0 rgba(41, 56, 78, 0.1)"
+      }
+    }),
+    control: base => ({
+      ...base,
+      background: "#152033"
+    }),
+    singleValue: base => ({
+      ...base,
+      color: "#fff"
+    }),
+    input: base => ({
+      ...base,
+      color: "#fff"
+    })
+  };
+
+  const customFormatStyles = {
+    container: (base, state) => ({
+      ...base,
+      border: state.isFocused ? null : null,
+      width: "90px",
+      transition:
+        "border-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease",
+      "&:hover": {
+        boxShadow: "0 2px 4px 0 rgba(41, 56, 78, 0.1)"
+      }
+    }),
+    control: base => ({
+      ...base,
+      background: "#152033"
+    }),
+    singleValue: base => ({
+      ...base,
+      color: "#fff"
+    }),
+    input: base => ({
+      ...base,
+      color: "#fff"
+    })
+  };
+  const customLangStyles = {
+    container: (base, state) => ({
+      ...base,
+      border: state.isFocused ? null : null,
+      width: "75px",
       transition:
         "border-color 0.2s ease, box-shadow 0.2s ease, padding 0.2s ease",
       "&:hover": {
@@ -151,6 +245,10 @@ function CategoryNav(props) {
     );
   };
 
+  const setLanguage = (locale) => {
+    shareContext.dispatch({ type: "setLocale", value: locale.value });
+  };
+
   return (
     <div>
       <Navbar color="light" light expand="md"></Navbar>
@@ -158,64 +256,110 @@ function CategoryNav(props) {
         <Row>
           <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
             {window.innerWidth > 500 ?
-              <Col sm={8}>
-                <Button onClick={() => handleSelected(0)}
-                  className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
-                  {t("AllCategory")}</Button>
-                {categoryList &&
-                  categoryList.map((item, index) => (
-                    <Button key={item.id} onClick={() => handleSelected(item.id)}
-                      className={shareContext.state.categoryId == item.id ? 'btn btn-danger active' : 'btn btn-secondary'}>
-                      {item.label}
-                    </Button>
-                  ))}
+              <React.Fragment>
+                <Col sm={8}>
+                  <Button onClick={() => handleSelected(0)}
+                    className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
+                    {t("AllCategory")}</Button>
+                  {categoryList &&
+                    categoryList.map((item, index) => (
+                      <Button key={item.id} onClick={() => handleSelected(item.id)}
+                        className={shareContext.state.categoryId == item.id ? 'btn btn-danger active' : 'btn btn-secondary'}>
+                        {item.label}
+                      </Button>
+                    ))}
 
-              </Col> :
-
-              <Col sm="8">
-
-                <Select id="localeid"
-                  // className="abc"
-                  components={{ DropdownIndicator }}
-                  theme={customTheme}
-                  styles={customStyles}
-                  // className='react-select-container'
-                  options={catOptions}
-                  onChange={handleCatOption}
-                  // className="mb-3"
-                  value={catValue} />
-
-              </Col>
-            }
-
-            <Col sm="1">
-              <Link to="#!" onClick={() => switchMenuFormat(1)}
-                className={shareContext.state.menuFormat == null || shareContext.state.menuFormat == 1 ? 'btn-outline-danger active' : 'text-white'}>
-                <span className="LargeFont">{t("CardFormat")}</span></Link>
+                </Col>
+                <Col sm="1">
+                  <Link to="#!" onClick={() => switchMenuFormat(1)}
+                    className={shareContext.state.menuFormat == null || shareContext.state.menuFormat == 1 ? 'btn-outline-danger active' : 'text-white'}>
+                    <span className="LargeFont">{t("CardFormat")}</span></Link>
               &nbsp;
             <Link to="#!" onClick={() => switchMenuFormat(2)}
-                className={shareContext.state.menuFormat == 2 ? 'btn-outline-danger active' : 'text-white'}>
-                <span className="LargeFont">{t("ListFormat")}</span></Link>
+                    className={shareContext.state.menuFormat == 2 ? 'btn-outline-danger active' : 'text-white'}>
+                    <span className="LargeFont">{t("ListFormat")}</span></Link>
 
-            </Col>
-            <Col sm={3} >
-              {shareContext.state.userMode == 2 ?
-                <span className="LargeFont"><Language /></span>
-                :
-                null
-              }
+                </Col>
+                <Col sm={2} >
+                  {shareContext.state.userMode == 2 ?
+                    <span className="LargeFont"><Language /></span>
+                    :
+                    null
+                  }
 
-              <Col sm={6} className="float-left">
-                <Link
-                  to="#!"
-                  onClick={() => setIsOrder(false)}
-                  className="font-weight-bold text-white"
-                >
-                  <MdShoppingCart color="gold" size="2rem" /> $
+                  <Col sm={6} className="float-left">
+                    <Link
+                      to="#!"
+                      onClick={() => setIsOrder(false)}
+                      className="font-weight-bold text-white"
+                    >
+                      <MdShoppingCart color="gold" size="2rem" /> $
               {cartTotal.toFixed(2)}
-                </Link>
-              </Col>
-            </Col >
+                    </Link>
+                  </Col>
+                </Col >
+              </React.Fragment>
+              :
+
+              <React.Fragment>
+                <Col sm="3" xs="3" className="float-left mx-0 px-0">
+
+                  <Select id="localeid"
+                    // className="abc"
+                    components={{ DropdownIndicator }}
+                    theme={customTheme}
+                    styles={customStyles}
+                    // className='react-select-container'
+                    options={catOptions}
+                    onChange={handleCatOption}
+                    // className="mb-3"
+                    value={catValue} />
+                </Col>
+                <Col sm="3" xs="3">
+                  <Select id="formatid"
+                    // className="abc"
+                    components={{ DropdownIndicator }}
+                    theme={customTheme}
+                    styles={customFormatStyles}
+                    // className='react-select-container'
+                    options={formatOptions}
+                    onChange={switchMenuFormat2}
+                    // className="mb-3"
+                    value={formatValue} />
+                </Col>
+
+                {shareContext.state.userMode == 2 ?
+                  <Col sm="3" xs="3">
+                    <Select id="languageid"
+                      // className="abc"
+                      components={{ DropdownIndicator }}
+                      theme={customTheme}
+                      styles={customLangStyles}
+                      // className='react-select-container'
+                      options={langOptions}
+                      onChange={setLanguage}
+                      // className="mb-3"
+                      value={langValue} />
+                  </Col> :
+                  null
+                }
+
+                <Col sm={3} xs="3" className="float-left mx-0 px-0">
+                  <Link
+                    to="#!"
+                    onClick={() => setIsOrder(false)}
+                    className="font-weight-bold text-white float-left text-sm-left"
+                  >
+                    <MdShoppingCart color="gold" size="2rem" />${cartTotal.toFixed(2)}
+                  </Link>
+
+                </Col >
+
+              </React.Fragment>
+            }
+
+
+
           </Nav>
         </Row>
       </Jumbotron>
