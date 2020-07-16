@@ -26,20 +26,22 @@ function NavTab(props) {
     };
 
     return (
-        <div>
-            <Navbar color="light" light expand="md">
-                <Jumbotron fluid className="my-0 py-1 bg-info w-100">
-                    <Row>
-                        <Col sm="9">
-                            <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto px-1 bx-1 py-0 my-0" tabs pills>
-                                <NavItem className="mt-0 ">
-                                    <NavLink className="border-info bg-light text-uppercase text-primary" href="/">
-                                        {
-                                            t("Home")
-                                        } </NavLink>
-                                </NavItem>
+        <Navbar color="light" light expand="md">
+            <Jumbotron fluid className="my-0 py-1 bg-info w-100">
+                <Row>
+
+                    <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto px-1 bx-1 py-0 my-0" tabs pills>
+                        <React.Fragment>
+                            <Col sm="1">                            <NavItem className="mt-0 ">
+                                <NavLink className="border-dark bg-dark font-weight-bold text-white" href="/">
+                                    {
+                                        t("Home")
+                                    } </NavLink>
+                            </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem className="mt-0">
-                                    <Button className=" border-info bg-light text-dark text-uppercase"
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
                                         onClick={
                                             () => goComponent("/Restaurant")
                                         }>
@@ -47,8 +49,10 @@ function NavTab(props) {
                                             t("Restaurant")
                                         } </Button>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem>
-                                    <Button className=" border-info mb-0 bg-light text-dark text-uppercase"
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
                                         onClick={
                                             () => goComponent("/Menu")
                                         }>
@@ -56,8 +60,11 @@ function NavTab(props) {
                                             t("Menu")
                                         } </Button>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
+
                                 <NavItem>
-                                    <Button className="border-info mb-0 bg-light text-dark text-uppercase"
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
                                         onClick={
                                             () => goComponent("/Category")
                                         }>
@@ -65,16 +72,21 @@ function NavTab(props) {
                                             t("Category")
                                         } </Button>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem>
-                                    <Button className="border-info mb-0 bg-light text-dark text-uppercase"
+                                    <Button className="border-dark bg-dark font-weight-bold text-white text-nowrap"
                                         onClick={
                                             () => goComponent("/Topping")
                                         }>
                                         {
                                             t("ToppingName")
                                         } </Button>
-                                </NavItem>                                <NavItem>
-                                    <Button className="border-info mb-0 bg-light text-dark text-uppercase"
+                                </NavItem>
+                            </Col>
+                            <Col sm="1">
+                                <NavItem>
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
                                         onClick={
                                             () => goComponent("/Order")
                                         }>
@@ -82,8 +94,10 @@ function NavTab(props) {
                                             t("Order")
                                         } </Button>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem>
-                                    <Button className="border-info mb-0 bg-light text-dark text-uppercase"
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
                                         onClick={
                                             () => goComponent("/EntityT")
                                         }>
@@ -91,37 +105,45 @@ function NavTab(props) {
                                             t("Translator")
                                         } </Button>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem className="mt-0 ">
-                                    <NavLink className="border-info bg-light text-uppercase text-primary" href="/Login">
+                                    <NavLink className="border-dark bg-dark font-weight-bold text-white" href="/Login">
                                         {
                                             t("Login")
                                         } </NavLink>
                                 </NavItem>
+                            </Col>
+                            <Col sm="1">
                                 <NavItem>
-                                    <NavLink className="border-info bg-light text-uppercase text-primary" href="/User">
+                                    <NavLink className="border-dark bg-dark font-weight-bold text-white text-nowrap" href="/User">
                                         {
                                             t("CreateUser")
                                         } </NavLink>
                                 </NavItem>
-                            </Nav>
-                        </Col>
-                        <Col sm="3" >
-                            <Language />
-
-                            <Col sm="6" className="float-left text-left text-nowrap">
-                                <Link to="#!"
-                                    onClick={
-                                        () => props.history.push("/user")
-                                    }
-                                    className="font-weight-bold text-Dark">
-                                    <MdAccountCircle color="gold" size="2rem" /> {username}
-                                </Link>
                             </Col>
-                        </Col>
-                    </Row>
-                </Jumbotron>
-            </Navbar>
-        </div>
+                            <Col sm="2" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+
+                                <Language />
+                            </Col>
+                            <Col sm="1" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+                                <NavItem className="float-right" >
+                                    <Link to="#!"
+                                        onClick={
+                                            () => props.history.push("/user")
+                                        }
+                                        className=" bg-dark font-weight-bold text-white">
+                                        <MdAccountCircle color="white" size="2rem" /> {username}
+                                    </Link>
+                                </NavItem>
+                            </Col>
+                        </React.Fragment>
+                    </Nav>
+
+                </Row>
+            </Jumbotron>
+            <div class="padding70"> </div>
+        </Navbar>
     );
 }
 

@@ -709,7 +709,7 @@ function Order(props) {
                 cartTotal={cartTotal}
                 setIsOrder={setIsOrder}
               />
-              <div class="padding70"> </div>
+
               {toppingOrderResult && toppingOrderResult.length > 0 ?
                 <Toppingline
                   toppingApplyOrder={toppingApplyOrder}

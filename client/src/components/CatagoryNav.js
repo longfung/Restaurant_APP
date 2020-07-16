@@ -10,7 +10,7 @@ import {
   Jumbotron
 
 } from "reactstrap";
-import { MdShoppingCart, MdDehaze, MdSignalCellularConnectedNoInternet1Bar } from "react-icons/md";
+import { MdShoppingCart, MdDehaze, MdArrowBack, MdSignalCellularConnectedNoInternet1Bar } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { store } from "./Store";
 import access from '../util/access';
@@ -111,6 +111,9 @@ function CategoryNav(props) {
     // setSupportLocale([]);
   }, [catValue])
 
+  const goComponent = (target) => {
+    props.history.push(target);
+  };
   const handleSelected = id => {
     debugger;
     shareContext.dispatch({
@@ -257,7 +260,23 @@ function CategoryNav(props) {
           <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
             {window.innerWidth > 500 ?
               <React.Fragment>
-                <Col sm={8}>
+                <Col sm="1" xs="1">
+                  {shareContext.state.userMode == 1 ?
+
+                    <NavItem className="mt-0">
+                      <Button className="border-dark bg-dark font-weight-bold text-white"
+                        onClick={
+                          () => goComponent("/Restaurant")
+                        }>
+                        {
+                          <MdArrowBack color='white' size='3rem' />
+                        } </Button>
+                    </NavItem>
+                    :
+                    null
+                  }
+                </Col>
+                <Col sm={6}>
                   <Button onClick={() => handleSelected(0)}
                     className={shareContext.state.categoryId == null || shareContext.state.categoryId == 0 ? 'btn btn-danger active' : 'btn btn-secondary'}>
                     {t("AllCategory")}</Button>
@@ -280,8 +299,8 @@ function CategoryNav(props) {
                     <span className="LargeFont">{t("ListFormat")}</span></Link>
 
                 </Col>
-                <Col sm={2} >
-                  {shareContext.state.userMode == 2 ?
+                <Col sm={4} >
+                  {shareContext.state.userMode == 2 || shareContext.state.userMode == 1 ?
                     <span className="LargeFont"><Language /></span>
                     :
                     null
@@ -363,6 +382,7 @@ function CategoryNav(props) {
           </Nav>
         </Row>
       </Jumbotron>
+      <div class="padding70"> </div>
     </div>
   );
 }
