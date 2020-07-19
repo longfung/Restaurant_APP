@@ -26,14 +26,27 @@ import { Card } from '../styleds';
 function EntityT(props) {
     const shareContext = useContext(store);
     const { t } = useTranslation();
-    debugger;
-    const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
-    const defaultLanguage = shareContext.state.restaurant.locale;
-    const support_locale = shareContext.state.restaurant.support_locale.split(',');
+    // debugger;
+    // const restaurantId = shareContext.state.restaurant != null ? shareContext.state.restaurant.id : null;
+    const defaultLanguage = shareContext.state.restaurant
+        ? shareContext.state.restaurant.locale
+        : null;
+    const support_locale = shareContext.state.restaurant
+        ? shareContext.state.restaurant.support_locale.split(',')
+        : null;
+
+    // const defaultLanguage = shareContext.state.restaurant.locale;
+    // const support_locale = shareContext.state.restaurant.support_locale.split(',');
+    const setMessage = props.setMessage;
+    const restaurantId = shareContext.state.restaurant
+        ? shareContext.state.restaurant.id
+        : null;
     if (!restaurantId) {
+        let m = t("LoginFirst");
+        setMessage({ status: 400, msg: m });
         props.history.push("/Login");
     }
-    const setMessage = props.setMessage;
+
     const [menuT, setMenuT] = useState({});
     const [menuTClone, setMenuTClone] = useState({});
     const [menuTList, setMenuTList] = useState([]);

@@ -23,6 +23,11 @@ function Restaurant(props) { // console.log("In Restaurant");
     const shareContext = useContext(store);
     const userId = shareContext.state.ownerId;
     const setMessage = props.setMessage;
+    if (!userId) {
+        let m = t("LoginFirst");
+        setMessage({ status: 400, msg: m });
+        props.history.push("/Login");
+    }
     const [restaurant, setRestaurant] = useState({
         id: "",
         name: "",

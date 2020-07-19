@@ -36,9 +36,15 @@ import { useTranslation } from 'react-i18next';
 function Order(props) {
   const { t } = useTranslation();
   const shareContext = useContext(store);
+  const setMessage = props.setMessage;
   const restaurant = shareContext.state.restaurant;
-  const restaurantId = restaurant != null ? restaurant.id : null;
+  const restaurantId =
+    shareContext.state.restaurant != null
+      ? shareContext.state.restaurant.id
+      : null;
   if (!restaurantId) {
+    let m = t("LoginFirst");
+    setMessage({ status: 400, msg: m });
     props.history.push("/Login");
   }
   const userMode = shareContext.state.userMode;
@@ -285,6 +291,8 @@ function Order(props) {
         price: price,
         size: size,
         quantity: 1,
+        status: 1,
+        isTopping: false,
       };
       setCartList([...nCartList, tmpCart]);
     } else {
@@ -314,11 +322,15 @@ function Order(props) {
       // calculate topping is added and priced
       const resultArr = cartList[i].toppingResult;
       const toppingArr = cartList[i].toppingArray;
+      cartList[i].isTopping = false;
       if (resultArr) {
         resultArr.forEach((elem, idx) => {
+          if (elem != true && elem != false)
+            cartList[i].isTopping = true;
           if (elem == true) {
             const p = (toppingMap[toppingArr[idx]])[2];
             sum += p * cartList[i].quantity;
+            cartList[i].isTopping = true;
           }
         })
       }
@@ -509,6 +521,21 @@ function Order(props) {
     // adjust cloneSequence in menuList
   }
 
+  const submitOrder = () => {
+    // let i = 0;
+    // while (i < 1000) {
+    //   let r = i * 63;
+    //   if (r % 2 === 1 &&
+    //     r % 4 === 1 &&
+    //     r % 5 === 4 &&
+    //     r % 6 === 3 &&
+    //     r % 8 === 1) {
+    //     console.log("number is " + r + " " + i);
+    //   }
+    //   i++;
+    // }
+  }
+
   const dishPrice = (item, price, size, symbol) => {
     return (
       <Row className="text-left my-0 py-0 pl-0 ml-0 ">
@@ -637,7 +664,6 @@ function Order(props) {
           </Card>
         </Col>)
     }
-
   }
 
   const dishList = (item, idx) => {
@@ -733,6 +759,7 @@ function Order(props) {
           <Cart
             addToOrder={addToOrder}
             removeFromOrder={removeFromOrder}
+            submitOrder={submitOrder}
             taxRate={restaurant.tax_rate}
             cartTotal={cartTotal}
             isQuantity={isQuantity}

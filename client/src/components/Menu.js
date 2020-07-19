@@ -23,21 +23,23 @@ function Menu(props) {
     debugger;
     const { t } = useTranslation();
     const shareContext = useContext(store);
+    const username = shareContext.state.username;
+    const setMessage = props.setMessage;
 
     const restaurantId =
         shareContext.state.restaurant != null
             ? shareContext.state.restaurant.id
             : null;
     if (!restaurantId) {
+        let m = t("LoginFirst");
+        setMessage({ status: 400, msg: m });
         props.history.push("/Login");
     }
-    const username = shareContext.state.username;
-    const setMessage = props.setMessage;
     const [menu, setMenu] = useState({
         id: "",
         name: "",
         description: "",
-        locale: shareContext.state.restaurant.locale,
+        locale: shareContext.state.restaurant ? shareContext.state.restaurant.locale : null,
         price_s: 0,
         price_m: 0,
         price_l: 0,

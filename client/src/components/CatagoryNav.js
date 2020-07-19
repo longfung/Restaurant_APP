@@ -23,7 +23,15 @@ function CategoryNav(props) {
   const { t } = useTranslation();
   const restaurant = shareContext.state.restaurant;
   const username = shareContext.state.username;
-  const restaurantId = restaurant.id;
+  const restaurantId = shareContext.state.restaurant
+    ? shareContext.state.restaurant.id
+    : null;
+  const setMessage = props.setMessage;
+  if (!restaurantId) {
+    let m = t("LoginFirst");
+    setMessage({ status: 400, msg: m });
+    props.history.push("/Login");
+  }
   const fetchMenuList = props.fetchMenuList;
   const cartTotal = props.cartTotal;
   const setIsOrder = props.setIsOrder;

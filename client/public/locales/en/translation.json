@@ -65,5 +65,7 @@
     "MenuName": "Dish Name",
     "MenuDesc": " Dish Description",
     "ChooseLanguage": "Choose a language",
-    "Note": "NOTE"
+    "Note": "NOTE",
+    "SubmitOrder": "Submit Order",
+    "LoginFirst": "Please Login to your acccount first"
 }

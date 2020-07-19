@@ -64,5 +64,7 @@
     "MenuName": "單品名稱",
     "MenuDesc": "單品描述",
     "ChooseLanguage": "選擇一種語言",
-    "Note": "注記"
+    "Note": "注記",
+    "SubmitOrder": "提交訂單",
+    "LoginFirst": "請先登錄到您的帳戶"
 }

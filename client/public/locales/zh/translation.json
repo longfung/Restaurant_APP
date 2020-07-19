@@ -64,5 +64,7 @@
     "MenuName": "单品称名",
     "MenuDesc": " 单品描述",
     "ChooseLanguage": "选择一种语言",
-    "Note": "注记"
+    "Note": "注记",
+    "SubmitOrder": "提交订单",
+    "LoginFirst": "请先登录到您的帐户"
 }

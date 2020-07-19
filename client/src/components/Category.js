@@ -11,10 +11,13 @@ function Category(props) {
   const restaurantId = shareContext.state.restaurant
     ? shareContext.state.restaurant.id
     : null;
+  const setMessage = props.setMessage;
   if (!restaurantId) {
+    let m = t("LoginFirst");
+    setMessage({ status: 400, msg: m });
     props.history.push("/Login");
   }
-  const setMessage = props.setMessage;
+
   const [node, setNode] = useState({});
   const [categoryList, setCategoryList] = useState([]);
 
