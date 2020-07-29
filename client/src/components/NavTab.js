@@ -122,7 +122,7 @@ function NavTab(props) {
                                         } </NavLink>
                                 </NavItem>
                             </Col>
-                            <Col sm="2" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+                            <Col sm="1" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
 
                                 <Language />
                             </Col>
@@ -135,6 +135,17 @@ function NavTab(props) {
                                         className=" bg-dark font-weight-bold text-white">
                                         <MdAccountCircle color="white" size="2rem" /> {username}
                                     </Link>
+                                </NavItem>
+                            </Col>
+                            <Col sm="1">
+                                <NavItem>
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
+                                        onClick={
+                                            () => goComponent("/QueueA")
+                                        }>
+                                        {
+                                            t("QueueA")
+                                        } </Button>
                                 </NavItem>
                             </Col>
                         </React.Fragment>

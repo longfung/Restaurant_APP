@@ -23,6 +23,11 @@ import {
   CardText,
   CardImgOverlay,
   CardFooter,
+  Modal,
+  ModalTitle,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from "reactstrap";
 import { Radio, RadioGroup } from 'react-radio-group'
 import CategoryNav from "./CatagoryNav";
@@ -46,6 +51,9 @@ function Order(props) {
     let m = t("LoginFirst");
     setMessage({ status: 400, msg: m });
     props.history.push("/Login");
+  }
+  if (!shareContext.state.customer) {
+    props.history.push("/Customer");
   }
   const userMode = shareContext.state.userMode;
   // const restaurant = shareContext.state.restaurant;
@@ -74,11 +82,13 @@ function Order(props) {
   });
   const [chosenToppingMap, setChosenToppingMap] = useState({});
   const toppingMapRef = useRef([]);
+
+
   let catId = 0;
 
   useEffect(() => {
     // const restaurantId = 45000
-    debugger;
+    // debugger;
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
@@ -114,7 +124,7 @@ function Order(props) {
   }, [cartList]);
 
   const fetchMenuList = (categoryId) => {
-    debugger;
+    // debugger;
     let promise1 = '';
     // let catId = '';
     // if (categoryId == 0)
@@ -135,7 +145,7 @@ function Order(props) {
       //     params: { restaurantId: restaurantId, categoryId: categoryId },
       //   })
       .then((res) => {
-        debugger;
+        // debugger;
         setMenuList([]);
         const newMenuList = res.data.map(item => {
           if (item.name_t != null) item.name = item.name_t;
@@ -193,7 +203,7 @@ function Order(props) {
     let tList = [];
     let rList = [];
     let cnt = 0;
-    debugger;
+    // debugger;
     oList.map((item, idx) => {
       let n = item.namet == null ? item.name : item.namet;
       if (!tMap.hasOwnProperty(item.id)) {
@@ -237,7 +247,7 @@ function Order(props) {
     let rList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
-    debugger;
+    // debugger;
     const toppingArray = obj.topping.split(',');
     toppingArray.forEach((elem, idx) => {
       const rId = parseInt(elem);
@@ -313,7 +323,7 @@ function Order(props) {
   };
 
   const calculateCartTotal = () => {
-    debugger;
+    // debugger;
     let sum = 0;
     for (let i = 0; i < cartList.length; i++) {
       if (cartList[i].quantity !== 0) {
@@ -359,7 +369,7 @@ function Order(props) {
   const removeFromOrder = (event, item, size) => {
     // search dish has been ordered yet
     event.preventDefault();
-    debugger;
+    // debugger;
     const nCartList = cartList.filter((elem) => {
       if (elem.id === item.id && elem.cloneSequence == item.cloneSequence && elem.size === size) {
         elem.quantity--;
@@ -372,14 +382,14 @@ function Order(props) {
   };
 
   const setOrderToppingRadio = (e, idx) => {
-    debugger;
+    // debugger;
 
     // toppingOrderResult[idx] = e;
     setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e : elem))
   }
 
   const setOrderToppingBox = (e, idx) => {
-    debugger;
+    // debugger;
 
     // toppingOrderResult[idx] = e;
     setToppingOrderResult(toppingOrderResult.map((elem, seq) => seq === idx ? e.target.checked : elem))
@@ -387,7 +397,7 @@ function Order(props) {
   }
 
   const setMenuToppingRadio = (e, idx, id, seq, result) => {
-    debugger;
+    // debugger;
     let nResult = result;
     nResult[idx] = e;
     setMenuList(menuList.map(elem => elem.id === id && elem.cloneSequence === seq ? { ...elem, toppingResult: nResult } : elem));
@@ -397,7 +407,7 @@ function Order(props) {
   }
 
   const setMenuToppingBox = (e, idx, id, seq, result) => {
-    debugger;
+    // debugger;
 
     // toppingOrderResult[idx] = e;
     let nResult = result;
@@ -410,7 +420,7 @@ function Order(props) {
   }
 
   const cloneMenuItem = (item) => {
-    debugger;
+    // debugger;
     let cloneItem = { ...item }
     let isFound = false;
     let insertIdx = 0;
@@ -442,7 +452,7 @@ function Order(props) {
   }
 
   const insertCloneItem = elem => {
-    debugger;
+    // debugger;
     if (chosenToppingMap && chosenToppingMap.hasOwnProperty(elem.id))
       chosenToppingMap[elem.id].push(elem.cloneSequence)
     else {
@@ -455,7 +465,7 @@ function Order(props) {
   }
 
   const removeCloneItem = elem => {
-    debugger;
+    // debugger;
     let chosenTopping;
     if (chosenToppingMap.hasOwnProperty(elem.id)) {
       chosenTopping = chosenToppingMap[elem.id].filter(seqId => {
@@ -470,7 +480,7 @@ function Order(props) {
   }
 
   const mergeChoiceToppingToMenu = menuList => {
-    debugger;
+    // debugger;
     if (chosenToppingMap == null)
       return menuList;
     const completedMenu = menuList.reduce((acc, item) => {
@@ -534,7 +544,31 @@ function Order(props) {
     //   }
     //   i++;
     // }
+    // if (node.id != "") {
+    //   handleUpdateCategory();
+    //   return;
+    // }
+    debugger;
+    let data = {
+      status: access.Status.submit,
+      cart: JSON.stringify(cartList),
+      topping_order_result: JSON.stringify(toppingOrderResult),
+      topping_apply_order: JSON.stringify(toppingApplyOrder),
+      restaurant_id: restaurantId,
+      date_id: new Date().toLocaleDateString().split('/').reverse().join(''),
+      order_id: shareContext.state.customer.orderId,
+      name: shareContext.state.customer.name
+    };
+    // props.history.push("/Queue", { toppingMap: toppingMap });
+    const promise1 = access.addOrders(data);
+    Promise.resolve(promise1)
+      .then(res => {
+        let m = " is created Successfully !!!";
+        setMessage({ status: 200, msg: m });
+        props.history.push("/Queue", { toppingMap: toppingMap });
+      });
   }
+
 
   const dishPrice = (item, price, size, symbol) => {
     return (
@@ -667,7 +701,7 @@ function Order(props) {
   }
 
   const dishList = (item, idx) => {
-    debugger;
+    // debugger;
     return (
       <>
 
@@ -719,58 +753,64 @@ function Order(props) {
   };
 
   return (
-    <div>
+
+
+    < div >
+
+
       {userMode != 2 ? <NavTab {...props} /> : null}
-      {isOrder ? (
-        detail.isDetail == true ?
-          <div>
-            <Detail {...props} menu={detail.menu} setDetail={setDetail} /> }
-          </div>
-          : (
+      {
+        isOrder ? (
+          detail.isDetail == true ?
             <div>
-              <CategoryNav
-                {...props}
-                restaurant={restaurant}
-                fetchMenuList={fetchMenuList}
-                cartTotal={cartTotal}
-                setIsOrder={setIsOrder}
-              />
-
-              {toppingOrderResult && toppingOrderResult.length > 0 ?
-                <Toppingline
-                  toppingApplyOrder={toppingApplyOrder}
-                  toppingGroupMap={toppingGroupMap}
-                  toppingMap={toppingMap}
-                  toppingOrderResult={toppingOrderResult}
-                  setOrderToppingBox={setOrderToppingBox}
-                  setOrderToppingRadio={setOrderToppingRadio}
+              <Detail {...props} menu={detail.menu} setDetail={setDetail} /> }
+          </div>
+            : (
+              <div>
+                <CategoryNav
+                  {...props}
+                  restaurant={restaurant}
+                  fetchMenuList={fetchMenuList}
+                  cartTotal={cartTotal}
+                  setIsOrder={setIsOrder}
                 />
-                : null}
-              {shareContext.state.menuFormat != 2 ?
-                <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
-                :
-                <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
-              }
+
+                {toppingOrderResult && toppingOrderResult.length > 0 ?
+                  <Toppingline
+                    toppingApplyOrder={toppingApplyOrder}
+                    toppingGroupMap={toppingGroupMap}
+                    toppingMap={toppingMap}
+                    toppingOrderResult={toppingOrderResult}
+                    setOrderToppingBox={setOrderToppingBox}
+                    setOrderToppingRadio={setOrderToppingRadio}
+                  />
+                  : null}
+                {shareContext.state.menuFormat != 2 ?
+                  <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
+                  :
+                  <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
+                }
 
 
-            </div>
+              </div>
+            )
+        ) : (
+            <Cart
+              addToOrder={addToOrder}
+              removeFromOrder={removeFromOrder}
+              submitOrder={submitOrder}
+              taxRate={restaurant.tax_rate}
+              cartTotal={cartTotal}
+              isQuantity={isQuantity}
+              cartList={cartList}
+              setIsOrder={setIsOrder}
+              toppingApplyOrder={toppingApplyOrder}
+              toppingMap={toppingMap}
+              toppingOrderResult={toppingOrderResult}
+            />
           )
-      ) : (
-          <Cart
-            addToOrder={addToOrder}
-            removeFromOrder={removeFromOrder}
-            submitOrder={submitOrder}
-            taxRate={restaurant.tax_rate}
-            cartTotal={cartTotal}
-            isQuantity={isQuantity}
-            cartList={cartList}
-            setIsOrder={setIsOrder}
-            toppingApplyOrder={toppingApplyOrder}
-            toppingMap={toppingMap}
-            toppingOrderResult={toppingOrderResult}
-          />
-        )}
-    </div>
+      }
+    </div >
   );
 }
 

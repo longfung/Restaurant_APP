@@ -27,6 +27,7 @@ app.use("/api/entityT", require("./api/entityT"));
 app.use("/api/category", require("./api/category"));
 app.use("/api/topping", require("./api/topping"));
 app.use("/api/user", require("./api/user"));
+app.use("/api/orders", require("./api/orders"));
 // app.use('/api/fileupload', require('./api/fileupload'));
 app.post("/fileupload", (req, res) => {
   // console.log(`"fileuplaod2" + ${workspaceFolder}`);

@@ -277,7 +277,7 @@ function CategoryNav(props) {
                           () => goComponent("/Restaurant")
                         }>
                         {
-                          <MdArrowBack color='white' size='3rem' />
+                          <MdArrowBack color='white' size='2rem' />
                         } </Button>
                     </NavItem>
                     :

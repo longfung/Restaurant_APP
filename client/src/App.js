@@ -9,6 +9,9 @@ import Menu from "./components/Menu";
 import Category from "./components/Category";
 import Topping from "./components/Topping";
 import Order from "./components/Order";
+import Queue from "./components/Queue";
+import QueueA from "./components/QueueA";
+import Customer from "./components/Customer";
 import Login from "./components/Login";
 import User from "./components/User";
 import EntityT from "./components/EntityT";
@@ -98,6 +101,20 @@ function App(props) {
               render={(props) => <Order {...props} setMessage={setMessage} />}
             />
             <Route
+              exact
+              path="/queue"
+              render={(props) => <Queue {...props} setMessage={setMessage} />}
+            />
+            <Route
+              exact
+              path="/queueA"
+              render={(props) => <QueueA {...props} setMessage={setMessage} />}
+            />
+            <Route
+              exact
+              path="/customer"
+              render={(props) => <Customer {...props} setMessage={setMessage} />}
+            />            <Route
               path="/Login"
               render={(props) => <Login {...props} setMessage={setMessage} />}
             />

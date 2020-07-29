@@ -1,5 +1,7 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
+const { debug } = require("request-promise");
+const { MdAccessAlarm } = require("react-icons/md");
 // const apiUrl = `http://localhost:8080`;
 let apiUrl = ``;
 if (process.env.REACT_APP_DB_HOST)
@@ -15,6 +17,16 @@ const Entity = {
   category: 2,
   desc: 3,
   topping: 4
+}
+
+const Status = {
+  open: 1,
+  submit: 2,
+  pending: 3,
+  itemComplete: 4,
+  orderComplete: 5,
+  paid: 6,
+  close: 7
 }
 
 // axios.defaults.port = 5000;
@@ -166,8 +178,41 @@ async function updateUser(user) {
   });
 }
 
+async function fetchOrdersById(id) {
+  debugger;
+  let data = { userId: id };
+  return await axios.get(apiUrl + "/api/orders/:id", { params: data });
+}
+
+async function fetchOrdersByDate(restaurantId, dateId) {
+  debugger;
+  let data = { restaurantId: restaurantId, date_id: dateId };
+  return await axios.get(apiUrl + "/api/orders/date", { params: data });
+}
+
+async function fetchOrdersByActive(restaurantId, dateId) {
+  debugger;
+  let data = { restaurantId: restaurantId, date_id: dateId, s1: Status.submit, s2: Status.itemComplete };
+  return await axios.get(apiUrl + "/api/orders/active", { params: data });
+}
+
+async function addOrders(order) {
+  return await axios.post(apiUrl + "/api/orders", JSON.stringify(order), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function updateOrders(order) {
+  let data = JSON.stringify(order);
+  return await axios.put(apiUrl + "/api/orders", data, {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+
 module.exports = {
   Entity,
+  Status,
   fetchRestuarantByOwnerId,
   performLogin,
   addRestaurant,
@@ -192,4 +237,9 @@ module.exports = {
   addEntityT,
   updateEntityT,
   deleteEntityTById,
+  fetchOrdersById,
+  fetchOrdersByDate,
+  fetchOrdersByActive,
+  addOrders,
+  updateOrders,
 };

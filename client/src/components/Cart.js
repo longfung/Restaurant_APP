@@ -33,7 +33,7 @@ function Cart(props) {
     useEffect(() => {
         let cnt = 0;
         toppingOrderResult.map(elem => {
-            if (elem != false)
+            if (elem !== false)
                 cnt++;
         })
         setResultCount(cnt - 1);
@@ -93,7 +93,7 @@ function Cart(props) {
                         const n = (toppingMap[elem])[0]
                         // if (idx == 0)
                         //     return <span>{t("Note")}:&nbsp;&nbsp;</span>
-                        debugger;
+                        // debugger;
                         if (g == 'G0') {
                             if (toppingOrderResult[idx] == true) {
                                 if (idx < resultCount)
@@ -102,7 +102,7 @@ function Cart(props) {
                                     return <span key={idx}>{n}</span>
                             }
                         } else {
-                            debugger;
+                            // debugger;
                             const res = toppingMap[toppingOrderResult[idx]];
                             if (idx < resultCount)
                                 return <span key={idx}>{res[0]},&nbsp;&nbsp;</span>
@@ -176,11 +176,11 @@ function Cart(props) {
 
                                 </Col>
                                 <Col sm='3' xs="3">
-                                    <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)} className='flow-right'>
+                                    <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)} className='float-left'>
                                         <MdAddCircle color='Primary' size='2rem' />
                                     </Link>
                                     {isQuantity(elem, elem.size) ?
-                                        <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)} className=' flow-right'>
+                                        <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)} className=' float-left'>
                                             <MdRemoveCircle color='Primary' size='2rem' />
                                         </Link>
                                         : null}
