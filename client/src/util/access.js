@@ -1,7 +1,7 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
-const { debug } = require("request-promise");
-const { MdAccessAlarm } = require("react-icons/md");
+// const { debug } = require("request-promise");
+// const { MdAccessAlarm } = require("react-icons/md");
 // const apiUrl = `http://localhost:8080`;
 let apiUrl = ``;
 if (process.env.REACT_APP_DB_HOST)
