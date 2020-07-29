@@ -46,6 +46,7 @@ function Menu(props) {
         price_x: 0,
         rest_id: 1000,
         category_id: "",
+        available: true,
         // image_path: `${process.cwd()}/public/images/img1.jpg`
         image_path: "",
     });
@@ -317,6 +318,7 @@ function Menu(props) {
             image_path: menu.image_path,
             restaurant_id: restaurantId,
             category_id: category.id,
+            available: menu.available,
             topping: g1.toString()
         };
         return data;
@@ -343,6 +345,7 @@ function Menu(props) {
             price_x: obj.price_x == null ? 0 : obj.price_x,
             rest_id: obj.restaurant_id,
             category_id: obj.category_id,
+            available: obj.available,
             image_path: obj.image_path,
         });
         shareContext.dispatch({
@@ -396,6 +399,7 @@ function Menu(props) {
             price_l: 0,
             price_x: 0,
             category_id: "",
+            available: true,
             image_path: "",
             topping: ""
         }));
@@ -438,7 +442,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="6" sm="6">
-                        <FormGroup className="float-left">
+                        <FormGroup className="float-left" style={{ width: "275px" }}>
                             <Label for="categoryid">{t("Category")}</Label>
                             <Select
                                 id="categoryid"
@@ -464,7 +468,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="3" sm="3">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="price_m">{t("Price")}({t("Medium")})</Label>
                             <Input
                                 type="text"
@@ -475,7 +479,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="3" sm="3">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="price_l">{t("Price")}({t("Large")})</Label>
                             <Input
                                 type="text"
@@ -486,7 +490,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="3" sm="3">
-                        <FormGroup>
+                        <FormGroup className="float-left">
                             <Label for="price_x">{t("Price")}({t("Extra")})</Label>
                             <Input
                                 type="text"
@@ -507,7 +511,7 @@ function Menu(props) {
                         </FormGroup>
                     </Col>
                     <Col xs="4" sm="4">
-                        <Card className="width: 6rem">
+                        <Card>
                             <div className="imgblock">
                                 <img
                                     className="imgbox"
@@ -526,7 +530,7 @@ function Menu(props) {
 
                     </Col>
                     <Col xs="6" sm="6">
-                        <FormGroup className="float-left">
+                        <FormGroup className="float-left" style={{ width: "275px" }}>
                             <Label for="toppingSelect">
                                 {
                                     t("ToppingList")
@@ -540,7 +544,23 @@ function Menu(props) {
                                 value={toppingSelected} />
                         </FormGroup>
                     </Col>
-                    <Col xs="6" sm="6">
+                    <Col xs="3" sm="3">
+
+
+                        <FormGroup className="float-left" key={1}>
+
+                            <Label for="isAvailable">
+                                {t("Available")}
+                            </Label>
+                            <Input className="form-control margin-left" type="checkbox" id="isAvailable"
+                                checked={menu.available}
+                                onChange={e => setMenu({ ...menu, available: e.target.checked })}
+                            />
+
+                        </FormGroup>
+
+                    </Col>
+                    <Col xs="3" sm="3">
                         <Button onClick={handleCreateOrUpdateMenu}>{t("Save")} </Button>
                         &nbsp;
                         <Button onClick={initialMenu}>{t("Cancel")} </Button>
@@ -581,7 +601,7 @@ function Menu(props) {
                     ))}
                 </ul>
             </div>
-        </div>
+        </div >
     );
 }
 
