@@ -181,3 +181,18 @@ input[type=radio]{
     visibility: hidden;
   }
 }
+
+div.notification-bottom {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  /* Rest of your styling */
+}
+
+.notification-close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  /* This are approximated values, and the rest of your styling goes here */
+}

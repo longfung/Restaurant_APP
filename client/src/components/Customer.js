@@ -56,7 +56,7 @@ function Customer(props) { // console.log("In Restaurant");
                 <ModalBody>
                     <Form>
                         <Row form>
-                            <Col sm="6" xs="6">
+                            <Col sm="12" xs="12">
                                 <FormGroup>
                                     <Label for="name">
                                         {
@@ -74,7 +74,7 @@ function Customer(props) { // console.log("In Restaurant");
                                         } />
                                 </FormGroup>
                             </Col>
-                            <Col sm="6" xs="6">
+                            <Col sm="12" xs="12">
                                 <FormGroup>
                                     <Label for="orderId">
                                         {

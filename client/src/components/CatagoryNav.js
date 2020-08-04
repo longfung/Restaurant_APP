@@ -342,7 +342,7 @@ function CategoryNav(props) {
                     // className="mb-3"
                     value={catValue} />
                 </Col>
-                <Col sm="3" xs="3">
+                <Col sm="3" xs="3" className="float-left mx-0 px-0">
                   <Select id="formatid"
                     // className="abc"
                     components={{ DropdownIndicator }}
@@ -356,7 +356,7 @@ function CategoryNav(props) {
                 </Col>
 
                 {shareContext.state.userMode == 2 ?
-                  <Col sm="3" xs="3">
+                  <Col sm="3" xs="3" className="float-left mx-0 px-0">
                     <Select id="languageid"
                       // className="abc"
                       components={{ DropdownIndicator }}

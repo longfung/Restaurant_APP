@@ -17,15 +17,15 @@ function MessageBar(props) {
   let barColor = "";
   status > 299 ? (barColor = "text-danger") : (barColor = "text-info");
   return (
-    <div>
+    <div class="notification-bottom">
       <Card>
         <Row>
-          <Col sm="11">
+          <Col sm="11" xs="10">
             <CardTitle className={barColor}>
               Status: {status} Message: {msg}
             </CardTitle>
           </Col>
-          <Col sm="1">
+          <Col sm="1" xs="2">
             <Link to="#!" onClick={resetNessageBar}>
               <MdClear color="dark" size="2.2rem" />
             </Link>

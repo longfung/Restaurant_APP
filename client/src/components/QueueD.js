@@ -65,7 +65,7 @@ function QueueD(props) {
                     elem["newItem"] = true;
                 else
                     elem["newItem"] = false;
-                if (oItem.status === access.Status.submit && elem.status === access.Status.itemComplete)
+                if ((oItem.status === access.Status.submit || oItem.status === access.Status.itemComplete) && elem.status === access.Status.itemComplete)
                     curr.push(key);
                 return elem;
             })
