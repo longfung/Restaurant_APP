@@ -70,10 +70,11 @@ class Orders {
 
     static insert(node, callback) {
         db.query(
-            "INSERT INTO orders (status, cart, topping_order_result, topping_apply_order, restaurant_id, date_id, order_id, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+            "INSERT INTO orders (status, cart, topping_order_result, topping_apply_order, restaurant_id, date_id, order_id, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning id",
             [node.status, node.cart, node.topping_order_result, node.topping_apply_order, node.restaurant_id, node.date_id, node.order_id, node.name],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
+                console.log("Order id " + res[0].id);
                 if (err.error) return callback(err);
                 callback(res);
             }

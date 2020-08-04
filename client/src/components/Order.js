@@ -563,7 +563,7 @@ function Order(props) {
     const promise1 = access.addOrders(data);
     Promise.resolve(promise1)
       .then(res => {
-        let m = " is created Successfully !!!";
+        let m = "Order id " + res.data[0].id + " is created Successfully !!!";
         setMessage({ status: 200, msg: m });
         props.history.push("/Queue", { toppingMap: toppingMap });
       });

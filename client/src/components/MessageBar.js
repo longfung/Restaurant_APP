@@ -21,9 +21,16 @@ function MessageBar(props) {
       <Card>
         <Row>
           <Col sm="11" xs="10">
-            <CardTitle className={barColor}>
-              Status: {status} Message: {msg}
-            </CardTitle>
+            {status < 300 ?
+              <CardTitle className={barColor} className="font-weight-bold">
+                {msg}
+              </CardTitle>
+              :
+              <CardTitle className={barColor} className="font-weight-bold">
+                Status: {status} Message: {msg}
+              </CardTitle>
+            }
+
           </Col>
           <Col sm="1" xs="2">
             <Link to="#!" onClick={resetNessageBar}>
