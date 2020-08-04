@@ -11,6 +11,7 @@ import Topping from "./components/Topping";
 import Order from "./components/Order";
 import Queue from "./components/Queue";
 import QueueA from "./components/QueueA";
+import QueueD from "./components/QueueD";
 import Customer from "./components/Customer";
 import Login from "./components/Login";
 import User from "./components/User";
@@ -109,6 +110,11 @@ function App(props) {
               exact
               path="/queueA"
               render={(props) => <QueueA {...props} setMessage={setMessage} />}
+            />
+            <Route
+              exact
+              path="/queueD"
+              render={(props) => <QueueD {...props} setMessage={setMessage} />}
             />
             <Route
               exact

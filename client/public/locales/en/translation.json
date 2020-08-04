@@ -34,8 +34,8 @@
     "CustomerInfo": "Customer Information",
     "orderId": "Email or Table Number",
     "CustomerName": "Customer Name",
-    "QueueA": "Queue Admin",
-    "QueueD": "Queue Board",
+    "QueueA": "Chef View",
+    "QueueD": "Dashboard",
     "Translator": "Translator",
     "Login": "Login",
     "CreateUser": "Create User",
@@ -73,5 +73,12 @@
     "ChooseLanguage": "Choose a language",
     "Note": "NOTE",
     "SubmitOrder": "Submit Order",
-    "LoginFirst": "Please Login to your acccount first"
+    "LoginFirst": "Please Login to your acccount first",
+    "Demo": "Demo",
+    "CoffeeShopScenario": "Coffee Shop Scenario",
+    "RestaurantScenario": "Demo",
+    "LoginToMaintainOwnShop": "Login to Maintain Own Shop",
+    "WelcomeToTakeOrder": "Welcome to Take Order",
+    "CreateUserAccount": "Create User Account",
+    "dummy": ""
 }

@@ -1,9 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
+import { MdArrowBack } from 'react-icons/md';
 import { store } from "./Store";
+import { Link } from 'react-router-dom';
 
-import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";
+import {
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  Form, FormGroup, Input, Label, Row, Col, Button
+} from "reactstrap";
 import { useTranslation } from "react-i18next";
-
+import Language from './Language';
 const access = require("../util/access.js");
 
 function Login(props) {
@@ -70,6 +79,75 @@ function Login(props) {
         });
       });
   };
+
+  return (
+    <div >
+      <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
+        <Row>
+
+          <Col sm={10} xs={10}>
+            <h3>
+              <CardTitle className=" font-weight-bold">{t("WelcomeToTakeOrder")}</CardTitle>
+            </h3>
+          </Col>
+
+          <Col sm={1} xs={1} className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+            <Language />
+          </Col>
+          <Col sm="1" xs="1" className="float-left">
+
+            <Link to="#!"
+              onClick={
+                () => props.history.push("/")
+              }
+              className=" bg-dark font-weight-bold text-white">
+              <MdArrowBack color="white" size="2rem" />
+            </Link>
+
+          </Col>
+
+        </Row>
+
+        <Row>
+          <Form inline>
+            <Row>
+              <Col sm="5">
+                <FormGroup>
+                  <Label for="userName" hidden>
+                    {t("Username")}
+                  </Label>
+                  <Input
+                    type="Text"
+                    name="userName"
+                    id="userName"
+                    placeholder={t("Username")}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col sm="5">
+                <FormGroup>
+                  <Label for="password" hidden>
+                    Password
+            </Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder={t("Password")}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col sm="2" >
+                <Button className="font-weight-bold" onClick={submit} >{t("Login")}</Button>
+              </Col>
+            </Row>
+          </Form>
+        </Row>
+      </Card>
+    </div>
+  );
 
   return (
     <Form inline>

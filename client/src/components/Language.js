@@ -24,6 +24,8 @@ function Language(props) {
         if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
             const arr = shareContext.state.restaurant.support_locale.split(',')
             setSupportLocale(arr);
+        } else {
+            setSupportLocale(['en', 'tw', 'zh'])
         }
 
     }, [rId])

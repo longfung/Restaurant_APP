@@ -108,21 +108,27 @@ function NavTab(props) {
                             </Col>
                             <Col sm="1">
                                 <NavItem className="mt-0 ">
-                                    <NavLink className="border-dark bg-dark font-weight-bold text-white" href="/Login">
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
+                                        onClick={
+                                            () => goComponent("/QueueA")
+                                        }>
                                         {
-                                            t("Login")
-                                        } </NavLink>
+                                            t("QueueA")
+                                        } </Button>
                                 </NavItem>
                             </Col>
                             <Col sm="1">
                                 <NavItem>
-                                    <NavLink className="border-dark bg-dark font-weight-bold text-white text-nowrap" href="/User">
+                                    <Button className="border-dark bg-dark font-weight-bold text-white"
+                                        onClick={
+                                            () => goComponent("/QueueD")
+                                        }>
                                         {
-                                            t("CreateUser")
-                                        } </NavLink>
+                                            t("QueueD")
+                                        } </Button>
                                 </NavItem>
                             </Col>
-                            <Col sm="1" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+                            <Col sm="2" className="border-dark bg-dark font-weight-bold text-white text-nowrap">
 
                                 <Language />
                             </Col>
@@ -137,17 +143,7 @@ function NavTab(props) {
                                     </Link>
                                 </NavItem>
                             </Col>
-                            <Col sm="1">
-                                <NavItem>
-                                    <Button className="border-dark bg-dark font-weight-bold text-white"
-                                        onClick={
-                                            () => goComponent("/QueueA")
-                                        }>
-                                        {
-                                            t("QueueA")
-                                        } </Button>
-                                </NavItem>
-                            </Col>
+
                         </React.Fragment>
                     </Nav>
 

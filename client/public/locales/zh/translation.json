@@ -72,5 +72,12 @@
     "ChooseLanguage": "选择一种语言",
     "Note": "注记",
     "SubmitOrder": "提交订单",
-    "LoginFirst": "请先登录到您的帐户"
+    "LoginFirst": "请先登录到您的帐户",
+    "Demo": "演示",
+    "CoffeeShopScenario": "咖啡店场景演示",
+    "RestaurantScenario": "餐厅场景演示",
+    "LoginToMaintainOwnShop": "登录管理商店",
+    "WelcomeToTakeOrder": "欢迎来订购",
+    "CreateUserAccount": "创建用户帐号",
+    "dummy": ""
 }

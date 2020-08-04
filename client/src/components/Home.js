@@ -10,69 +10,70 @@ import {
   Col,
   NavLink
 } from "reactstrap";
+import { useTranslation } from "react-i18next";
+import Language from './Language';
 
 function Home(props) {
+  const { t } = useTranslation();
   return (
     <div >
-      <Card>
-        <CardImg
-          top
-          width="100%"
-          src="/assets/318x180.svg"
-          alt="Card image cap"
-        />
+      <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
+        <Row>
+          <Col sm={10} xs={10}>
+            <h3>
+              <CardTitle className=" font-weight-bold">{t("WelcomeToTakeOrder")}</CardTitle>
+            </h3>
+          </Col>
+
+          <Col sm={2} xs={2} className="border-dark bg-dark font-weight-bold text-white text-nowrap">
+            <Language />
+          </Col>
+
+        </Row>
+
         <Row>
           <Col sm="4">
             <CardBody>
-              <CardTitle> Welcome to my restaurant</CardTitle>
-              <CardText>Login to maintain owner restaurant</CardText>
-              <NavItem className="mt-0">
-                <NavLink
-                  className="border-info bg-light text-uppercase text-primary"
-                  href="/Login?userMode=1"
-                >
-                  Login
-                </NavLink>
-              </NavItem>
+              <CardText>{t("LoginToMaintainOwnShop")}</CardText>
+
+              <NavLink
+                className="border-info bg-light text-uppercase text-primary font-weight-bold active"
+                href="/Login?userMode=1"
+              >
+                {t("Login")}
+              </NavLink>
+
             </CardBody>
           </Col>
           <Col sm="4">
             <CardBody>
-              <CardTitle> Create user account</CardTitle>
-              <CardText>
-                Create a user account and then to create restaurant
-              </CardText>
-              <NavItem className="mt-0">
-                <NavLink
-                  className="border-info bg-light text-uppercase text-primary"
-                  href="/User"
-                >
-                  Create account
-                </NavLink>
-              </NavItem>
+              <CardTitle>{t("CreateUserAccount")}</CardTitle>
+
+              <NavLink
+                className="border-info bg-light text-uppercase text-primary font-weight-bold"
+                href="/User"
+              >
+                {t("CreateUser")}
+              </NavLink>
+
             </CardBody>
           </Col>
           <Col sm="4">
             <CardBody>
-              <CardTitle> Demo</CardTitle>
-              <CardText>
-                run a demo1 to see how restaurant guest conduct ordering based on
-                dish menu and demo2 for Coffee House
-              </CardText>
-              <NavItem className="mt-0">
-                <NavLink
-                  className="border-info bg-light text-uppercase text-primary"
-                  href="/login?userMode=2&u=demo"
-                >
-                  Demo_restaurant
-                </NavLink>
-                <NavLink
-                  className="border-info bg-light text-uppercase text-primary"
-                  href="/login?userMode=2&u=demo2"
-                >
-                  Demo_Coffee
-                </NavLink>
-              </NavItem>
+              <CardTitle>{t("Demo")}</CardTitle>
+              <NavLink
+                className="border-info bg-light text-uppercase text-primary font-weight-bold"
+                href="/login?userMode=2&u=demo"
+              >
+                {t("RestaurantScenario")}
+              </NavLink>
+              <hr />
+              <NavLink
+                className="border-info bg-light text-uppercase text-primary font-weight-bold"
+                href="/login?userMode=2&u=demo2"
+              >
+                {t("CoffeeShopScenario")}
+              </NavLink>
             </CardBody>
           </Col>
         </Row>
