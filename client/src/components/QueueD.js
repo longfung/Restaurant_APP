@@ -84,17 +84,22 @@ function QueueD(props) {
             <Row>
                 <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
                     <React.Fragment>
-                        <Col sm="12" xs="12" className="float-left">
+                        <Col sm="5" xs="5" className="float-left">
                             <NavItem className="float-left" >
                                 <Link to="#!"
                                     onClick={
                                         () => props.history.push("/Restaurant")
                                     }
                                     className=" bg-dark font-weight-bold text-white">
+
                                     <MdArrowBack color="white" size="2rem" />
                                 </Link>
                             </NavItem>
                         </Col>
+                        <Col sm="7" xs="7" className=" bg-dark font-weight-bold text-white">
+                            {t("QueueD")}
+                        </Col>
+
 
                     </React.Fragment>
                 </Nav>

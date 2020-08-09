@@ -34,9 +34,16 @@ function QueueA(props) {
         props.history.push("/Login");
     }
 
+    // useEffect(() => {
+    //     debugger;
+    //     getToppingList();
+    // }, []);
+
     useEffect(() => {
-        debugger;
-        getToppingList();
+        const interval = setInterval(() => {
+            getToppingList();
+        }, 10000);
+        return () => clearInterval(interval);
     }, []);
 
     const getToppingList = () => {
@@ -119,7 +126,7 @@ function QueueA(props) {
             <Row>
                 <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
                     <React.Fragment>
-                        <Col sm="12" xs="12" className="float-left">
+                        <Col sm="5" xs="5" className="float-left">
                             <NavItem className="float-left" >
                                 <Link to="#!"
                                     onClick={
@@ -130,7 +137,9 @@ function QueueA(props) {
                                 </Link>
                             </NavItem>
                         </Col>
-
+                        <Col sm="7" xs="7" className=" bg-dark font-weight-bold text-white">
+                            {t("QueueA")}
+                        </Col>
                     </React.Fragment>
                 </Nav>
             </Row>

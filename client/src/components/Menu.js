@@ -72,7 +72,7 @@ function Menu(props) {
         e.preventDefault();
         if (e.target.files.length == 0) return;
         var image = e.target.files[0];
-        if (username == "demo") {
+        if (username == "demo" || username == "demo2") {
             const formdata = new FormData();
             formdata.append("file", image);
             formdata.append("pathId", restaurantId);
