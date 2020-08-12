@@ -37,6 +37,7 @@ import NavTab from "./NavTab";
 import { store } from "./Store";
 import "../index.css";
 import { useTranslation } from 'react-i18next';
+import { debug } from "request";
 
 function Order(props) {
   const { t } = useTranslation();
@@ -159,13 +160,16 @@ function Order(props) {
           item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
           item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
           item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
-          // debugger;
+          debugger;
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
             // console.log("before" + elem.name);
-            if (elem.id == item.id)
+            if (elem.id === item.id && elem.cloneSequence === 0) {
               elem.name = item.name;
+              item.toppingResult = elem.toppingResult;
+            }
+
             // console.log("after" + elem.name);
           })
           return item;
@@ -175,6 +179,7 @@ function Order(props) {
         //   return a.category_id - b.category_id;
         // })
         // }
+        debugger;
         const completedMenu = mergeChoiceToppingToMenu(newMenuList);
         completedMenu.sort((a, b) => {
           return a.id - b.id;
@@ -247,7 +252,7 @@ function Order(props) {
     let rList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
-    // debugger;
+    debugger;
     const toppingArray = obj.topping.split(',');
     toppingArray.forEach((elem, idx) => {
       const rId = parseInt(elem);
@@ -480,8 +485,8 @@ function Order(props) {
   }
 
   const mergeChoiceToppingToMenu = menuList => {
-    // debugger;
-    if (chosenToppingMap == null)
+    debugger;
+    if (chosenToppingMap == "")
       return menuList;
     const completedMenu = menuList.reduce((acc, item) => {
       if (chosenToppingMap.hasOwnProperty(item.id)) {
@@ -491,7 +496,18 @@ function Order(props) {
           let cloneItem = { ...item };
           cloneItem.cloneSequence = seqId;
           cloneItem['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
-          cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+          let lb_found = false;
+          cartList.forEach(elem => {
+            // console.log("before" + elem.name);
+            if (elem.id === cloneItem.id && elem.cloneSequence === cloneItem.cloneSequence) {
+              cloneItem['toppingResult'] = elem.toppingResult;
+              lb_found = true;
+            }
+          })
+          if (!lb_found)
+            cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+
+          // cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
           acc.push(cloneItem);
         })
         return acc;
