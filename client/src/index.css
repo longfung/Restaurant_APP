@@ -196,3 +196,8 @@ div.notification-bottom {
   top: 5px;
   /* This are approximated values, and the rest of your styling goes here */
 }
+
+Button.no-border {
+  border: none;
+  border-color: transparent;
+}

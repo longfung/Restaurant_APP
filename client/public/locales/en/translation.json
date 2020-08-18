@@ -80,5 +80,15 @@
     "LoginToMaintainOwnShop": "Login to Maintain Own Shop",
     "WelcomeToTakeOrder": "Welcome to Take Order",
     "CreateUserAccount": "Create User Account",
+    "Score": "Rating",
+    "ScoreMT": "I want to rate",
+    "Relvant": "Relvant",
+    "RelvantMT": "is this comment relvant?",
+    "SortbYDate": "ByDate",
+    "SortbYDateMT": "Sorted by Date",
+    "SortbYRelevant": "ByRelevant",
+    "SortbYRelevantMT": "Sorted by Relevant",
+    "SortbYScore": "ByScore",
+    "SortbYScoreMT": "Sorted by Score",
     "dummy": ""
 }

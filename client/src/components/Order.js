@@ -3,7 +3,7 @@ import Cart from "./Cart";
 import Toppingline from "./Toppingline";
 import Toppingmenuline from "./Toppingmenuline";
 import Select from "react-select";
-import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete } from "react-icons/md";
+import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete, MdComment } from "react-icons/md";
 import access from '../util/access';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -32,6 +32,7 @@ import {
 import { Radio, RadioGroup } from 'react-radio-group'
 import CategoryNav from "./CatagoryNav";
 import Detail from "./Detail";
+import Rating from "./Rating";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
 import { store } from "./Store";
@@ -79,6 +80,10 @@ function Order(props) {
   const [isOrder, setIsOrder] = useState(true);
   const [detail, setDetail] = useState({
     isDetail: false,
+    menu: ''
+  });
+  const [toComment, setToComment] = useState({
+    isComment: false,
     menu: ''
   });
   const [chosenToppingMap, setChosenToppingMap] = useState({});
@@ -672,6 +677,16 @@ function Order(props) {
             >
               <MdEventNote color="Primary" size="2rem" />
             </Link>
+            <Link
+              to="#!"
+              onClick={(e) => setToComment({
+                isComment: true,
+                menu: item
+              })}
+              className=" flow-left"
+            >
+              <MdComment color="Primary" size="2rem" />
+            </Link>
             &nbsp;
             {item.name}
             {item.toppingResult && item.toppingResult.length > 0 ?
@@ -777,39 +792,44 @@ function Order(props) {
       {userMode != 2 ? <NavTab {...props} /> : null}
       {
         isOrder ? (
-          detail.isDetail == true ?
+          toComment.isComment ?
             <div>
-              <Detail {...props} menu={detail.menu} setDetail={setDetail} /> }
-          </div>
-            : (
+              <Rating {...props} menu={toComment.menu} setToComment={setToComment} />
+            </div>
+            :
+            detail.isDetail == true ?
               <div>
-                <CategoryNav
-                  {...props}
-                  restaurant={restaurant}
-                  fetchMenuList={fetchMenuList}
-                  cartTotal={cartTotal}
-                  setIsOrder={setIsOrder}
-                />
-
-                {toppingOrderResult && toppingOrderResult.length > 0 ?
-                  <Toppingline
-                    toppingApplyOrder={toppingApplyOrder}
-                    toppingGroupMap={toppingGroupMap}
-                    toppingMap={toppingMap}
-                    toppingOrderResult={toppingOrderResult}
-                    setOrderToppingBox={setOrderToppingBox}
-                    setOrderToppingRadio={setOrderToppingRadio}
-                  />
-                  : null}
-                {shareContext.state.menuFormat != 2 ?
-                  <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
-                  :
-                  <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
-                }
-
-
+                <Detail {...props} menu={detail.menu} setDetail={setDetail} />
               </div>
-            )
+              : (
+                <div>
+                  <CategoryNav
+                    {...props}
+                    restaurant={restaurant}
+                    fetchMenuList={fetchMenuList}
+                    cartTotal={cartTotal}
+                    setIsOrder={setIsOrder}
+                  />
+
+                  {toppingOrderResult && toppingOrderResult.length > 0 ?
+                    <Toppingline
+                      toppingApplyOrder={toppingApplyOrder}
+                      toppingGroupMap={toppingGroupMap}
+                      toppingMap={toppingMap}
+                      toppingOrderResult={toppingOrderResult}
+                      setOrderToppingBox={setOrderToppingBox}
+                      setOrderToppingRadio={setOrderToppingRadio}
+                    />
+                    : null}
+                  {shareContext.state.menuFormat != 2 ?
+                    <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
+                    :
+                    <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
+                  }
+
+
+                </div>
+              )
         ) : (
             <Cart
               addToOrder={addToOrder}

@@ -209,6 +209,28 @@ async function updateOrders(order) {
   });
 }
 
+async function fetchRatingByRestaurant(restaurantId) {
+  let data = { restaurantId: restaurantId };
+  return await axios.get(apiUrl + "/api/rating/restaurant", { params: data });
+}
+async function fetchRatingByMenu(restaurantId, menuId) {
+  let data = { restaurantId: restaurantId, menu_id: menuId };
+  return await axios.get(apiUrl + "/api/rating/menu", { params: data });
+}
+
+async function addRating(rating) {
+  return await axios.post(apiUrl + "/api/rating", JSON.stringify(rating), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function updateRating(rating) {
+  return await axios.put(apiUrl + "/api/rating", JSON.stringify(rating), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+
 
 module.exports = {
   Entity,
@@ -242,4 +264,8 @@ module.exports = {
   fetchOrdersByActive,
   addOrders,
   updateOrders,
+  fetchRatingByRestaurant,
+  fetchRatingByMenu,
+  addRating,
+  updateRating,
 };
