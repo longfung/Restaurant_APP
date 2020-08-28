@@ -40,7 +40,7 @@
     "draft-convert": "^2.1.9",
     "draft-js": "^0.11.5",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.6",
+    "express-fileupload": "^1.1.10",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "pg": "^7.17.1",
