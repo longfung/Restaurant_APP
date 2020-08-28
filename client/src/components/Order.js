@@ -165,7 +165,7 @@ function Order(props) {
           item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
           item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
           item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
-          debugger;
+          access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
@@ -193,6 +193,42 @@ function Order(props) {
       })
       .catch();
   };
+
+  const getImage = (imageName) => {
+    let imageMap = shareContext.state.imageMap;
+    if (imageMap && imageMap.has(imageName))
+      return imageMap.get(imageName);
+    else
+      return null;
+  }
+  // const getImage = async (imageName) => {
+  //   try {
+  //     if (!imageName)
+  //       return false;
+  //     let imageMap = shareContext.state.imageMap;
+  //     if (imageMap && imageMap.has(imageName)) {
+  //       setImage2(imageMap.get(imageName))
+  //       return true;
+  //     }
+  //     const promise1 = access.doDownload(restaurantId, imageName)
+  //     Promise.resolve(promise1)
+  //       .then((res) => {
+  //         if (!imageMap)
+  //           imageMap = new Map();
+  //         imageMap.set(imageName, res.data);
+  //         shareContext.dispatch({
+  //           type: "setImageMap",
+  //           value: imageMap
+  //         });
+  //         setImage2(res.data)
+  //         return true;
+  //       })
+  //       .catch((error) => console.log("Error"));
+  //   } catch (err) {
+  //     console.log("error:" + err.error);
+  //   }
+  // };
+
 
   const getToppingList = () => {
     const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
@@ -637,7 +673,8 @@ function Order(props) {
               top
               width="100%"
               className="imgbox h-100 d-inline-block"
-              src={item.image_path}
+              // src={item.image_path}
+              src={getImage(item.image_path)}
               alt="Card image cap"
             />
           </div>

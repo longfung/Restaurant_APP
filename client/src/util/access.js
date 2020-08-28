@@ -1,8 +1,6 @@
 const axios = require("axios");
 const adapter = require('axios/lib/adapters/http');
-// const { debug } = require("request-promise");
-// const { MdAccessAlarm } = require("react-icons/md");
-// const apiUrl = `http://localhost:8080`;
+
 let apiUrl = ``;
 if (process.env.REACT_APP_DB_HOST)
   console.log("dbhost " + process.env.REACT_APP_DB_HOST);
@@ -230,7 +228,49 @@ async function updateRating(rating) {
   });
 }
 
+async function doDownload(pathId, imageName, shareContext, setImage2, setMessage) {
+  if (!imageName) {
+    let m = " No image name is presented !!!";
+    setMessage({ status: 401, msg: m });
+    return
+  }
+  let imageMap = shareContext.state.imageMap;
+  if (imageMap && imageMap.has(imageName)) {
+    if (setImage2 != null)
+      setImage2(imageMap.get(imageName))
+    return;
+  }
+  const imagePath = pathId + '/' + imageName;
+  let data = { imagePath: imagePath };
+  await await axios.get(apiUrl + "/api/dodownload", { params: data })
+    .then(res => {
+      if (!imageMap)
+        imageMap = new Map();
+      imageMap.set(imageName, res.data);
+      shareContext.dispatch({
+        type: "setImageMap",
+        value: imageMap
+      });
+      if (setImage2 != null)
+        setImage2(res.data)
+    }).catch((err) => {
+      let m = "image name " + imageName + " failed to retrieve image, " + err.error;
+      setMessage({ status: 401, msg: m });
+      return;
+    })
+}
 
+async function doUpload(formdata) {
+  return await axios.post(apiUrl + "/api/doupload", formdata, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+// async function doDownload(pathId, imageName) {
+//   const imagePath = pathId + '/' + imageName;
+//   let data = { imagePath: imagePath };
+//   return await axios.get(apiUrl + "/api/dodownload", { params: data });
+// }
 
 module.exports = {
   Entity,
@@ -268,4 +308,6 @@ module.exports = {
   fetchRatingByMenu,
   addRating,
   updateRating,
+  doUpload,
+  doDownload,
 };

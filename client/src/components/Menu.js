@@ -15,12 +15,13 @@ import {
 import { store } from "./Store";
 import "../index.css";
 import { storage } from "../firebase";
+import { s3, doConfig } from "../digitalocean";
 import access from "../util/access";
 import { useTranslation } from "react-i18next"
 import Editpan from "./Editpan";
 
 function Menu(props) {
-    debugger;
+    // debugger;
     const { t } = useTranslation();
     const shareContext = useContext(store);
     const username = shareContext.state.username;
@@ -53,6 +54,7 @@ function Menu(props) {
     const [description, setDescription] = useState('');
     const [menuList, setMenuList] = useState([]);
     const [image, setImage] = useState("");
+    const [image2, setImage2] = useState("");
     const [imageName, setImageName] = useState("Choose Image");
     const [categoryList, setCategoryList] = useState([]);
     const [toppingList, setToppingList] = useState([]);
@@ -68,19 +70,52 @@ function Menu(props) {
         getToppingList();
     }, [shareContext.state.locale]);
 
+    const getImage = async (imageName) => {
+        access.doDownload(restaurantId, imageName, shareContext, setImage2);
+        return;
+        // try {
+        //     if (!imageName)
+        //         return false;
+        //     let imageMap = shareContext.state.imageMap;
+        //     if (imageMap && imageMap.has(imageName)) {
+        //         setImage2(imageMap.get(imageName))
+        //         return true;
+        //     }
+        //     const promise1 = access.doDownload(restaurantId, imageName)
+        //     Promise.resolve(promise1)
+        //         .then((res) => {
+        //             if (!imageMap)
+        //                 imageMap = new Map();
+        //             imageMap.set(imageName, res.data);
+        //             shareContext.dispatch({
+        //                 type: "setImageMap",
+        //                 value: imageMap
+        //             });
+        //             setImage2(res.data)
+        //             return true;
+        //         })
+        //         .catch((error) => console.log("Error"));
+        // } catch (err) {
+        //     console.log("error:" + err.error);
+        // }
+    };
+
     const handleSelector = (e) => {
         e.preventDefault();
         if (e.target.files.length == 0) return;
         var image = e.target.files[0];
+        const formdata = new FormData();
         if (username == "demo" || username == "demo2") {
-            const formdata = new FormData();
             formdata.append("file", image);
             formdata.append("pathId", restaurantId);
             fileUpload(formdata);
         } else {
-            setImage(image);
-            setImageName(image.name);
-            firebaseUpload(image);
+            formdata.append("file", image);
+            formdata.append("pathId", restaurantId);
+            DOUpload(formdata);
+            // setImage(image);
+            // setImageName(image.name);
+            // firebaseUpload(image);
         }
     };
 
@@ -155,12 +190,57 @@ function Menu(props) {
     // upload to client/public folder, not used now, using firebase instead
     const fileUpload = async (formdata) => {
         try {
-            const res = await axios.post("/fileupload", formdata, {
+            let apiUrl = ``;
+            if (!process.env.REACT_APP_DB_HOST) {
+                apiUrl = `http://localhost:8080`;
+            }
+            const res = await axios.post(apiUrl + "/api/fileupload", formdata, {
+                // const res = await axios.post("/imageupload", formdata, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
             const { filename, filepath } = res.data;
             setMenu({ ...menu, image_path: filepath });
+        } catch (err) {
+            console.log("error:" + err.error);
+        }
+    };
+
+    // digital ocean image upload
+    // digitaloceanUpload = (image) => {
+
+    //     const params = {
+    //         Body: image,
+    //         Bucket: `${Config.bucketName}`,
+    //         Key: image.name
+    //     };
+    //     // Sending the file to the Spaces
+    //     s3.putObject(params)
+    //         .on('build', request => {
+    //             request.httpRequest.headers.Host = `${doConfig.digitalOceanSpaces}`;
+    //             request.httpRequest.headers['Content-Length'] = image.size;
+    //             request.httpRequest.headers['Content-Type'] = image.type;
+    //             request.httpRequest.headers['x-amz-acl'] = 'public-read';
+    //         })
+    //         .send((err) => {
+    //             if (err) errorCallback();
+    //             else {
+    //                 // If there is no error updating the editor with the imageUrl
+    //                 const imageUrl = `${doConfig.digitalOceanSpaces}` + image.name
+    //                 callback(imageUrl, image.name)
+    //             }
+    //         }
+    //   };
+    // only upload when the image not upload before
+    const DOUpload = async (formdata) => {
+        try {
+            const promise1 = access.doUpload(formdata)
+            Promise.resolve(promise1)
+                .then((res) => {
+                    setMenu({ ...menu, image_path: res.data });
+                    getImage(res.data);
+                })
+                .catch((error) => console.log("Error"));
         } catch (err) {
             console.log("error:" + err.error);
         }
@@ -348,6 +428,7 @@ function Menu(props) {
             available: obj.available,
             image_path: obj.image_path,
         });
+        getImage(obj.image_path);
         shareContext.dispatch({
             type: "setMenuDescription",
             value: obj.description
@@ -507,7 +588,7 @@ function Menu(props) {
                         <FormGroup>
                             <Label for="pathId">{t("UploadPicture")}</Label>
 
-                            <Input type="file" id="pathId" onChange={handleSelector} />
+                            <input type="file" name="myImage" id="pathId" onChange={handleSelector} />
                         </FormGroup>
                     </Col>
                     <Col xs="4" sm="4">
@@ -516,7 +597,11 @@ function Menu(props) {
                                 <img
                                     className="imgbox"
                                     alt={menu.image_path}
-                                    src={menu.image_path}
+                                    // src={menu.image_path}
+                                    // src='https://takeorder.sfo2.digitaloceanspaces.com/Chinese-Pork-Belly.jpg'
+                                    // src={getImage(menu.image_path) ? image2 : null}
+                                    src={image2}
+
                                 />
                             </div>
                         </Card>

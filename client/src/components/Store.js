@@ -34,6 +34,8 @@ const StateProvider = ({ children }) => {
         return { ...state, locale: action.value };
       case "setOrderId":
         return { ...state, orderId: action.value };
+      case "setImageMap":
+        return { ...state, imageMap: action.value };
       default:
         return state;
     }

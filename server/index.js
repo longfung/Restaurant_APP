@@ -6,12 +6,9 @@ const bodyParser = require("body-parser");
 
 var db = require("./database");
 const cors = require('cors');
-
+const imageUtil = require("./api/imageUtil");
 
 const PORT = 8080;
-const ENV = process.env.NODE_ENV;
-// const PORT = process.env.PORT || 5000;
-
 const app = express();
 
 app.use(express.json());
@@ -19,8 +16,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(cors());
-// app.use('/api/cities', require('./api/cities'));
-// app.use('/api/weather', require('./api/weather'));
 app.use("/api/restaurant", require("./api/restaurant"));
 app.use("/api/menu", require("./api/menu"));
 app.use("/api/entityT", require("./api/entityT"));
@@ -29,8 +24,8 @@ app.use("/api/topping", require("./api/topping"));
 app.use("/api/user", require("./api/user"));
 app.use("/api/orders", require("./api/orders"));
 app.use("/api/rating", require("./api/rating"));
-// app.use('/api/fileupload', require('./api/fileupload'));
-app.post("/fileupload", (req, res) => {
+
+app.post("/api/fileupload", (req, res) => {
   // console.log(`"fileuplaod2" + ${workspaceFolder}`);
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).json({ err: "NO file uploaded" });
@@ -52,9 +47,18 @@ app.post("/fileupload", (req, res) => {
   // let filepath = process.cwd() + '\\client\\public\\images\\' + image.name;
   // add for not actually upload image, just to get the name back and upload picture to public folder 
   // separate manually
-  console.log(`${process.cwd()}/client/public/images/${image.name}`);
-  res.json({ filename: image.name, filepath: `/images/${image.name}` });
 
+  // upload(req, res, (err) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(400).json({ errors: err });
+  //   }
+  //   console.log(req.files.file);
+  //   console.log(req);
+  //   return res.status(200).json({ message: 'File uploaded successfully.' });
+  // });
+  // console.log(`${process.cwd()}/client/public/images/${image.name}`);
+  // res.json({ filename: image.name, filepath: `/images/${image.name}` });
   // image.mv(
   //   `${process.cwd()}/client/public/images/${path}/${image.name}`,
   //   (err) => {
@@ -72,6 +76,17 @@ app.post("/fileupload", (req, res) => {
   //     // res.send({filename: filepath});
   //   }
   // );
+});
+//DO
+app.post("/api/doupload", (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).json({ err: "NO file uploaded" });
+  }
+  return imageUtil.upload(req, res);
+});
+
+app.get('/api/dodownload', function (req, res, next) {
+  imageUtil.download(req, res);
 });
 
 app.listen(PORT, () => {
