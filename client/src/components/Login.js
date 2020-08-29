@@ -68,7 +68,10 @@ function Login(props) {
           type: "setOwnerId",
           value: { id: res.data.id, username: res.data.username },
         });
-        shareContext.dispatch({ type: "setUserMode", value: 1 });
+        if (res.data.username == 'demo' || res.data.username == 'demo2')
+          shareContext.dispatch({ type: "setUserMode", value: 2 });
+        else
+          shareContext.dispatch({ type: "setUserMode", value: 1 });
         props.history.push("/restaurant");
       })
       .catch((err) => {

@@ -71,7 +71,7 @@ function Menu(props) {
     }, [shareContext.state.locale]);
 
     const getImage = async (imageName) => {
-        access.doDownload(restaurantId, imageName, shareContext, setImage2);
+        access.doDownload(restaurantId, imageName, shareContext, setImage2, setMessage);
         return;
         // try {
         //     if (!imageName)
@@ -428,7 +428,8 @@ function Menu(props) {
             available: obj.available,
             image_path: obj.image_path,
         });
-        getImage(obj.image_path);
+        if (shareContext.state.userMode !== 2)
+            getImage(obj.image_path);
         shareContext.dispatch({
             type: "setMenuDescription",
             value: obj.description
@@ -600,7 +601,7 @@ function Menu(props) {
                                     // src={menu.image_path}
                                     // src='https://takeorder.sfo2.digitaloceanspaces.com/Chinese-Pork-Belly.jpg'
                                     // src={getImage(menu.image_path) ? image2 : null}
-                                    src={image2}
+                                    src={shareContext.state.userMode === 2 ? menu.image_path : image2}
 
                                 />
                             </div>

@@ -165,7 +165,8 @@ function Order(props) {
           item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
           item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
           item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
-          access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
+          if (shareContext.state.userMode !== 2)
+            access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
           cartList.forEach(elem => {
@@ -674,7 +675,9 @@ function Order(props) {
               width="100%"
               className="imgbox h-100 d-inline-block"
               // src={item.image_path}
-              src={getImage(item.image_path)}
+              src={shareContext.state.userMode === 2 ? item.image_path : getImage(item.image_path)}
+
+              // src={getImage(item.image_path)}
               alt="Card image cap"
             />
           </div>
