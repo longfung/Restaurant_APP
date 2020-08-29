@@ -105,7 +105,7 @@ function Menu(props) {
         if (e.target.files.length == 0) return;
         var image = e.target.files[0];
         const formdata = new FormData();
-        if (username == "demo" || username == "demo2") {
+        if (shareContext.state.userMode === 2) {
             formdata.append("file", image);
             formdata.append("pathId", restaurantId);
             fileUpload(formdata);
