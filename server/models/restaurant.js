@@ -33,7 +33,10 @@ class Restaurant {
       [n.name, n.taxRate, n.address, n.city, n.state, n.zipCode, n.ownerId, lo, n.supportLocale],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-        if (err.error) return callback(err);
+        if (err) {
+          console.log("error in post restaurant " + err.message);
+          return callback(err, null);
+        }
         callback(res);
       }
     );

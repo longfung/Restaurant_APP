@@ -28,7 +28,7 @@ function App(props) {
   //   debugger;
   //   let lPath = process.cwd();
   //   lPath = __dirname + "dog.png";
-  debugger;
+  // debugger;
   const shareContext = useContext(store);
   // const restaurantId =
   //   shareContext.state.restaurant !== null

@@ -17,7 +17,7 @@ import { useTranslation, setDefaults } from "react-i18next";
 const config = require("../util/config.json");
 
 function Restaurant(props) { // console.log("In Restaurant");
-    debugger;
+    // debugger;
 
     const { t } = useTranslation();
     const shareContext = useContext(store);
@@ -122,7 +122,8 @@ function Restaurant(props) { // console.log("In Restaurant");
             let m = restaurant.name + " is created Successfully !!!";
             setMessage({ status: 200, msg: m });
         }).catch((err) => {
-            console.log(err);
+            let m = restaurant.name + " is created failed !!!";
+            setMessage({ status: 404, msg: err.message });
         });
     };
 

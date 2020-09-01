@@ -34,7 +34,10 @@ router.post("/", (req, res) => {
   console.log("in Post");
   var node = req.body;
   Restaurant.insert(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) {
+      console.log("error in API Post restaurant " + err.message)
+      return res.status(404).json({ error: err.message });
+    }
     return res.json(result);
   });
 });
