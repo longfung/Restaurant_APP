@@ -17,7 +17,7 @@ import { MdCheckBox } from "react-icons/md";
 const config = require("../util/config.json");
 
 function Topping(props) { // console.log("In Restaurant");
-    debugger;
+    // debugger;
     const { t } = useTranslation();
     const shareContext = useContext(store);
     const restaurantId =
@@ -50,7 +50,7 @@ function Topping(props) { // console.log("In Restaurant");
     }, []);
 
     const buildToppingGroupList = () => {
-        debugger;
+        // debugger;
 
         const options = config.toppingGroup.map(v => ({
             value: v,
@@ -114,8 +114,10 @@ function Topping(props) { // console.log("In Restaurant");
             .then(res => {
                 console.log(res);
                 setToppingList(res.data);
-            })
-            .catch(error => console.log("Error"));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     };
 
     const setEdit = elem => {
@@ -134,8 +136,10 @@ function Topping(props) { // console.log("In Restaurant");
                 setMessage({ status: 200, msg: m });
                 getToppingList();
                 initializeTopping();
-            })
-            .catch(err => console.log(err.error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     };
 
     const initializeTopping = () => {

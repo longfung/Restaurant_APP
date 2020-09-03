@@ -32,7 +32,7 @@ router.get("/desc", (req, res) => {
   EntityT.retrieveDescTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (err) return res.json(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest).
     return res.json(menu);
   });
@@ -80,7 +80,7 @@ router.post("/", (req, res) => {
   // }
   // const file = req.files.file;
   // console.log("inage name" + file.name);
-  console.log("in Menu Post" + req.body);
+  // console.log("in Menu Post" + req.body);
   var node = req.body;
   EntityT.insert(node, (err, result) => {
     if (err) res.status(404).send(err);

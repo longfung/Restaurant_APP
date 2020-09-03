@@ -5,7 +5,7 @@ var Topping = require("../models/topping");
 var router = express.Router();
 
 router.get("/", (req, res) => {
-    console.log("in topping Get");
+    // console.log("in topping Get");
     var node = req.query;
     Topping.retrieveAllByRestaurant(node, (err, topping) => {
         // console.log(err);s

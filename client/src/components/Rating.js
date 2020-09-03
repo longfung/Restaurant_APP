@@ -50,7 +50,10 @@ function Rating(props) {
         Promise.resolve(promise1).
             then((res) => {
                 setRatingList([...res.data]);
-            })
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     const startRating = () => {
@@ -73,6 +76,9 @@ function Rating(props) {
                 setMessage({ status: 200, msg: m });
                 setIsComment(false);
                 fetchRating();
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
             });
     };
 

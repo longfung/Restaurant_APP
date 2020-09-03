@@ -46,31 +46,7 @@ function Restaurant(props) { // console.log("In Restaurant");
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const promise1 = access.fetchRestuarantByOwnerId(userId);
-        Promise.resolve(promise1).then((res1) => {
-            const rest = res1.data;
-            setRestaurant({
-                id: rest.id,
-                name: rest.name,
-                taxRate: rest.tax_rate,
-                address: rest.address,
-                city: rest.city,
-                zipCode: rest.zip_code,
-                state: rest.state,
-                locale: rest.locale,
-                supportLocale: rest.support_locale,
-                ownerId: userId
-            });
-            debugger;
-            // if (!shareContext.state.restaurant)
-            shareContext.dispatch({ type: "setRestaurant", value: rest });
-            buildLocaleList(rest);
-
-            if (shareContext.state.locale == null)
-                shareContext.dispatch({ type: "setLocale", value: rest.locale });
-
-        }).catch((error) => console.log(error));
-
+        fetchRestuarantByOwnerId();
     }, []);
 
     // useEffect(() => {
@@ -85,7 +61,7 @@ function Restaurant(props) { // console.log("In Restaurant");
     }, [shareContext.state.locale])
 
     const buildLocaleList = (rest) => {
-        debugger;
+        // debugger;
         const arr = rest.support_locale.split(',')
         const options = arr.map(v => ({
             value: v,
@@ -105,6 +81,32 @@ function Restaurant(props) { // console.log("In Restaurant");
         setOptions(options);
     }
 
+    const fetchRestuarantByOwnerId = () => {
+        const promise1 = access.fetchRestuarantByOwnerId(userId);
+        Promise.resolve(promise1).then((res1) => {
+            const rest = res1.data;
+            setRestaurant({
+                id: rest.id,
+                name: rest.name,
+                taxRate: rest.tax_rate,
+                address: rest.address,
+                city: rest.city,
+                zipCode: rest.zip_code,
+                state: rest.state,
+                locale: rest.locale,
+                supportLocale: rest.support_locale,
+                ownerId: userId
+            });
+            shareContext.dispatch({ type: "setRestaurant", value: rest });
+            buildLocaleList(rest);
+            if (shareContext.state.locale == null)
+                shareContext.dispatch({ type: "setLocale", value: rest.locale });
+        }).catch((err) => {
+            // let errorObject = JSON.parse(JSON.stringify(err));
+            setMessage({ status: 404, msg: err.message });
+        });
+    }
+
     const handlePostRestaurant = () => {
         if (restaurant.id != "") {
             handleUpdateRestaurant();
@@ -118,6 +120,7 @@ function Restaurant(props) { // console.log("In Restaurant");
         const data = moveCorrespond();
         const promise1 = access.addRestaurant(data);
         Promise.resolve(promise1).then((res) => {
+            fetchRestuarantByOwnerId();
             shareContext.dispatch({ setRestaurant: restaurant });
             let m = restaurant.name + " is created Successfully !!!";
             setMessage({ status: 200, msg: m });
@@ -136,7 +139,8 @@ function Restaurant(props) { // console.log("In Restaurant");
             let m = restaurant.name + " is updated Successfully !!!";
             setMessage({ status: 200, msg: m });
         }).catch((err) => {
-            console.log(err);
+            // let errorObject = JSON.parse(JSON.stringify(err));
+            setMessage({ status: 404, msg: err.message });
         });
     };
 

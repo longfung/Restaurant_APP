@@ -5,7 +5,7 @@ var Rating = require("../models/rating");
 var router = express.Router();
 
 router.get("/menu", (req, res) => {
-    console.log("in rating Get");
+    // console.log("in rating Get");
     var node = req.query;
     Rating.retrieveByMenu(node, (err, rating) => {
         // console.log(err);s
@@ -17,7 +17,7 @@ router.get("/menu", (req, res) => {
 });
 
 router.get("/restaurant", (req, res) => {
-    console.log("in rating Get");
+    // console.log("in rating Get");
     var node = req.query;
     Rating.retrieveByRestaurant(node, (err, rating) => {
         // console.log(err);s
@@ -29,7 +29,7 @@ router.get("/restaurant", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    console.log("in Rating Post" + req.body);
+    // console.log("in Rating Post" + req.body);
     var node = req.body;
     Rating.insert(node, (err, result) => {
         if (err) return res.status(404).send(err);

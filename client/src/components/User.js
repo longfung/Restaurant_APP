@@ -25,6 +25,9 @@ function User(props) {
         email: d.email,
         phone: d.phone
       });
+    }).catch((err) => {
+      // let errorObject = JSON.parse(JSON.stringify(err));
+      setMessage({ status: 404, msg: err.message });
     });
   }, []);
 
@@ -39,6 +42,9 @@ function User(props) {
       let m = user.username + " is created Successfully !!!";
       setMessage({ status: 200, msg: m });
       clearUserInput();
+    }).catch((err) => {
+      // let errorObject = JSON.parse(JSON.stringify(err));
+      setMessage({ status: 404, msg: err.message });
     });
   };
 
@@ -47,6 +53,9 @@ function User(props) {
     Promise.resolve(promise1).then(() => {
       let m = user.username + " is updated Successfully !!!";
       setMessage({ status: 200, msg: m });
+    }).catch((err) => {
+      // let errorObject = JSON.parse(JSON.stringify(err));
+      setMessage({ status: 404, msg: err.message });
     });
   };
   const clearUserInput = () => {

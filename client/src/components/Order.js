@@ -107,8 +107,10 @@ function Order(props) {
             { id: item.id, label: item.namet == null ? item.category_name : item.namet },
           ])
         );
-      })
-      .catch((error) => console.log(error));
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
     getToppingList();
   }, [shareContext.state.locale]);
 
@@ -185,14 +187,16 @@ function Order(props) {
         //   return a.category_id - b.category_id;
         // })
         // }
-        debugger;
+        // debugger;
         const completedMenu = mergeChoiceToppingToMenu(newMenuList);
         completedMenu.sort((a, b) => {
           return a.id - b.id;
         })
         setMenuList([...completedMenu]);
-      })
-      .catch();
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
   };
 
   const getImage = (imageName) => {
@@ -240,8 +244,10 @@ function Order(props) {
         setupToppingMap(res.data);
         const cId = shareContext.state.categoryId == null ? 0 : shareContext.state.categoryId;
         fetchMenuList(cId);
-      })
-      .catch((error) => console.log(error));
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
   }
 
   const setupToppingMap = oList => {

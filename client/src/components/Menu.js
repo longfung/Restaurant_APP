@@ -64,7 +64,7 @@ function Menu(props) {
 
     useEffect(() => {
         // const restaurantId = 45000
-        console.log("in UseEffect");
+        // console.log("in UseEffect");
         getMenuList();
         getCategoryList();
         getToppingList();
@@ -319,7 +319,7 @@ function Menu(props) {
     };
 
     const postCreateMenu = () => {
-        debugger;
+        // debugger;
         // let data = {
         //     name: menu.name,
         //     description: menu.description,
@@ -348,7 +348,7 @@ function Menu(props) {
     };
 
     const postUpdateMenu = () => {
-        debugger;
+        // debugger;
         // let data = {
         //     id: menu.id,
         //     name: menu.name,
@@ -387,7 +387,7 @@ function Menu(props) {
                 g1.push(elem.value);
         })
         g1 = g1.concat(g0);
-        debugger;
+        // debugger;
         // toppingSelected.map(elem => {
         //     temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
         // });
@@ -469,12 +469,6 @@ function Menu(props) {
             .catch((err) => console.log(err.error));
     };
 
-    const handleSelect = (e) => {
-        debugger;
-        console.log(e.target.value);
-        console.log(menu.category_id);
-    };
-
     const initialMenu = () => {
         setMenu(prev => ({
             ...prev,
@@ -500,6 +494,7 @@ function Menu(props) {
             label: "",
         });
         setToppingSelected([]);
+        setImage2('');
     };
 
     const fetchCategoryName = cid => {

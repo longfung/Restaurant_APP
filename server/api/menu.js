@@ -5,7 +5,7 @@ var Menu = require("../models/menu");
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("in Menu Get");
+  // console.log("in Menu Get");
 
   // var node = req.query;
   var node = req.query;
@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/category", (req, res) => {
-  console.log("in Menu Get By Category" + JSON.stringify(req.query));
+  // console.log("in Menu Get By Category" + JSON.stringify(req.query));
 
   var node = req.query;
   // var node = req.query.restaurant_id;

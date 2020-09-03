@@ -54,8 +54,10 @@ function QueueA(props) {
             .then((res) => {
                 getOrderList();
                 setupToppingMap(res.data);
-            })
-            .catch((error) => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     const getOrderList = () => {
@@ -65,8 +67,10 @@ function QueueA(props) {
             .then(res => {
                 res.data.sort((a, b) => { return a.id - b.id; });
                 setOrders(res.data);
-            })
-            .catch(error => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     const setupToppingMap = oList => {
@@ -91,12 +95,14 @@ function QueueA(props) {
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
             .then((res) => {
                 getOrderList();
-            })
-            .catch((error) => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     const completeItem = (event, order, idx) => {
-        debugger;
+        // debugger;
         event.preventDefault();
         const cart = JSON.parse(order.cart);
         let isCompleted = true;
@@ -117,8 +123,10 @@ function QueueA(props) {
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
             .then((res) => {
                 getOrderList();
-            })
-            .catch((error) => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     return (

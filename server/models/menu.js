@@ -59,7 +59,7 @@ class Menu {
       ],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         // db.query(
         //   "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
         //   [res.id, node.name, node.locale, node.restaurant_id, node.entityId],

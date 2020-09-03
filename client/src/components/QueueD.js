@@ -49,8 +49,10 @@ function QueueD(props) {
                 res.data.sort((a, b) => { return a.id - b.id; });
                 setupOrderMap(res.data);
                 setOrders(res.data);
-            })
-            .catch(error => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }
 
     const setupOrderMap = oList => {

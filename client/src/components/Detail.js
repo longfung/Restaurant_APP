@@ -33,7 +33,7 @@ function Detail(props) {
     useEffect(() => {
         // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
         // const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-        debugger;
+        // debugger;
 
         if (menu.description == null || menu.description.length < 1) {
 

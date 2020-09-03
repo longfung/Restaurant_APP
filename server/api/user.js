@@ -5,12 +5,12 @@ var User = require("../models/user");
 var router = express.Router();
 
 router.get("/:id", (req, res) => {
-  console.log("in user Get");
+  // console.log("in user Get");
   var node = req.query.userId;
   User.retrieveById(node, (err, user) => {
     // console.log(err);s
     // console.log(res);
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err);
     if (user && user.length == 0) {
       return res.status(404).json({ error: "restaurant not found!!" });
     }
@@ -19,7 +19,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  console.log("in user login");
+  // console.log("in user login");
   var username = req.body.username;
   var password = req.body.password;
   User.retrieveByUsername(username, (err, userList) => {
@@ -38,13 +38,13 @@ router.post("/login", (req, res) => {
 router.delete("/", (req, res) => {
   const id = req.query.id;
   User.delete(id, (err, user) => {
-    if (err.error) return res.status(404).send(err);
+    if (err) return res.status(404).send(err);
     return res.json(user);
   });
 });
 
 router.post("/", (req, res) => {
-  console.log("in User Post" + req.body);
+  // console.log("in User Post" + req.body);
   var node = req.body;
   try {
     const salt = bcrypt.genSaltSync();

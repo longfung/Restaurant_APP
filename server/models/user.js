@@ -24,7 +24,7 @@ class User {
       [node.username, node.password, node.email, node.phone],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );

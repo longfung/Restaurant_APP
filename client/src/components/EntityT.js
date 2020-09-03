@@ -62,7 +62,10 @@ function EntityT(props) {
             locale, entity);
         Promise.resolve(promise1).then((res) => {
             setMenuTList(res.data);
-        }).catch((error) => console.log("Error"));
+        }).catch((err) => {
+            // let errorObject = JSON.parse(JSON.stringify(err));
+            setMessage({ status: 404, msg: err.message });
+        });
     };
 
     const handleUpdateMenu = () => {
@@ -113,7 +116,10 @@ function EntityT(props) {
             getMenuTList();
             // setMenu({ ...menu, name: '', price: 0, category_id: '', path: res.data.filepath });
             initialMenuT();
-        }).catch((err) => console.log(err.error));
+        }).catch((err) => {
+            // let errorObject = JSON.parse(JSON.stringify(err));
+            setMessage({ status: 404, msg: err.message });
+        });
     };
     const initialMenuT = () => {
         setMenuT({

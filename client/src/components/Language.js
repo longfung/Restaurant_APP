@@ -20,7 +20,7 @@ function Language(props) {
         setRid(shareContext.state.restaurant.id);
 
     useEffect(() => {
-        debugger;
+        // debugger;
         if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
             const arr = shareContext.state.restaurant.support_locale.split(',')
             setSupportLocale(arr);

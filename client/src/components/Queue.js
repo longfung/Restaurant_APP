@@ -42,8 +42,10 @@ function Queue(props) {
             .then(res => {
                 res.data.sort((a, b) => { return a.id - b.id; });
                 setOrders(res.data);
-            })
-            .catch(error => console.log(error));
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
+            });
     }, []);
 
     return (

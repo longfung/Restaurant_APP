@@ -47,12 +47,9 @@ function Login(props) {
             shareContext.dispatch({ type: 'setOwnerId', value: { id: res0.id, username: 'demo' } })
             return props.history.push("/order/id");
           });
-        })
-        .catch((err) => {
-          setMessage({
-            status: err.response.status,
-            msg: err.response.data.error,
-          });
+        }).catch((err) => {
+          // let errorObject = JSON.parse(JSON.stringify(err));
+          setMessage({ status: 404, msg: err.message });
         });
     }
   }
@@ -75,11 +72,8 @@ function Login(props) {
         props.history.push("/restaurant");
       })
       .catch((err) => {
-        console.error(err.response.data.error);
-        setMessage({
-          status: err.response.status,
-          msg: err.response.data.error,
-        });
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
       });
   };
 

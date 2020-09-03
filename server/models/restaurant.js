@@ -6,8 +6,6 @@ class Restaurant {
       if (err)
         // console.log("in Retrieve all error");
         return callback(err);
-      console.log("in Retrieve all");
-      // console.log(res);
       callback(err, res);
     });
   }
@@ -34,8 +32,7 @@ class Restaurant {
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err) {
-          console.log("error in post restaurant " + err.message);
-          return callback(err, null);
+          return callback(err);
         }
         callback(err, res);
       }
@@ -43,7 +40,7 @@ class Restaurant {
   }
 
   static put(n, callback) {
-    console.log("put restaurant model " + n.name + n.taxRate)
+    // console.log("put restaurant model " + n.name + n.taxRate)
     const d = new Date();
     //    db.query('select * from menu where restaurant_id = $1 and category_id = $2', [restaurantId, categoryId], function (err, res) {
     let lo = n.locale == null ? "en" : n.locale;

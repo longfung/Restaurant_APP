@@ -31,11 +31,11 @@ router.get("/:ownerId", (req, res) => {
 
 router.post("/", (req, res) => {
   // var name = req.body.name;
-  console.log("in Post");
+  // console.log("in Post");
   var node = req.body;
   Restaurant.insert(node, (err, result) => {
     if (err) {
-      console.log("error in API Post restaurant " + err.message)
+      // console.log("error in API Post restaurant " + err.message)
       // res.writeHead(401);
       // res.write(err.message);
       // res.end();
@@ -57,10 +57,10 @@ router.post("/", (req, res) => {
 
 router.put("/", (req, res) => {
   // var name = req.body.name;
-  console.log("in Restaurant Put");
+  // console.log("in Restaurant Put");
   var node = req.body;
   Restaurant.put(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(result);
   });
 });

@@ -4,14 +4,14 @@ class Orders {
     static retrieveByRestaurant(query, callback) {
         const restaurantId = query.restaurantId;
         db.query("select * from orders where restaurant_id = $1", [restaurantId], function (err, res) {
-            if (err.error) return callback(err);
+            if (err) return callback(err);
             callback(err, res);
         });
     }
 
     static retrieveById(id, callback) {
         db.query("select * from orders where id = $1", [id], function (err, res) {
-            if (err.error) return callback(err);
+            if (err) return callback(err);
             callback(err, res);
         });
     }
@@ -20,7 +20,7 @@ class Orders {
         const restaurantId = query.restaurantId;
         const order_id = query.order_id;
         db.query("select * from orders where id = $1", [id], function (err, res) {
-            if (err.error) return callback(err);
+            if (err) return callback(err);
             callback(err, res);
         });
     }
@@ -29,7 +29,7 @@ class Orders {
         const restaurantId = query.restaurantId;
         const date_id = query.date_id;
         db.query("select * from orders where restaurant_id = $1 and date_id = $2", [restaurantId, date_id], function (err, res) {
-            if (err.error) return callback(err);
+            if (err) return callback(err);
             callback(err, res);
         });
     }
@@ -41,14 +41,14 @@ class Orders {
         const s2 = query.s2;
         db.query("select * from orders where restaurant_id = $1 and date_id = $2 and (status = $3 or status = $4)",
             [restaurantId, date_id, s1, s2], function (err, res) {
-                if (err.error) return callback(err);
+                if (err) return callback(err);
                 callback(err, res);
             });
     }
 
     static delete(id, callback) {
         db.query(`delete from orders where id=${id}`, function (err, res) {
-            if (err.error) return callback(err);
+            if (err) return callback(err);
             callback(err, res);
         });
     }
@@ -62,8 +62,8 @@ class Orders {
             [node.status, node.cart, node.topping_order_result, node.topping_apply_order, node.restaurant_id, node.date_id, node.order_id, node.name, node.id],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-                if (err.error) return callback(err);
-                callback(res);
+                if (err) return callback(err);
+                callback(err, res);
             }
         );
     }
@@ -75,8 +75,8 @@ class Orders {
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
                 console.log("Order id " + res[0].id);
-                if (err.error) return callback(err);
-                callback(res);
+                if (err) return callback(err);
+                callback(err, res);
             }
         );
     }

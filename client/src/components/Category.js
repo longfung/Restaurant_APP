@@ -28,7 +28,10 @@ function Category(props) {
       .then(res => {
         setCategoryList(res.data);
       })
-      .catch(error => console.log(error));
+      .catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
   }, []);
 
   const handleAddCategory = () => {
@@ -50,6 +53,9 @@ function Category(props) {
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
       });
   };
 
@@ -70,6 +76,9 @@ function Category(props) {
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
       });
   };
 
@@ -79,8 +88,10 @@ function Category(props) {
       .then(res => {
         console.log(res);
         setCategoryList(res.data);
-      })
-      .catch(error => console.log("Error"));
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
   };
 
   const setEdit = obj => {
@@ -96,8 +107,10 @@ function Category(props) {
         setMessage({ status: 200, msg: m });
         getCategoryList();
         initializeCategory();
-      })
-      .catch(err => console.log(err.error));
+      }).catch((err) => {
+        // let errorObject = JSON.parse(JSON.stringify(err));
+        setMessage({ status: 404, msg: err.message });
+      });
   };
 
   const initializeCategory = () => {
