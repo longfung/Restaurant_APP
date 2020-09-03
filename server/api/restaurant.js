@@ -20,7 +20,7 @@ router.get("/:ownerId", (req, res) => {
   Restaurant.retrieveRestaurantByOwnerId(query, (err, rest) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest);
     if (rest && rest.length == 0) {
       return res.status(404).json({ error: "restaurant not found!!" });
@@ -36,9 +36,22 @@ router.post("/", (req, res) => {
   Restaurant.insert(node, (err, result) => {
     if (err) {
       console.log("error in API Post restaurant " + err.message)
-      return res.status(404).json({ error: err.message });
-    }
-    return res.json(result);
+      // res.writeHead(401);
+      // res.write(err.message);
+      // res.end();
+      // res.addHeader("Access-Control-Allow-Origin", "*");
+      // res.addHeader("Access-Control-Allow-Headers", "*");
+      // res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+      // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      // res.header('content-type', 'application/x-www-form-urlencoded');
+      return res.status(404).send(err);
+      // res.status(412).send('Not Acceptable');
+      // res.setStatus(412);
+      // res.setContentType("application/json");
+      // res.setCharacterEncoding("UTF-8");
+      // res.getWriter().write(err);
+    } else
+      return res.json(result);
   });
 });
 

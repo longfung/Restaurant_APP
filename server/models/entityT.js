@@ -11,7 +11,7 @@ class EntityT {
         left join entity_t as t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
       [locale, entityId, restaurantId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -21,14 +21,14 @@ class EntityT {
     const restaurantId = query.restaurantId;
     const locale = query.locale;
     const entityId = query.entityId;
-    console.log("in EntityT Desc: " + entityId);
+    // console.log("in EntityT Desc: " + entityId);
     db.query(
       //   "select * from menu where restaurant_id = $1",
       "select m.id, m.description, t.lang, t.text as nameT from menu as m \
         left join entity_t as t on m.id = t.id and t.lang = $1 and t.entity_id = $2 where m.restaurant_id = $3",
       [locale, entityId, restaurantId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -43,7 +43,7 @@ class EntityT {
         left join entity_t as t on c.id = t.id and t.lang = $1 and t.entity_id = $2 where c.restaurant_id = $3",
       [locale, entityId, restaurantId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -59,7 +59,7 @@ class EntityT {
         left join entity_t as t on c.id = t.id and t.lang = $1 and t.entity_id = $2 where c.restaurant_id = $3",
       [locale, entityId, restaurantId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -80,18 +80,20 @@ class EntityT {
       "update entity_t set text = $1 where id = $2 and lang = $3 and entity_id = $4 and restaurant_id = $5 returning id",
       [node.namet, node.id, node.locale, node.entityId, node.restaurantId],
       (err, res) => {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         if (res.length == 0) {
           db.query(
             "INSERT INTO entity_t (id, text, lang, entity_id, restaurant_id) VALUES ($1, $2, $3, $4, $5)",
             [node.id, node.namet, node.locale, node.entityId, node.restaurantId],
             (err, res) => {
-              if (err.error) return callback(err);
-              callback(res);
+              if (err)
+                return callback(err);
+              else
+                callback(err, res);
             }
           );
         } else {
-          callback(res);
+          callback(err, res);
         }
       }
     );

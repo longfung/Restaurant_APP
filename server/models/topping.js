@@ -13,7 +13,7 @@ class Topping {
             function (err, res) {
 
                 // db.query(`select * from category where restaurant_id = ${restaurantId}`, function (err, res) {
-                if (err.error)
+                if (err)
                     return callback(err);
                 callback(err, res);
             })
@@ -21,10 +21,10 @@ class Topping {
 
     static delete(node, callback) {
         db.query(`delete from topping where id=${node.id}`, function (err, res) {
-            if (err.error)
+            if (err)
                 return callback(err);
             db.query(`delete from entity_t where id=${node.id} and entity_id=${node.entityId} and restaurant_id=${node.restaurantId}`, function (err, res) {
-                if (err.error)
+                if (err)
                     return callback(err);
                 callback(err, res)
             })
@@ -35,24 +35,24 @@ class Topping {
         // let idInt = parseint(obj.id);
         db.query(`update topping set name = '${node.name}', topping_group = '${node.topping_group}', apply_order = ${node.apply_order}, apply_item = ${node.apply_item}, \
             apply_default = ${node.apply_default}, price = ${node.price} where id = ${node.id}`, function (err, res) {
-            if (err.error)
+            if (err)
                 return callback(err);
             db.query(
                 "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
                 [node.name, node.id, node.locale, node.restaurant_id, node.entityId],
                 (err, res) => {
-                    if (err.error) return callback(err);
+                    if (err) return callback(err);
                     if (res.length == 0) {
                         db.query(
                             "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
                             [node.id, node.name, node.locale, node.restaurant_id, node.entityId],
                             (err, res) => {
-                                if (err.error) return callback(err);
-                                callback(res);
+                                if (err) return callback(err);
+                                callback(err, res);
                             }
                         );
                     } else {
-                        callback(res);
+                        callback(err, res);
                     }
                 }
             );
@@ -65,7 +65,7 @@ class Topping {
             [node.name, node.topping_group, node.apply_order, node.apply_item, node.apply_default, node.price, node.restaurant_id],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) { 
-                if (err.error)
+                if (err)
                     return callback(err);
                 if (res.length > 0) {
                     const nId = res[0].id;
@@ -73,7 +73,7 @@ class Topping {
                         "INSERT INTO entity_t (id, lang, text, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
                         [nId, node.locale, node.name, node.restaurant_id, node.entityId],
                         (err, res) => {
-                            callback(res);
+                            return callback(err, res);
                         }
                     );
                 }

@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
   Menu.retrieveByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest).
     return res.json(menu);
   });
@@ -32,7 +32,7 @@ router.get("/category", (req, res) => {
   Menu.retrieveByCategory(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err)
     // console.log(rest)
     return res.json(menu);
   });
@@ -49,7 +49,7 @@ router.post("/", (req, res) => {
   console.log("in Menu Post" + req.body);
   var node = req.body;
   Menu.insert(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) return res.status(404).send(err)
     return res.json(result);
   });
 });
@@ -57,7 +57,7 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
   const data = req.body;
   Menu.put(data, (err, result) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err)
     return res.json(result);
   });
 });
@@ -65,7 +65,7 @@ router.put("/", (req, res) => {
 router.delete("/", (req, res) => {
   const id = req.query.id;
   Menu.delete(id, (err, menu) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err)
     return res.json(menu);
   });
 });

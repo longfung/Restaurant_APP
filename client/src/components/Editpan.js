@@ -49,7 +49,7 @@ function Editpan({ menu, setMenu }) {
         // const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
         // debugger;
 
-        if (menu.description == '' || menu.description.trim().length < 1) {
+        if ((menu.description == undefined || menu.description == '' || menu.description.trim().length < 1)) {
 
             // const newState = convertFromRaw(JSON.parse(menu.description));
             setEditorState(EMPTY_EDITOR_STATE);

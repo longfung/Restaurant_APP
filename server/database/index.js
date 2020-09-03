@@ -24,10 +24,10 @@ class Database {
             client.query(query, params, (err, res) => {
                 done();
                 if (err) {
-                    // console.log(err.stack);
+                    console.log(err.message);
                     return callback(err);
                 }
-                callback({}, res.rows);
+                callback(err, res.rows);
             });
         })
     }

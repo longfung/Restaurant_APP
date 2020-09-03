@@ -341,6 +341,9 @@ function Menu(props) {
                 let m = menu.name + " is created Successfully !!!";
                 setMessage({ status: 200, msg: m });
                 getMenuList();
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
             });
     };
 
@@ -367,6 +370,9 @@ function Menu(props) {
                 let m = menu.name + " is updated Successfully !!!";
                 setMessage({ status: 200, msg: m });
                 getMenuList();
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
             });
     };
 

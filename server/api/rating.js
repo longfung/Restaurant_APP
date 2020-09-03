@@ -10,7 +10,7 @@ router.get("/menu", (req, res) => {
     Rating.retrieveByMenu(node, (err, rating) => {
         // console.log(err);s
         // console.log(res);
-        if (!err) return res.json(err);
+        if (err) return res.status(404).send(err);
         // console.log(rest)
         return res.json(rating);
     });
@@ -22,7 +22,7 @@ router.get("/restaurant", (req, res) => {
     Rating.retrieveByRestaurant(node, (err, rating) => {
         // console.log(err);s
         // console.log(res);
-        if (!err) return res.json(err);
+        if (err) return res.status(404).send(err);
         // console.log(rest)
         return res.json(rating);
     });
@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
     console.log("in Rating Post" + req.body);
     var node = req.body;
     Rating.insert(node, (err, result) => {
-        if (err) return res.json(err);
+        if (err) return res.status(404).send(err);
         return res.json(result);
     });
 });
@@ -40,7 +40,7 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
     const data = req.body;
     Rating.put(data, (err, result) => {
-        if (err.error) return res.json(err);
+        if (err) return res.status(404).send(err);
         return res.json(result);
     });
 });

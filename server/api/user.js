@@ -25,20 +25,20 @@ router.post("/login", (req, res) => {
   User.retrieveByUsername(username, (err, userList) => {
     // console.log(err);s
     // console.log(res);
-    if (err.error) return res.send(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest)
     if (userList.length == 0) {
-      return res.status(404).json({ error: "Usernae not found!!" });
+      return res.status(404).json({ message: "Usernae not found!!" });
     }
     let user = userList[0];
     if (bcrypt.compareSync(password, user.password)) return res.json(user);
-    else return res.status(404).json({ error: "password invalid" });
+    else return res.status(404).json({ message: "password invalid" });
   });
 });
 router.delete("/", (req, res) => {
   const id = req.query.id;
   User.delete(id, (err, user) => {
-    if (err.error) return res.json(err);
+    if (err.error) return res.status(404).send(err);
     return res.json(user);
   });
 });
@@ -49,10 +49,10 @@ router.post("/", (req, res) => {
   try {
     const salt = bcrypt.genSaltSync();
     node.password = bcrypt.hashSync(node.password, salt);
-  } catch {}
+  } catch { }
 
   User.insert(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(result);
   });
 });
@@ -60,7 +60,7 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
   const data = req.body;
   User.put(data, (err, result) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(result);
   });
 });

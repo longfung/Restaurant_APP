@@ -16,6 +16,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(cors());
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000", // restrict calls to those this address
+//     methods: "POST" // only allow GET requests
+//   })
+// );
 app.use("/api/restaurant", require("./api/restaurant"));
 app.use("/api/menu", require("./api/menu"));
 app.use("/api/entityT", require("./api/entityT"));
@@ -24,6 +30,17 @@ app.use("/api/topping", require("./api/topping"));
 app.use("/api/user", require("./api/user"));
 app.use("/api/orders", require("./api/orders"));
 app.use("/api/rating", require("./api/rating"));
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+
 
 app.post("/api/fileupload", (req, res) => {
   // console.log(`"fileuplaod2" + ${workspaceFolder}`);
@@ -94,7 +111,7 @@ app.listen(PORT, () => {
 });
 
 db.query("select now()", (err, res) => {
-  if (err.error) return console.log(err.error);
+  if (err) return console.log(err.error);
   console.log(`PostgreSQL connected: ${res[0].now}.`);
 });
 module.exports = app;

@@ -15,7 +15,7 @@ router.get("/menu", (req, res) => {
   EntityT.retrieveMenuTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);;
     // console.log(rest).
     return res.json(menu);
   });
@@ -32,7 +32,7 @@ router.get("/desc", (req, res) => {
   EntityT.retrieveDescTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.json(err);
     // console.log(rest).
     return res.json(menu);
   });
@@ -49,7 +49,7 @@ router.get("/category", (req, res) => {
   EntityT.retrieveCategoryTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);;
     // console.log(rest).
     return res.json(menu);
   });
@@ -66,7 +66,7 @@ router.get("/topping", (req, res) => {
   EntityT.retrieveToppingTByRestaurant(node, (err, menu) => {
     // console.log(err);
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest).
     return res.json(menu);
   });
@@ -83,7 +83,7 @@ router.post("/", (req, res) => {
   console.log("in Menu Post" + req.body);
   var node = req.body;
   EntityT.insert(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) res.status(404).send(err);
     return res.json(result);
   });
 });
@@ -91,15 +91,17 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
   const data = req.body;
   EntityT.put(data, (err, result) => {
-    if (err.error) return res.json(err);
-    return res.json(result);
+    if (err)
+      return res.status(404).send(err);
+    else
+      return res.json(result);
   });
 });
 
 router.delete("/", (req, res) => {
   const id = req.query.id;
   EntityT.delete(id, (err, menu) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(menu);
   });
 });

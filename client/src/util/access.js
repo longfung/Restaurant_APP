@@ -40,7 +40,13 @@ async function fetchRestuarantByOwnerId(id) {
 async function addRestaurant(rest) {
   return await axios.post(apiUrl + "/api/restaurant", JSON.stringify(rest), {
     headers: { "Content-Type": "application/json" },
+    // headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": '*' },
+    // })
+    // .catch(err => {
+    //   let errorObject = JSON.parse(JSON.stringify(err));
+    //   console.log(err.message);
   });
+  // return res;
 }
 
 async function updateRestaurant(rest) {

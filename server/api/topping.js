@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
     Topping.retrieveAllByRestaurant(node, (err, topping) => {
         // console.log(err);s
         // console.log(res);
-        if (!err) return res.json(err);
+        if (err) return res.status(404).send(err);
         // console.log(rest)
         return res.json(topping);
     });
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 router.delete("/", (req, res) => {
     const query = req.query;
     Topping.delete(query, (err, topping) => {
-        if (err.error) return res.json(err);
+        if (err) return res.status(404).send(err);
         return res.json(topping);
     });
 });
@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
     console.log("in topping Post" + req.body);
     var node = req.body;
     Topping.insert(node, (err, result) => {
-        if (err) return res.json(err);
+        if (err) res.status(404).send(err);
         return res.json(result);
     });
 });
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
     const data = req.body;
     Topping.put(data, (err, result) => {
-        if (err.error) return res.json(err);
+        if (err) return res.status(404).send(err);
         return res.json(result);
     });
 });

@@ -2,18 +2,18 @@ const db = require("../database");
 
 class User {
   static retrieveByUsername(username, callback) {
-    db.query("select * from auth where username = $1", [username], function(
+    db.query("select * from auth where username = $1", [username], function (
       err,
       res
     ) {
-      if (err.error) return callback(err);
+      if (err) return callback(err);
       callback(err, res);
     });
   }
 
   static retrieveById(id, callback) {
-    db.query("select * from auth where id = $1", [id], function(err, res) {
-      if (err.error) return callback(err);
+    db.query("select * from auth where id = $1", [id], function (err, res) {
+      if (err) return callback(err);
       callback(err, res);
     });
   }
@@ -25,7 +25,7 @@ class User {
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
         if (err.error) return callback(err);
-        callback(res);
+        callback(err, res);
       }
     );
   }
@@ -37,15 +37,15 @@ class User {
       [node.email, node.phone, d, node.id],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-        if (err.error) return callback(err);
-        callback(res);
+        if (err) return callback(err);
+        callback(err, res);
       }
     );
   }
 
   static delete(id, callback) {
-    db.query(`delete from auth where id=${id}`, function(err, res) {
-      if (err.error) return callback(err);
+    db.query(`delete from auth where id=${id}`, function (err, res) {
+      if (err) return callback(err);
       callback(err, res);
     });
   }

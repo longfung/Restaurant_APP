@@ -88,6 +88,9 @@ function Topping(props) { // console.log("In Restaurant");
                 setMessage({ status: 200, msg: m });
                 getToppingList();
                 initializeTopping();
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
             });
     };
 
@@ -99,6 +102,9 @@ function Topping(props) { // console.log("In Restaurant");
                 setMessage({ status: 200, msg: m });
                 getToppingList();
                 initializeTopping();
+            }).catch((err) => {
+                // let errorObject = JSON.parse(JSON.stringify(err));
+                setMessage({ status: 404, msg: err.message });
             });
     };
 

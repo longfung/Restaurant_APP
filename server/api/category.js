@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
   Category.retrieveAllByRestaurant(node, (err, category) => {
     // console.log(err);s
     // console.log(res);
-    if (!err) return res.json(err);
+    if (err) return res.status(404).send(err);
     // console.log(rest)
     return res.json(category);
   });
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 router.delete("/", (req, res) => {
   const query = req.query;
   Category.delete(query, (err, category) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(category);
   });
 });
@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
   console.log("in Menu Post" + req.body);
   var node = req.body;
   Category.insert(node, (err, result) => {
-    if (err) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(result);
   });
 });
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
   const data = req.body;
   Category.put(data, (err, result) => {
-    if (err.error) return res.json(err);
+    if (err) return res.status(404).send(err);
     return res.json(result);
   });
 });

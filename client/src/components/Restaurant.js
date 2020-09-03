@@ -123,6 +123,7 @@ function Restaurant(props) { // console.log("In Restaurant");
             setMessage({ status: 200, msg: m });
         }).catch((err) => {
             let m = restaurant.name + " is created failed !!!";
+            let errorObject = JSON.parse(JSON.stringify(err));
             setMessage({ status: 404, msg: err.message });
         });
     };

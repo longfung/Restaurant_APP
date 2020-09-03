@@ -8,7 +8,7 @@ class Rating {
             "select * from rating where menu_id = $1 and restaurant_id = $2",
             [menuId, restaurantId],
             function (err, res) {
-                if (err.error) return callback(err);
+                if (err) return callback(err);
                 callback(err, res);
             }
         );
@@ -20,7 +20,7 @@ class Rating {
             "select * from rating restaurant_id = $a",
             [restaurantId],
             function (err, res) {
-                if (err.error) return callback(err);
+                if (err) return callback(err);
                 callback(err, res);
             }
         );
@@ -31,8 +31,8 @@ class Rating {
             "update rating set relevant = $1 where id = $2",
             [n.relevant, n.id],
             function (err, res) {
-                if (err.error) return callback(err);
-                return callback(res);
+                if (err) return callback(err);
+                return callback(err, res);
             }
         )
     }
@@ -44,8 +44,8 @@ class Rating {
             [n.score, n.comment, n.menu_id, n.restaurantId, n.post_by],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-                if (err.error) return callback(err);
-                callback(res);
+                if (err) return callback(err);
+                callback(err, res);
             }
         );
     }

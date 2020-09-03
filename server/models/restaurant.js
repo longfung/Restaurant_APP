@@ -3,7 +3,7 @@ const db = require("../database");
 class Restaurant {
   static retrieveAll(callback) {
     db.query("select * from restaurant", function (err, res) {
-      if (err.error)
+      if (err)
         // console.log("in Retrieve all error");
         return callback(err);
       console.log("in Retrieve all");
@@ -17,7 +17,7 @@ class Restaurant {
       "select * from restaurant where owner_id = $1",
       [node.ownerId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -37,7 +37,7 @@ class Restaurant {
           console.log("error in post restaurant " + err.message);
           return callback(err, null);
         }
-        callback(res);
+        callback(err, res);
       }
     );
   }
@@ -53,8 +53,8 @@ class Restaurant {
             ,locale = $8, support_locale = $9 where id = $10",
       [n.name, n.taxRate, n.address, n.city, n.state, n.zipCode, d, lo, n.supportLocale, n.id],
       function (err, res) {
-        if (err.error) return callback(err);
-        return callback(res);
+        if (err) return callback(err);
+        return callback(err, res);
       }
     );
   }

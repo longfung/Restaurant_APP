@@ -13,7 +13,7 @@ class Menu {
       where m.restaurant_id = $2",
       [locale, restaurantId],
       function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         callback(err, res);
       }
     );
@@ -33,7 +33,7 @@ class Menu {
         where m.restaurant_id = $2 and m.category_id = $3",
         [locale, restaurantId, categoryId],
         function (err, res) {
-          if (err.error) return callback(err);
+          if (err) return callback(err);
           callback(err, res);
         }
       );
@@ -70,7 +70,7 @@ class Menu {
         const promise1 = Menu.insertNameT(res[0].id, node);
         const promise2 = Menu.insertDescT(res[0].id, node);
         Promise.resolve(promise1, promise2).then(res => {
-          callback(res);
+          callback(null, res);
         })
           .catch((err) => callback(err))
       }
@@ -93,7 +93,7 @@ class Menu {
       "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
       [id, node.name, node.locale, node.restaurant_id, node.entityId],
       (err, res) => {
-        if (err.error) rejsct("err");
+        if (err) rejsct("err");
         resolve(res)
       }
     ));
@@ -104,13 +104,13 @@ class Menu {
       "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
       [node.name, node.id, node.locale, node.restaurant_id, 1],
       (err, res) => {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         if (res.length == 0) {
           db.query(
             "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
             [node.id, node.name, node.locale, node.restaurant_id, 1],
             (err, res) => {
-              if (err.error) return rejsct(err);
+              if (err) return rejsct(err);
               resolve(res);
             }
           );
@@ -126,13 +126,13 @@ class Menu {
       "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
       [node.description, node.id, node.locale, node.restaurant_id, 3],
       (err, res) => {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         if (res.length == 0) {
           db.query(
             "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
             [node.id, node.description, node.locale, node.restaurant_id, 3],
             (err, res) => {
-              if (err.error) return rejsct(err);
+              if (err) return reject(err);
               resolve(res);
             }
           );
@@ -149,7 +149,7 @@ class Menu {
       "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
       [nId, node.description, node.locale, node.restaurant_id, 3],
       (err, res) => {
-        if (err.error) rejsct("err");
+        if (err) reject(err);
         resolve(res)
       }
     )
@@ -163,11 +163,11 @@ class Menu {
       [node.price_s, node.price_m, node.price_l, node.price_x, node.image_path, node.category_id, node.description, node.topping, node.available, node.id],
       (err, res) => {
         // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
-        if (err.error) return callback(err);
+        if (err) return callback(err);
         const promise1 = Menu.updateNameT(node);
         const promise2 = Menu.updateDescT(node);
         Promise.resolve(promise1, promise2).then(res => {
-          callback(res);
+          callback(null, res);
         })
           .catch((err) => callback(err))
       }
@@ -176,7 +176,7 @@ class Menu {
 
   static delete(id, callback) {
     db.query(`delete from menu where id=${id}`, function (err, res) {
-      if (err.error) return callback(err);
+      if (err) return callback(err);
       callback(err, res);
     });
   }

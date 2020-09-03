@@ -13,7 +13,7 @@ class Category {
             function (err, res) {
 
                 // db.query(`select * from category where restaurant_id = ${restaurantId}`, function (err, res) {
-                if (err.error)
+                if (err)
                     return callback(err);
                 callback(err, res);
             })
@@ -21,10 +21,10 @@ class Category {
 
     static delete(node, callback) {
         db.query(`delete from category where id=${node.id}`, function (err, res) {
-            if (err.error)
+            if (err)
                 return callback(err);
             db.query(`delete from entity_t where id=${node.id} and entity_id=${node.entityId} and restaurant_id=${node.restaurantId}`, function (err, res) {
-                if (err.error)
+                if (err)
                     return callback(err);
                 callback(err, res)
             })
@@ -35,24 +35,24 @@ class Category {
         // let idInt = parseint(obj.id);
         db.query(`update category set category_name = '${node.category_name}', category_description = '${node.category_description}' 
             where id = ${node.id};`, function (err, res) {
-            if (err.error)
+            if (err)
                 return callback(err);
             db.query(
                 "update entity_t set text = $1 where id = $2 and lang = $3 and restaurant_id = $4 and entity_id = $5 returning id",
                 [node.category_name, node.id, node.locale, node.restaurantId, node.entityId],
                 (err, res) => {
-                    if (err.error) return callback(err);
+                    if (err) return callback(err);
                     if (res.length == 0) {
                         db.query(
                             "INSERT INTO entity_t (id, text, lang, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
                             [node.id, node.category_name, node.locale, node.restaurantId, node.entityId],
                             (err, res) => {
-                                if (err.error) return callback(err);
-                                callback(res);
+                                if (err) return callback(err);
+                                callback(err, res);
                             }
                         );
                     } else {
-                        callback(res);
+                        callback(err, res);
                     }
                 }
             );
@@ -65,7 +65,7 @@ class Category {
             [node.category_name, node.category_description, node.restaurantId],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) { 
-                if (err.error)
+                if (err)
                     return callback(err);
                 if (res.length > 0) {
                     const nId = res[0].id;
@@ -73,7 +73,7 @@ class Category {
                         "INSERT INTO entity_t (id, lang, text, restaurant_id, entity_id) VALUES ($1, $2, $3, $4, $5)",
                         [nId, node.locale, node.category_name, node.restaurantId, node.entityId],
                         (err, res) => {
-                            callback(res);
+                            callback(err, res);
                         }
                     );
                 }

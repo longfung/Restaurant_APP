@@ -59,7 +59,7 @@ function Login(props) {
   // }, [usermode])
 
   const submit = () => {
-    // debugger;
+    debugger;
     const promise1 = access.performLogin(username, password);
     Promise.resolve(promise1)
       .then((res) => {

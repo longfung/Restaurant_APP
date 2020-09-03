@@ -73,7 +73,7 @@ function EntityT(props) {
     const postUpdateMenu = () => { // debugger;
         const data = {
             id: menuT.id,
-            namet: entity == 3 ? menuT.description : menuT.namet,
+            namet: entity == 3 ? shareContext.state.menuDescription : menuT.namet,
             locale: lang,
             entityId: entity,
             restaurantId: restaurantId
@@ -83,6 +83,9 @@ function EntityT(props) {
             let m = menuT.name + " is updated Successfully !!!";
             setMessage({ status: 200, msg: m });
             getMenuTList(lang, entity);
+        }).catch((err) => {
+            // let errorObject = JSON.parse(JSON.stringify(err));
+            setMessage({ status: 404, msg: err.message });
         });
     };
 
