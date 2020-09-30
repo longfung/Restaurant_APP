@@ -17,7 +17,7 @@ function MessageBar(props) {
   let barColor = "";
   status > 299 ? (barColor = "text-danger font-weight-bold") : (barColor = "text-primary font-weight-bold");
   return (
-    <div class="notification-bottom">
+    <div className="notification-bottom">
       <Card>
         <Row>
           <Col sm="11" xs="10">

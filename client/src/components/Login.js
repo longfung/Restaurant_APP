@@ -21,7 +21,7 @@ function Login(props) {
   const setMessage = props.setMessage;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [usermode, setUsermode] = useState(0);
+  const [usermode, setUsermode] = useState(1);
 
   const urlParams = new URLSearchParams(props.location.search);
   const uMode = urlParams.get("userMode");
@@ -32,7 +32,7 @@ function Login(props) {
     // useEffect(() => {
     //   debugger;
     if (uMode == 2) {
-      const uName = urlParams.get("u");
+      const uName = urlParams.get("userName");
       const promise0 = access.performLogin(uName, "demo");
       Promise.resolve(promise0)
         .then((res0) => {
@@ -52,6 +52,7 @@ function Login(props) {
           setMessage({ status: 404, msg: err.message });
         });
     }
+
   }
   // }, [usermode])
 
@@ -65,10 +66,10 @@ function Login(props) {
           type: "setOwnerId",
           value: { id: res.data.id, username: res.data.username },
         });
-        if (res.data.username == 'demo' || res.data.username == 'demo2')
-          shareContext.dispatch({ type: "setUserMode", value: 2 });
-        else
-          shareContext.dispatch({ type: "setUserMode", value: 1 });
+        // if (uMode == 2)
+        //   shareContext.dispatch({ type: "setUserMode", value: 2 });
+        // else
+        shareContext.dispatch({ type: "setUserMode", value: 1 });
         props.history.push("/restaurant");
       })
       .catch((err) => {

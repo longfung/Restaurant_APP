@@ -79,5 +79,8 @@
     "LoginToMaintainOwnShop": "登录管理商店",
     "WelcomeToTakeOrder": "欢迎来订购",
     "CreateUserAccount": "创建用户帐号",
+    "E010": "必填",
+    "E101": "密码长度必须为4个字符或更长",
+    "E102": "无效的电子邮件格式",
     "dummy": ""
 }

@@ -28,8 +28,8 @@ function Customer(props) { // console.log("In Restaurant");
     const shareContext = useContext(store);
     const setMessage = props.setMessage;
     const [customer, setCustomer] = useState({
-        orderId: "",
-        name: "",
+        orderId: "12",
+        name: "Tom",
     });
     const [open, setOpen] = useState(true);
 

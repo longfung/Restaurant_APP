@@ -3,7 +3,12 @@ import Cart from "./Cart";
 import Toppingline from "./Toppingline";
 import Toppingmenuline from "./Toppingmenuline";
 import Select from "react-select";
-import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete, MdComment } from "react-icons/md";
+import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete, MdComment, MdCenterFocusStrong } from "react-icons/md";
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import CheckIcon from '@material-ui/icons/Check';
 import access from '../util/access';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -12,11 +17,11 @@ import {
   Input,
   Row,
   Col,
-  Button,
+
   ButtonGroup,
   FormGroup,
   Label,
-  Card,
+
   CardImg,
   CardBody,
   NavLink,
@@ -32,13 +37,80 @@ import {
 import { Radio, RadioGroup } from 'react-radio-group'
 import CategoryNav from "./CatagoryNav";
 import Detail from "./Detail";
-import Rating from "./Rating";
+import UserRate from "./UserRate";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
 import { store } from "./Store";
 import "../index.css";
 import { useTranslation } from 'react-i18next';
 import { debug } from "request";
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Rating from '@material-ui/lab/Rating';
+
+import {
+
+  LinearProgress,
+  Grid,
+  Box,
+} from '@material-ui/core';
+import ItemTopping from './ItemTopping';
+import { IoTSecureTunneling } from "aws-sdk";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    maxWidth: 385,
+  },
+  Card: {
+    width: 300,
+    height: 240,
+    margin: 'auto'
+  },
+  media: {
+    // height: 140,
+    width: 385,
+    // maxWidth: 320,
+    height: 280,
+    // maxHeight: 240,
+    marginLeft: 10,
+    marginBottom: 0,
+    paddingBottom: 0,
+    align: "left",
+  },
+  content: {
+    aligh: 'left',
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
+  priceBox: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.neutral.white,
+    width: '100%',
+    margin: 0,
+    padding: 0,
+    align: 'center',
+  },
+  quantityBox: {
+
+    color: theme.palette.neutral.blue,
+
+    marginBottom: 0,
+    paddingBottom: 0,
+    marginTop: 0,
+    paddingTop: 0,
+  }
+}));
 
 function Order(props) {
   const { t } = useTranslation();
@@ -91,6 +163,8 @@ function Order(props) {
 
 
   let catId = 0;
+
+  const classes = useStyles();
 
   useEffect(() => {
     // const restaurantId = 45000
@@ -165,9 +239,15 @@ function Order(props) {
           if (item.price_x > 0) cnt++;
           item['isMultiple'] = cnt > 1 ? true : false;
           item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
-          item['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+          const tList = item.topping && item.topping.length ? setupToppingApplyMenu(item) : [];
+          // debugger;
+          item['hasTopping'] = tList && tList.length ? true : false;
+          item['toppingResult'] = tList && tList.length ? tList[0] : null;
+          item['defaultTopping'] = tList && tList.length ? tList[1] : null;
+          // item['defaultTopping'] = tList != undefined && tList.length > 0 ? fetchToppingNameList(tList) : null;
           item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
-          if (shareContext.state.userMode !== 2)
+          item['inCart'] = false;
+          if (shareContext.state.username !== 'demo' && shareContext.state.username !== 'demo2')
             access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
           // setMenuList(prevState => [...prevState, item])
           // update cart list if there is any
@@ -176,6 +256,7 @@ function Order(props) {
             if (elem.id === item.id && elem.cloneSequence === 0) {
               elem.name = item.name;
               item.toppingResult = elem.toppingResult;
+              item['inCart'] = true;
             }
 
             // console.log("after" + elem.name);
@@ -200,6 +281,7 @@ function Order(props) {
   };
 
   const getImage = (imageName) => {
+    debugger;
     let imageMap = shareContext.state.imageMap;
     if (imageMap && imageMap.has(imageName))
       return imageMap.get(imageName);
@@ -298,6 +380,7 @@ function Order(props) {
     if (obj.topping == "")
       return;
     let rList = [];
+    let nList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
     debugger;
@@ -311,11 +394,12 @@ function Order(props) {
       } else {
         // rList.unshift(item[0]);
         rList.push(rId);
+        nList.push(rId)
         cnt++;
       }
 
     });
-    return rList;
+    return [rList, nList];
     // const nMenuList = menuList.filter((elem) => {
     //   if (elem.id === obj.id) {
     //     elem.toppingResult = rList;
@@ -325,6 +409,16 @@ function Order(props) {
     //   return elem;
     // });
     // setMenuList([...nMenuList]);
+  }
+
+  const fetchToppingNameList = oList => {
+    debugger;
+    let rList = [];
+    oList && oList.map((item, idx) => {
+      const n = (toppingMap[item])[0];
+      rList.push(n);
+    })
+    return rList ? rList.join(', ') : null;
   }
 
   const addToOrder = (event, item, price, size) => {
@@ -361,6 +455,8 @@ function Order(props) {
     } else {
       setCartList([...nCartList]);
     }
+    // item['inCart'] = true;
+    setMenuList(menuList.map(elem => elem.id === item.id && elem.cloneSequence === item.cloneSequence ? { ...elem, inCart: true } : elem));
     return false;
   };
 
@@ -412,9 +508,14 @@ function Order(props) {
     }
     if (q != 0) {
       return (
-        <CardText className="font-weight-bold text-primary">
-          <MdDone color="Primary" size="2rem" /> {q}
-        </CardText>
+        // <CardText className="font-weight-bold text-primary">
+        //   <MdDone color="Primary" size="2rem" /> {q}
+        // </CardText>
+        <span>
+          <CheckIcon />
+        &nbsp;&nbsp;
+          { q}
+        </span>
       );
     }
   };
@@ -426,8 +527,14 @@ function Order(props) {
     const nCartList = cartList.filter((elem) => {
       if (elem.id === item.id && elem.cloneSequence == item.cloneSequence && elem.size === size) {
         elem.quantity--;
-        if (elem.quantity !== 0) return elem;
-        else return null;
+        if (elem.quantity !== 0) {
+
+          return elem;
+        }
+        else {
+          item['inCart'] = false;
+          return null;
+        }
       }
       return elem;
     });
@@ -475,6 +582,7 @@ function Order(props) {
   const cloneMenuItem = (item) => {
     // debugger;
     let cloneItem = { ...item }
+    cloneItem['inCart'] = false;
     let isFound = false;
     let insertIdx = 0;
     let seq = 1;
@@ -494,7 +602,7 @@ function Order(props) {
     })
     cloneItem.cloneSequence = seq;
     cloneItem['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
-    cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+    cloneItem['toppingResult'] = item.topping != null ? (setupToppingApplyMenu(item))[0] : [];
 
     // cloneItem.toppingResult = [];
     insertIdx++;
@@ -553,7 +661,7 @@ function Order(props) {
             }
           })
           if (!lb_found)
-            cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
+            cloneItem['toppingResult'] = item.topping != null ? (setupToppingApplyMenu(item))[0] : [];
 
           // cloneItem['toppingResult'] = item.topping != null ? setupToppingApplyMenu(item) : [];
           acc.push(cloneItem);
@@ -636,122 +744,286 @@ function Order(props) {
 
   const dishPrice = (item, price, size, symbol) => {
     return (
-      <Row className="text-left my-0 py-0 pl-0 ml-0 ">
-        <Col sm="4" xs="4">
-          <CardText className="d-inline bg-dark font-weight-bold text-light">
-            ${price}
-          </CardText>
-          &nbsp;
-          {item.isMultiple == true ? t(symbol) : null}
-        </Col>
-        <Col sm="4" xs="4">
-          <Link
+      <Grid container spacing={1}>
+        <Grid item xs={4} sm={4}>
+          <Box className={classes.priceBox}>
+            <Typography >
+              ${price}
+            </Typography>
+          </Box>
+        </Grid>
+        {/* &nbsp; */}
+        <Grid item xs={1} sm={1}>
+          <Typography >
+            <b>
+              {item.isMultiple == true ? t(symbol) : null}
+            </b>
+          </Typography >
+        </Grid>
+        <Grid item xs={3} sm={3} alignItems="top">
+          {/* <Link
             to="#!"
             onClick={(e) => addToOrder(e, item, price, size)}
             className="flow-right"
           >
             <MdAddCircle color="Primary" size="2rem" />
+          </Link> */}
+
+          <Link href="#" onClick={(e) => addToOrder(e, item, price, size)} >
+            <AddCircleOutlineIcon />
           </Link>
-          &nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;
+
+          {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
+            <Tooltip title={t("Add")} arror>
+              <AddCircleOutlineIcon />
+            </Tooltip>
+          </IconButton> */}
+
+
           {isQuantity(item, size) ? (
-            <Link
-              to="#!"
-              onClick={(e) => removeFromOrder(e, item, size)}
-              className=" flow-right"
-            >
-              <MdRemoveCircle color="Primary" size="2rem" />
+            // <Link
+            //   to="#!"
+            //   onClick={(e) => removeFromOrder(e, item, size)}
+            //   className=" flow-right"
+            // >
+            //   <MdRemoveCircle color="Primary" size="2rem" />
+            // </Link>
+            // <IconButton edge="end" aria-label="delete" onClick={(e) => removeFromOrder(e, item, price, size)} >
+            //   <Tooltip title={t("Subtract")} arror>
+            //     <RemoveCircleOutlineIcon />
+            //   </Tooltip>
+            // </IconButton>
+            <Link href="#" onClick={(e) => removeFromOrder(e, item, size)} >
+              <RemoveCircleOutlineIcon />
             </Link>
           ) : null}
-        </Col>
-        <Col sm="4" xs="4">
-          <i>{getQuantity(item, size)}</i>
-        </Col>
-      </Row>
+
+        </Grid>
+        <Grid item xs={3} sm={3} alignItems="bottom">
+          <Typography className={classes.quantityBox}>
+            {getQuantity(item, size)}
+            {/* <CheckIcon /> */}
+          </Typography>
+        </Grid>
+      </Grid >
     )
   };
 
-  const dishCard = (item, idx) => {
+
+
+  const dishCard = (item, idx, isNotDone = true) => {
     // debugger;
     return (
-      <Col sm="4" key={idx}>
-        <Card className="border-0">
-          <div className="imgblock">
-            <CardImg
-              top
-              width="100%"
-              className="imgbox h-100 d-inline-block"
-              // src={item.image_path}
-              src={shareContext.state.userMode === 2 ? item.image_path : getImage(item.image_path)}
+      // <Grid container spacing={2}>
+      //   <Grid item xs={12} sm={12}>
 
-              // src={getImage(item.image_path)}
-              alt="Card image cap"
-            />
-          </div>
 
-          <CardBody className="text-left py-0 by-0 pl-0 bl-0">
+      <Card className={classes.root}>
+        <CardActionArea
+          onClick={(e) => setDetail(
+            {
+              isDetail: true,
+              menu: item,
+              // getImage: getImage,
+              // dishPrice: dishPrice,
+              // setMenuToppingBox: setMenuToppingBox,
+              // setMenuToppingRadio: setMenuToppingRadio,
+              // Toppingmenuline: Toppingmenuline,
+              // toppingGroupMap: toppingGroupMap,
+              // toppingMap: toppingMap
+
+
+            })} >
+          <CardMedia
+            className={classes.media}
+            image={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? item.image_path : getImage(item.image_path)}
+            title={item.name}
+          />
+        </CardActionArea>
+        <CardContent className={classes.content}>
+          <Grid container spacing={0}>
+            <Grid item xs={8}>
+              <Typography variant="h6" component="h2" className={classes.content} noWrap>
+                {item.name}
+              </Typography>
+            </Grid>
+
+            <Grid xs={4}>
+              {
+                item.rating_size != 0 ?
+
+                  <Box component="fieldset" mb={0} borderColor="transparent">
+                    <Link href="#" onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                      <Rating
+                        readOnly
+                        // name="simple-controlled"
+                        value={item.rating_sum / item.rating_size}
+                        size="small"
+                        precision={0.5}
+                      // onChange={(e) => setToComment({ isComment: true, menu: item })}
+                      />({item.rating_size})
+                  </Link>
+                  </Box>
+                  :
+
+
+
+                  <Link href="#" onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                    <Tooltip title="Be first one to commnet" aria-label="Toppings">
+                      <Typography variant="caption" component="h2" className={classes.content} noWrap>
+                        No Commnet yet</Typography>
+                    </Tooltip>
+
+                  </Link>
+
+              }
+
+            </Grid>
+          </Grid>
+
+          <Typography variant="body2" color="textSecondary" component="p">
             {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
             {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
             {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
             {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
-          </CardBody>
-          <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
-            {item.cloneSequence === 0 ?
-              <Link
-                to="#!"
-                onClick={(e) => cloneMenuItem(item)}
-                className=" flow-left"
-              >
-                <MdContentCopy color="Primary" size="2rem" />
-              </Link>
-              :
-              <Link
-                to="#!"
-                onClick={(e) => removeCloneMenuItem(item)}
-                className=" flow-left"
-              >
-                <MdDelete color="Primary" size="2rem" />
-              </Link>
-            }
+          </Typography>
+          {/* <Typography variant="body2" color="textSecondary" component="p">
+              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+              across all continents except Antarctica
+          </Typography> */}
+        </CardContent>
+        {/* </CardActionArea> */}
+        {
+          item.hasTopping ?
+            <CardActions>
+              {item.cloneSequence === 0 ?
+                <Link href="#" onClick={(e) => cloneMenuItem(item)} >
+                  <Tooltip title="For order with other toppings" aria-label="Toppings">
+                    <FileCopyIcon />
+                  </Tooltip>
+                </Link>
+                :
+                <Link
+                  href="#"
+                  onClick={(e) => removeCloneMenuItem(item)}
+                >
+                  <Tooltip title="For removing addition menu item" aria-label="Toppings">
+                    < DeleteOutlineIcon />
+                  </Tooltip>
+                </Link>
+              }
+              {item.inCart ?
+                // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
+                cartList.map((elem, idx) => {
+                  if (isNotDone && item.id === elem.id && item.cloneSequence == elem.cloneSequence) {
+                    isNotDone = false;
+                    return (
+                      <ItemTopping elem={elem} toppingMap={toppingMap} />
+                    )
+                  }
+                })
+                :
+                <Typography variant="caption">
+                  {item.defaultTopping && item.defaultTopping.length ?
+                    fetchToppingNameList(item.defaultTopping)
+                    :
+                    t("ChooseTopping")}
+                </Typography>
+              }
+            </CardActions>
+            :
+            // <Typography variant="caption">
+            //   <Tooltip title={t("NoTopping")}y aria-label="Toppings">
+            //     <FileCopyIcon readOnly />
+            //   </Tooltip>
+            //   {t("NoTopping")}
+            // </Typography>
+            null
+        }
 
-            <Link
-              to="#!"
-              onClick={(e) => setDetail({
-                isDetail: true,
-                menu: item
-              })}
-              className=" flow-left"
-            >
-              <MdEventNote color="Primary" size="2rem" />
-            </Link>
-            <Link
-              to="#!"
-              onClick={(e) => setToComment({
-                isComment: true,
-                menu: item
-              })}
-              className=" flow-left"
-            >
-              <MdComment color="Primary" size="2rem" />
-            </Link>
-            &nbsp;
-            {item.name}
-            {item.toppingResult && item.toppingResult.length > 0 ?
-              <Toppingmenuline
-                item={item}
-                toppingApplyMenu={item.toppingArray}
-                toppingGroupMap={toppingGroupMap}
-                toppingMap={toppingMap}
-                toppingMenuResult={item.toppingResult}
-                setMenuToppingBox={setMenuToppingBox}
-                setMenuToppingRadio={setMenuToppingRadio}
-              />
-              :
-              null
-            }
+      </Card >
+      //   </Grid>
+      // </Grid>
+      // <Col sm="4" key={idx}>
+      //   <Card className="border-0">
+      //     <div className="imgblock">
+      //       <CardImg
+      //         top
+      //         width="100%"
+      //         className="imgbox h-100 d-inline-block"
+      //         // src={item.image_path}
+      //         src={shareContext.state.userMode === 2 ? item.image_path : getImage(item.image_path)}
 
-          </CardBody>
-        </Card>
-      </Col>
+      //         // src={getImage(item.image_path)}
+      //         alt="Card image cap"
+      //       />
+      //     </div>
+
+      //     <CardBody className="text-left py-0 by-0 pl-0 bl-0">
+      //       {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+      //       {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+      //       {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+      //       {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+      //     </CardBody>
+      //     <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
+      // {item.cloneSequence === 0 ?
+      //   <Link
+      //     to="#!"
+      //     onClick={(e) => cloneMenuItem(item)}
+      //     className=" flow-left"
+      //   >
+      //     <MdContentCopy color="Primary" size="2rem" />
+      //   </Link>
+      //   :
+      //   <Link
+      //     to="#!"
+      //     onClick={(e) => removeCloneMenuItem(item)}
+      //     className=" flow-left"
+      //   >
+      //     <MdDelete color="Primary" size="2rem" />
+      //   </Link>
+      // }
+
+      //       <Link
+      //         to="#!"
+      //         onClick={(e) => setDetail({
+      //           isDetail: true,
+      //           menu: item
+      //         })}
+      //         className=" flow-left"
+      //       >
+      //         <MdEventNote color="Primary" size="2rem" />
+      //       </Link>
+      //       <Link
+      //         to="#!"
+      //         onClick={(e) => setToComment({
+      //           isComment: true,
+      //           menu: item
+      //         })}
+      //         className=" flow-left"
+      //       >
+      //         <MdComment color="Primary" size="2rem" />
+      //       </Link>
+      //       &nbsp;
+      //       {item.name}
+      //       {item.toppingResult && item.toppingResult.length > 0 ?
+      //         <Toppingmenuline
+      //           item={item}
+      //           toppingApplyMenu={item.toppingArray}
+      //           toppingGroupMap={toppingGroupMap}
+      //           toppingMap={toppingMap}
+      //           toppingMenuResult={item.toppingResult}
+      //           setMenuToppingBox={setMenuToppingBox}
+      //           setMenuToppingRadio={setMenuToppingRadio}
+      //         />
+      //         :
+      //         null
+      //       }
+
+      //     </CardBody>
+      //   </Card>
+      // </Col>
     );
   };
 
@@ -835,17 +1107,31 @@ function Order(props) {
     < div >
 
 
-      {userMode != 2 ? <NavTab {...props} /> : null}
+      {/* {shareContext.state.userMode == 1 ? <NavTab {...props} /> : null} */}
       {
         isOrder ? (
           toComment.isComment ?
             <div>
-              <Rating {...props} menu={toComment.menu} setToComment={setToComment} />
+              <UserRate {...props} menu={toComment.menu} setToComment={setToComment} />
             </div>
             :
             detail.isDetail == true ?
               <div>
-                <Detail {...props} menu={detail.menu} setDetail={setDetail} />
+                <Detail {...props}
+                  menu={detail.menu}
+                  setDetail={setDetail}
+                  taxRate={restaurant.tax_rate}
+                  cartTotal={cartTotal}
+                  getImage={getImage}
+                  dishPrice={dishPrice}
+                  setMenuToppingBox={setMenuToppingBox}
+                  setMenuToppingRadio={setMenuToppingRadio}
+                  Toppingmenuline={Toppingmenuline}
+                  toppingGroupMap={toppingGroupMap}
+                  toppingMap={toppingMap}
+
+
+                />
               </div>
               : (
                 <div>
@@ -868,7 +1154,15 @@ function Order(props) {
                     />
                     : null}
                   {shareContext.state.menuFormat != 2 ?
-                    <Row>{menuList && menuList.map((item, idx) => dishCard(item, idx))}</Row>
+                    <Grid container spacing={1}>
+                      {menuList && menuList.map((item, idx) =>
+                        <Grid item xs="12" sm="4">
+
+                          {dishCard(item, idx)}
+                        </Grid>
+                      )}
+
+                    </Grid>
                     :
                     <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
                   }

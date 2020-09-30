@@ -12,6 +12,8 @@ import {
 } from "reactstrap";
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import CartHeader from './CartHeader';
+import ItemTopping from './ItemTopping';
 
 function Cart(props) {
     debugger;
@@ -41,7 +43,12 @@ function Cart(props) {
 
     return (
         <div>
-            <Navbar color="light" light expand="md"></Navbar>
+            <CartHeader
+                taxRate={taxRate}
+                cartTotal={cartTotal}
+                setIsOrder={setIsOrder}
+                submitOrder={submitOrder} />
+            {/* <Navbar color="light" light expand="md"></Navbar>
             <Jumbotron fluid className="my-0 py-1 bg-info w-100">
                 <Row>
                     <Nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top mr-auto">
@@ -77,7 +84,7 @@ function Cart(props) {
                         </React.Fragment>
                     </Nav>
                 </Row>
-            </Jumbotron>
+            </Jumbotron> */}
             <div class="padding70"> </div>
 
             <Row>
@@ -122,6 +129,7 @@ function Cart(props) {
                             <Row>
                                 < Col sm="4" xs="4" className="text-wrap">
                                     <b>{elem.name}</b>
+                                    {/* <ItemTopping elem={elem} toppingMap={toppingMap} /> */}
                                     {elem.isTopping > 0 ?
                                         <Col sm="12" >
                                             <span className="SmallFont font-weight-bold">{t("Note")}:&nbsp;&nbsp;</span>

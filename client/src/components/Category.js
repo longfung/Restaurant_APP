@@ -1,9 +1,78 @@
 import React, { useState, useEffect, useContext } from "react";
 import NavTab from "./NavTab";
-import { Form, Input, Row, Col, Button, FormGroup, Label } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { store } from "./Store";
 import access from "../util/access";
 import { useTranslation } from "react-i18next";
+import { FormControl } from "@material-ui/core";
+import { Formik, Form, Field } from 'formik';
+import {
+  Button,
+  LinearProgress,
+  Grid,
+  Box,
+} from '@material-ui/core';
+import {
+  TextField,
+} from 'formik-material-ui';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     flexGrow: 1,
+//     maxWidth: 752,
+//   },
+//   demo: {
+//     backgroundColor: theme.palette.background.paper,
+//   },
+//   title: {
+//     margin: theme.spacing(4, 0, 2),
+//   },
+// }));
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    padding: '1px 1px',
+    margin: '1px 1px',
+  },
+  container: {
+    maxHeight: 500,
+    margin: '1px 1px',
+    padding: '0px 0px'
+  },
+  content: {
+    // backgroundColor: 'primary',
+    // color: 'white',
+    fontStyle: 'oblique',
+    fontSize: "30px",
+    fontWeight: 500,
+    textAlign: "left",
+    fontWeight: 'fontWeightBold',
+  },
+});
+
+
+
 
 function Category(props) {
   const { t } = useTranslation();
@@ -18,8 +87,22 @@ function Category(props) {
     props.history.push("/Login");
   }
 
-  const [node, setNode] = useState({});
+  const [category, setCategory] = useState({});
   const [categoryList, setCategoryList] = useState([]);
+
+
+  const classes = useStyles();
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   useEffect(() => {
     initializeCategory();
@@ -34,9 +117,9 @@ function Category(props) {
       });
   }, []);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = (node) => {
     if (node.id != "") {
-      handleUpdateCategory();
+      handleUpdateCategory(node);
       return;
     }
     let data = {
@@ -59,7 +142,7 @@ function Category(props) {
       });
   };
 
-  const handleUpdateCategory = () => {
+  const handleUpdateCategory = (node) => {
     let data = {
       id: node.id,
       category_name: node.category_name,
@@ -86,7 +169,6 @@ function Category(props) {
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       .then(res => {
-        console.log(res);
         setCategoryList(res.data);
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
@@ -95,8 +177,7 @@ function Category(props) {
   };
 
   const setEdit = obj => {
-    debugger;
-    setNode(obj);
+    setCategory(obj);
   };
 
   const setDelete = obj => {
@@ -105,8 +186,12 @@ function Category(props) {
       .then(res => {
         let m = obj.category_name + " is deleted Successfully !!!";
         setMessage({ status: 200, msg: m });
+        if (categoryList && categoryList.length == (rowsPerPage + 1) && page == 1)
+          setPage(0);
         getCategoryList();
         initializeCategory();
+        debugger;
+
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
         setMessage({ status: 404, msg: err.message });
@@ -114,72 +199,164 @@ function Category(props) {
   };
 
   const initializeCategory = () => {
-    setNode({
+    setCategory(prev => ({
+      ...prev,
       id: "",
-      category_name: "",
+      category_name: null,
       category_description: "",
       restaurant_id: restaurantId
-    });
+    })
+    );
   };
+
   return (
     <div>
       <NavTab {...props} />
-      <Form>
-        <Row form>
-          <Col md={1}>
-            <FormGroup>
-              <Label for="catagoryName">{t("Category")}</Label>
-              <Input
-                type="text"
-                id="categoryName"
-                value={node.category_name}
-                onChange={e =>
-                  setNode({ ...node, category_name: e.target.value })
-                }
-              />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={1}>
-            <FormGroup>
-              <Label for="categoryDescritpion">{t("CategoryDescription")}</Label>
-              <Input
-                type="text"
-                id="categoryDescription"
-                value={node.category_description}
-                onChange={e =>
-                  setNode({ ...node, category_description: e.target.value })
-                }
-              />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Button id="saveButton" onClick={handleAddCategory}>
-          {t("Save")}
-        </Button>
-      </Form>
+      <Formik
+        enableReinitialize={true}
+        initialValues={{
+          id: category.id,
+          category_name: category.category_name === null ||
+            category.category_name === undefined
+            ? ""
+            : category.category_name,
+          category_description: category.category_description === null ||
+            category.category_description === undefined
+            ? ""
+            : category.category_description,
+          restaurant_id: restaurantId,
+        }}
+        validate={values => {
+          const errors = {};
+          if (!values.category_name) {
+            errors.category_name = t("E010");
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          setTimeout(() => {
+            setSubmitting(false);
+            handleAddCategory(values);
+            resetForm({});
+          }, 500);
+        }}
+      >
+        {({ submitForm, isSubmitting }) => (
+          <Form>
+            <Grid container spacing={2} >
+              <Grid item xs={12} sm={12} margin={0} padding={0}>
+                <Box margin={0} padding={0}>
+                  <Field
+                    component={TextField}
+                    name="category_name"
+                    type="text"
+                    label={t("Category")}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={12} margin={0} padding={0}>
+                <Box margin={0} padding={0}>
+                  <FormControl fullWidth variant="filled">
+                    <Field
+                      component={TextField}
+                      name="category_description"
+                      type="text"
+                      label={t("CategoryDescription")}
+                    />
+                  </FormControl>
+                </Box>
+              </Grid>
+              {isSubmitting && <LinearProgress />}
+              <Grid item xs={12} sm={6} >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting}
+                  onClick={submitForm}
+                >
+                  Submit
+            </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
       <hr></hr>
-      <div>
-        <h2>{t("CategoryList")}</h2>
-        <ul>
-          {categoryList &&
-            categoryList.map((item, idx) => (
-              <Row key={idx}>
-                <Col sm={4}>{item.category_name}</Col>
-                <Col sm={6}>{item.category_description}</Col>
-                <Col sm={1}>
-                  <Button onClick={() => setEdit(item)}>{t("Edit")}</Button>
-                </Col>
-                <Col sm={1}>
-                  <Button onClick={() => setDelete(item)}>{t("Delete")}</Button>
-                </Col>
-              </Row>
-            ))}
-        </ul>
-      </div>
-    </div>
+      <Paper className={classes.root}>
+        <TableContainer className={classes.container}>
+          <Table stickyHeader aria-label="sticky table" size="small" aria-label="a dense table" >
+            <TableBody>
+              {categoryList && categoryList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, rId) => {
+                return (
+                  <TableRow key={rId} style={{ padding: '0px', margin: '0px', backgroundColor: "#eaeaea", }} >
+                    <TableCell style={{ width: '20%' }} align="left">
+                      <Typography variant="body1">
+                        {item.category_name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{ width: '60%' }} align="left">
+                      {item.category_description}
+                    </TableCell>
+                    <TableCell style={{ width: '20%' }} align="left">
+                      <IconButton edge="end" aria-label="edit" onClick={() => setEdit(item)} >
+                        <Tooltip title={t("Edit")} arror>
+                          <EditIcon />
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton edge="end" aria-label="delete" onClick={() => setDelete(item)} >
+                        <Tooltip title={t("Delete")} arror>
+                          <DeleteIcon />
+                        </Tooltip>
+                      </IconButton>
+
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {categoryList && categoryList.length > rowsPerPage ?
+          <TablePagination
+            rowsPerPageOptions={[8, 25, 100]}
+            component="div"
+            count={categoryList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+          : null}
+      </Paper>
+
+      {/* <Typography variant="h5" className={classes.title}>
+        {t("CategoryList")}
+      </Typography>
+      {categoryList &&
+        categoryList.map((item, idx) => (
+          <Grid container spacing={0} style={{ padding: 0 }}>
+            <Grid item xs={3} >
+              {item.category_name}
+            </Grid>
+            <Grid item xs={7} >
+              {item.category_description}
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton edge="end" aria-label="edit" onClick={() => setEdit(item)} >
+                <EditIcon />
+              </IconButton>
+              <IconButton edge="end" aria-label="delete" onClick={() => setDelete(item)} >
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        ))} */}
+
+    </div >
+
   );
 }
+
+
 
 export default Category;

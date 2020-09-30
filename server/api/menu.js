@@ -62,6 +62,14 @@ router.put("/", (req, res) => {
   });
 });
 
+router.put("/rating", (req, res) => {
+  const data = req.body;
+  Menu.updateRating(data, (err, result) => {
+    if (err) return res.status(404).send(err)
+    return res.json(result);
+  });
+});
+
 router.delete("/", (req, res) => {
   const id = req.query.id;
   Menu.delete(id, (err, menu) => {

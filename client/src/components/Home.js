@@ -63,14 +63,14 @@ function Home(props) {
               <CardTitle>{t("Demo")}</CardTitle>
               <NavLink
                 className="border-info bg-light text-uppercase text-primary font-weight-bold"
-                href="/login?userMode=2&u=demo"
+                href="/login?userMode=2&userName=demo"
               >
                 {t("RestaurantScenario")}
               </NavLink>
               <hr />
               <NavLink
                 className="border-info bg-light text-uppercase text-primary font-weight-bold"
-                href="/login?userMode=2&u=demo2"
+                href="/login?userMode=2&userName=demo2"
               >
                 {t("CoffeeShopScenario")}
               </NavLink>

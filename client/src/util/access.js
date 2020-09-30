@@ -130,6 +130,12 @@ async function updateMenu(menu) {
   });
 }
 
+async function updateMenuRating(menu) {
+  return await axios.put(apiUrl + "/api/menu/rating", JSON.stringify(menu), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 async function deleteMenuById(id) {
   let data = { id: id };
   return await axios.delete(apiUrl + "/api/menu", { params: data });
@@ -297,6 +303,7 @@ module.exports = {
   fetchMenuByRestaurantCategoryId,
   addMenu,
   updateMenu,
+  updateMenuRating,
   deleteMenuById,
   fetchUserById,
   addUser,

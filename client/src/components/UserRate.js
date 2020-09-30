@@ -17,7 +17,7 @@ import access, { fetchRatingByMenu } from '../util/access';
 import SelectOption from './SelectOption';
 import "../index.css";
 
-function Rating(props) {
+function UserRate(props) {
     debugger;
     const { t } = useTranslation();
     const menu = props.menu;
@@ -68,9 +68,15 @@ function Rating(props) {
             restaurantId: restaurantId,
             post_by: shareContext.state.customer ? shareContext.state.customer.name : ''
         };
+        let menuD = {
+            id: menu.id,
+            rating_sum: menu.rating_sum + score,
+            rating_size: menu.rating_size + 1
+        }
 
         const promise1 = access.addRating(data);
-        Promise.resolve(promise1)
+        const promise2 = access.updateMenuRating(menuD);
+        Promise.resolve(promise1, promise2)
             .then(res => {
                 let m = "Rating submit Successfully !!!";
                 setMessage({ status: 200, msg: m });
@@ -289,4 +295,4 @@ function Rating(props) {
         </div >
     )
 }
-export default Rating
+export default UserRate

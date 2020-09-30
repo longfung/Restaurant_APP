@@ -3,13 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import "./i18n";
-
+import { ThemeProvider } from "@material-ui/core"
+import theme from "./theme.js"
 import "bootstrap/dist/css/bootstrap.css";
 
 debugger;
 ReactDOM.render(
   <Suspense fallback={<div>Loading</div>}>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </Suspense>,
   document.getElementById("root")
 );

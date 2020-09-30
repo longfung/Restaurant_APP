@@ -6,7 +6,7 @@ class Menu {
     const locale = query.locale;
     const entityId = query.entityId;
     db.query(
-      "select m.id, m.name, m.description, m.price_s, m.price_m, m.price_l, m.price_x, m.topping, \
+      "select m.id, m.name, m.description, m.price_s, m.price_m, m.price_l, m.price_x, m.topping, m.rating_sum, m.rating_size, \
       m.image_path, m.category_id, m.restaurant_id, m.available, t1.text as name_t, t2.text as description_t from menu m \
       left join entity_t as t1 on m.id = t1.id and t1.lang = $1 and t1.entity_id = 1  \
       left join entity_t as t2 on m.id = t2.id and t2.lang = $1 and t2.entity_id = 3  \
@@ -26,7 +26,7 @@ class Menu {
     const entityId = query.entityId;
     if (categoryId) {
       db.query(
-        "select m.id, m.name, m.description, m.price_s, m.price_m, m.price_l, m.price_x, m.topping, \
+        "select m.id, m.name, m.description, m.price_s, m.price_m, m.price_l, m.price_x, m.topping, m.rating_sum, m.rating_size, \
         m.image_path, m.category_id, m.available, m.restaurant_id, t1.text as name_t, t2.text as description_t from menu m \
         left join entity_t as t1 on m.id = t1.id and t1.lang = $1 and t1.entity_id = 1  \
         left join entity_t as t2 on m.id = t2.id and t2.lang = $1 and t2.entity_id = 3  \
@@ -154,6 +154,17 @@ class Menu {
       }
     )
     );
+  }
+
+  static updateRating(node, callback) {
+    db.query(
+      "update menu set rating_sum = $1, rating_size = $2 where id = $3",
+      [node.rating_sum, node.rating_size, node.id],
+      (err, res) => {
+        // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) {
+        if (err) return callback(err);
+        callback(null, res);
+      });
   }
 
   static put(node, callback) {
