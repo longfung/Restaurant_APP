@@ -64,7 +64,7 @@ import {
   Box,
 } from '@material-ui/core';
 import ItemTopping from './ItemTopping';
-import { IoTSecureTunneling } from "aws-sdk";
+// import { IoTSecureTunneling } from "aws-sdk";
 
 const useStyles = makeStyles(theme => ({
   root: {
