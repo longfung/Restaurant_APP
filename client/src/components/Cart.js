@@ -14,9 +14,75 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CartHeader from './CartHeader';
 import ItemTopping from './ItemTopping';
+import { Grid } from "@material-ui/core";
+import { Typography } from '@material-ui/core';
+import { makeStyles } from "@material-ui/styles";
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+
+const useStyles = makeStyles((theme) => ({
+    selectEmpty: {
+        marginTop: theme.spacing(0),
+    },
+    iconStyle: {
+        '&:before': {
+            height: '2px',
+            backgroundColor: theme.palette.neutral.white,
+            color: theme.palette.neutral.white,
+        }
+    },
+    iconContent: {
+        color: theme.palette.neutral.gold,
+        fontStyle: 'oblique',
+        fontSize: "40px",
+        fontWeight: 500,
+        verticalAlign: "middle",
+        fontWeight: 'fontWeightBold',
+    },
+    textNameContent: {
+        fontSize: "16px",
+        fontWeight: 700,
+        align: 'justify',
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(0),
+        paddingTop: theme.spacing(0),
+        paddingBottom: theme.spacing(0),
+        fontWeight: 'fontWeightBold',
+        // display: 'inline-block',
+    },
+    textDescContent: {
+        fontSize: "10px",
+        fontWeight: 300,
+        // align: 'justify',
+        marginTop: theme.spacing(0),
+        marginBottom: theme.spacing(0),
+        paddingTop: theme.spacing(0),
+        paddingBottom: theme.spacing(0),
+        display: 'inline-block',
+    },
+    textSubContent: {
+        fontSize: "24px",
+        fontWeight: 500,
+        // align: 'justify',
+        marginTop: theme.spacing(0),
+        marginBottom: theme.spacing(0),
+        paddingTop: theme.spacing(0),
+        paddingBottom: theme.spacing(0),
+        // display: 'inline-block',
+    },
+    icon: {
+        fontSize: 'small',
+        color: theme.palette.neutral.black,
+        padding: theme.spacing(0),
+        margin: theme.spacing(0),
+    }
+
+
+}));
 
 function Cart(props) {
     debugger;
+    const classes = useStyles();
     const { t } = useTranslation();
     const cartList = props.cartList;
     const isQuantity = props.isQuantity;
@@ -79,16 +145,16 @@ function Cart(props) {
                                     ${(cartTotal + (cartTotal * taxRate / 100)).toFixed(2)}
 
                                 </NavItem>
-
+ 
                             </Col >
                         </React.Fragment>
                     </Nav>
                 </Row>
             </Jumbotron> */}
-            <div class="padding70"> </div>
+            {/* <div class="padding70"> </div> */}
 
-            <Row>
-                <Col sm="12">
+            <Grid container spacing={0}>
+                <Grid xs="12">
                     {toppingApplyOrder && toppingApplyOrder.length > 0 ?
                         <b>{t("Note")}:&nbsp;&nbsp;</b>
                         :
@@ -118,21 +184,23 @@ function Cart(props) {
                         }
 
                     })}
-                </Col>
-            </Row>
+                </Grid>
+            </Grid>
             {
                 cartList && cartList.map((elem, idx) => {
                     tSum = 0;
                     return (
                         <div key={idx}>
 
-                            <Row>
-                                < Col sm="4" xs="4" className="text-wrap">
-                                    <b>{elem.name}</b>
+                            <Grid container spacing={0}>
+                                <Grid xs="4" >
+                                    <Typography className={classes.textNameContent}>{idx + 1}.&nbsp;&nbsp;{elem.name}</Typography>
                                     {/* <ItemTopping elem={elem} toppingMap={toppingMap} /> */}
                                     {elem.isTopping > 0 ?
-                                        <Col sm="12" >
-                                            <span className="SmallFont font-weight-bold">{t("Note")}:&nbsp;&nbsp;</span>
+                                        <Grid xs="12" >
+                                            <Typography className={classes.textDescContent} component="p">
+                                                {t("Note")}:&nbsp;&nbsp;
+                                            </Typography>
                                             {elem.toppingArray && elem.toppingArray.map((item, idx) => {
                                                 const g = (toppingMap[item])[1];
                                                 const n = (toppingMap[item])[0];
@@ -143,29 +211,36 @@ function Cart(props) {
                                                 }
                                                 // if (idx == 0)
                                                 //     return <span>{t("Note")}:&nbsp;&nbsp;</span>
-                                                debugger;
+                                                // debugger;
                                                 if (g == 'G0') {
                                                     if (elem.toppingResult[idx] == true) {
                                                         if (idx != 0)
-                                                            return <span className="SmallFont"
-                                                                key={idx}>,&nbsp;&nbsp;{n}{p > 0 ? '($' + p + ")" : null}</span>
+                                                            return (
+                                                                <Typography className={classes.textDescContent} component="p">
+                                                                    ,&nbsp;&nbsp;{n}{p > 0 ? '($' + p + ")" : null}
+                                                                </Typography>)
                                                         else
-                                                            return <span className="SmallFont"
-                                                                key={idx}>{n}{p > 0 ? '($' + p + ")" : null}</span>
+                                                            return <Typography className={classes.textDescContent} component="p">
+                                                                {n}{p > 0 ? '($' + p + ")" : null}
+                                                            </Typography>
                                                     }
                                                 } else {
                                                     const res = toppingMap[elem.toppingResult[idx]];
                                                     if (idx != 0)
-                                                        return <span className="SmallFont" key={idx}>,&nbsp;&nbsp;{res[0]}</span>
+                                                        return <Typography className={classes.textDescContent} component="p">
+                                                            ,&nbsp;&nbsp;{res[0]}
+                                                        </Typography>
                                                     else
-                                                        return <span className="SmallFont" key={idx}>{res[0]}</span>
+                                                        return <Typography className={classes.textDescContent} component="p">
+                                                            {res[0]}
+                                                        </Typography>
                                                 }
 
                                             })}
-                                        </Col>
+                                        </Grid>
                                         : null}
-                                </Col>
-                                <Col sm="2" xs="2" className="float-left">
+                                </Grid>
+                                <Grid xs="2">
                                     ${elem.price}
                         &nbsp;
 
@@ -174,26 +249,32 @@ function Cart(props) {
                                     {elem.size == 3 && elem.isMultiple == true ? t("L") : null}
                                     {elem.size == 4 && elem.isMultiple == true ? t("X") : null}
 
-                                </Col>
-                                <Col sm="1" xs="1">
+                                </Grid>
+                                <Grid xs="1">
                                     {elem.quantity}
-                                </Col>
-                                <Col sm="2" xs="2" className="float-left">
+                                </Grid>
+                                <Grid xs="2">
                                     ${(elem.price * elem.quantity).toFixed(2)}
-                                    {tSum !== 0 ? <Col sm="12" className="float-left"> ${(tSum * elem.quantity).toFixed(2)} </Col> : null}
+                                    {tSum !== 0 ?
+                                        <Grid xs="12" >
+                                            <Typography className={classes.textDescContent} >
+                                                ${(tSum * elem.quantity).toFixed(2)}
+                                            </Typography>
+                                        </Grid>
+                                        : null}
 
-                                </Col>
-                                <Col sm='3' xs="3">
-                                    <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)} className='float-left'>
-                                        <MdAddCircle color='Primary' size='2rem' />
+                                </Grid>
+                                <Grid xs="3">
+                                    <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)}>
+                                        <AddCircleOutlineIcon classname={classes.icon} />
                                     </Link>
                                     {isQuantity(elem, elem.size) ?
-                                        <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)} className=' float-left'>
-                                            <MdRemoveCircle color='Primary' size='2rem' />
+                                        <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)}>
+                                            <RemoveCircleOutlineIcon classname={classes.icon} />
                                         </Link>
                                         : null}
-                                </Col>
-                            </Row>
+                                </Grid>
+                            </Grid>
 
                         </div>
                     )
@@ -201,35 +282,50 @@ function Cart(props) {
                 )
             }
             <hr />
-            <Row>
-                <Col sm='7' xs="7">
-                    <b>{t("SubTotal")}:</b>
-                </Col>
-                <Col sm='5' xs="5" className="float-left">
-                    ${cartTotal.toFixed(2)}
-                </Col>
-            </Row>
-            <Row>
-                <Col sm='4' xs="4">
-                    <b>{t("Tax")}:</b>
-                </Col>
-                <Col sm='3' xs="3">
-                    {taxRate.toFixed(2)}%
-                </Col>
-                <Col sm='5' xs="5" className="float-left">
-                    ${(cartTotal * taxRate / 100).toFixed(2)}
-                </Col>
+            <Grid container >
+                <Grid xs="7">
+                    <Typography className={classes.textSubContent} >
+                        {t("SubTotal")}:
+                    </Typography>
+                </Grid>
+                <Grid xs="5">
+                    <Typography className={classes.textNameContent} >
+                        ${cartTotal.toFixed(2)}
+                    </Typography>
+                </Grid>
 
-            </Row>
-            <hr />
-            <Row>
-                <Col sm='7' xs="7">
-                    <b>{t("Total")}:</b>
-                </Col>
-                <Col sm='5' xs="5" className="float-left">
-                    ${(cartTotal + (cartTotal * taxRate / 100)).toFixed(2)}
-                </Col>
-            </Row>
+
+                <Grid xs="4">
+                    <Typography className={classes.textSubContent} >
+                        {t("Tax")}:
+                    </Typography>
+                </Grid>
+                <Grid xs="3">
+                    <Typography className={classes.textNameContent} >
+                        {taxRate.toFixed(2)}%
+                    </Typography>
+                </Grid>
+                <Grid xs="5">
+                    <Typography className={classes.textNameContent} >
+                        ${(cartTotal * taxRate / 100).toFixed(2)}
+                    </Typography>
+                </Grid>
+
+
+                <hr />
+
+                <Grid xs="7">
+                    <Typography className={classes.textSubContent} >
+                        {t("Total")}:
+                    </Typography>
+                </Grid>
+                <Grid xs="5">
+                    <Typography className={classes.textNameContent} >
+
+                        ${(cartTotal + (cartTotal * taxRate / 100)).toFixed(2)}
+                    </Typography>
+                </Grid>
+            </Grid>
 
             {/* 
             <Row>

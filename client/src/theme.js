@@ -41,6 +41,7 @@ const theme = createMuiTheme({
             white: 'white',
             black: 'black',
             gold: 'gold',
+            grey: 'grey'
         },
     },
 })
