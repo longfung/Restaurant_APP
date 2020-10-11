@@ -155,72 +155,78 @@ function CategoryNav(props) {
   const [menuFormat, setMenuFormat] = useState(1);  // 1 with photo, 2 without format list format
 
   useEffect(() => {
+    let isMounted = true;
     setCategoryList([]);
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       // axios
       //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       .then(res => {
-        res.data.map(item =>
-          setCategoryList(prevState => [
-            ...prevState,
-            { id: item.id, label: item.namet == null ? item.category_name : item.namet }
-          ])
-        );
-        // debugger;
-        setCatOptions([])
-        let catOpt = res.data.map(item => ({
-          value: item.id,
-          label: item.namet == null ? item.category_name : item.namet
-        }));
-        const temp = t("AllCategory");
-        const tempObj = { value: 0, label: temp };
-        catOpt.unshift(tempObj);
-        // setCatValue(catOptions);
-        if (catValue == null || catValue == 0) {
-          setCatValue(0);
-        } else {
-          catOpt.forEach((elem) => {
-            if (elem.value == catValue.value) {
-              catValue.label = elem.label;
-            }
-          })
-        }
-        setCatOptions(catOpt);
-        // format options
-        let formatOpt = [];
-        setFormatOptions([])
-        const temp1 = t("CardFormat");
-        const temp1Obj = { value: 1, label: temp1 };
-        formatOpt.push(temp1Obj);
-        const temp2 = t("ListFormat");
-        const temp2Obj = { value: 2, label: temp2 };
-        formatOpt.push(temp2Obj);
-        // setCatValue(catOptions);
-        // if (formatValue == 1) {
-        //   setFormatValue(1);
-        // } else {
-        //   setFormatValue(2);
-        // }
-        setFormatOptions(formatOpt);
-        // Language switch
-        if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
-          const arr = shareContext.state.restaurant.support_locale.split(',')
-          let formatOpt = [];
-          setLangOptions([])
-          let langOpt = arr.map(lang => ({
-            value: lang,
-            label: t(lang)
+        if (isMounted) {
+          res.data.map(item =>
+            setCategoryList(prevState => [
+              ...prevState,
+              { id: item.id, label: item.namet == null ? item.category_name : item.namet }
+            ])
+          );
+          // debugger;
+          setCatOptions([])
+          let catOpt = res.data.map(item => ({
+            value: item.id,
+            label: item.namet == null ? item.category_name : item.namet
           }));
+          const temp = t("AllCategory");
+          const tempObj = { value: 0, label: temp };
+          catOpt.unshift(tempObj);
           // setCatValue(catOptions);
-          const temp3 = t(shareContext.state.locale);
-          const temp3Obj = { value: shareContext.state.locale, label: temp3 };
-          setLangValue(shareContext.state.locale);
-          setLangOptions(langOpt);
+          if (catValue == null || catValue == 0) {
+            setCatValue(0);
+          } else {
+            catOpt.forEach((elem) => {
+              if (elem.value == catValue.value) {
+                catValue.label = elem.label;
+              }
+            })
+          }
+          setCatOptions(catOpt);
+          // format options
+          let formatOpt = [];
+          setFormatOptions([])
+          const temp1 = t("CardFormat");
+          const temp1Obj = { value: 1, label: temp1 };
+          formatOpt.push(temp1Obj);
+          const temp2 = t("ListFormat");
+          const temp2Obj = { value: 2, label: temp2 };
+          formatOpt.push(temp2Obj);
+          // setCatValue(catOptions);
+          // if (formatValue == 1) {
+          //   setFormatValue(1);
+          // } else {
+          //   setFormatValue(2);
+          // }
+          setFormatOptions(formatOpt);
+          // Language switch
+          if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
+            const arr = shareContext.state.restaurant.support_locale.split(',')
+            let formatOpt = [];
+            setLangOptions([])
+            let langOpt = arr.map(lang => ({
+              value: lang,
+              label: t(lang)
+            }));
+            // setCatValue(catOptions);
+            const temp3 = t(shareContext.state.locale);
+            const temp3Obj = { value: shareContext.state.locale, label: temp3 };
+            setLangValue(shareContext.state.locale);
+            setLangOptions(langOpt);
+          }
         }
-
       })
-      .catch(error => console.log(error));
+      .catch(error => console.log(error))
+      .finally(() => {
+        isMounted = false;
+      });
+    return () => isMounted = false;
   }, [shareContext.state.locale]);
 
   useEffect(() => {
@@ -377,7 +383,7 @@ function CategoryNav(props) {
           <Grid container direction="row">
 
             {shareContext.state.userMode == 1 ?
-              <Grid xs="1">
+              <Grid item xs={1}>
 
                 <Link to='#!'
                   onClick={
@@ -405,7 +411,7 @@ function CategoryNav(props) {
                   // MenuProps={catOptions}
                   // className={classes.selectEmpty}
                   inputProps={{ 'aria-label': 'Without label' }}
-                  color="common.white"
+                // color="common.white"
                 // input={
                 //   <Input
                 //     classes={{
@@ -437,7 +443,7 @@ function CategoryNav(props) {
                   value={formatValue}
                   onChange={switchMenuFormat2}
                   inputProps={{ 'aria-label': 'Without label' }}
-                  color="common.white"
+                // color="common.white"
                 >
                   {formatOptions.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -464,7 +470,7 @@ function CategoryNav(props) {
                     value={langValue}
                     onChange={setLanguage}
                     inputProps={{ 'aria-label': 'Without label' }}
-                    color="common.white"
+                  // color="common.white"
                   >
                     {langOptions.map(option => (
                       <MenuItem key={option.value} value={option.value}>
@@ -481,7 +487,7 @@ function CategoryNav(props) {
 
 
             </Grid>
-            <Grid xs={3}>
+            <Grid item xs={3}>
 
               <Link
                 to="#!"
@@ -502,7 +508,7 @@ function CategoryNav(props) {
           </Grid>
         </Toolbar>
       </AppBar >
-      <div class="padding05"> </div>
+      <div className="padding05"> </div>
     </div>
 
     // <div>

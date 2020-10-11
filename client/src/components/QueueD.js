@@ -44,15 +44,20 @@ function QueueD(props) {
     const getOrderList = () => {
         const dateId = new Date().toLocaleDateString().split('/').reverse().join('');
         const promise1 = access.fetchOrdersByActive(restaurantId, dateId);
+        let isMounted = true;
         Promise.resolve(promise1)
             .then(res => {
                 res.data.sort((a, b) => { return a.id - b.id; });
-                setupOrderMap(res.data);
-                setOrders(res.data);
+                if (isMounted) {
+                    setupOrderMap(res.data);
+                    setOrders(res.data);
+                }
             }).catch((err) => {
                 // let errorObject = JSON.parse(JSON.stringify(err));
                 setMessage({ status: 404, msg: err.message });
-            });
+            }).finally(() => {
+                isMounted = false;
+            })
     }
 
     const setupOrderMap = oList => {
@@ -106,7 +111,7 @@ function QueueD(props) {
                     </React.Fragment>
                 </Nav>
             </Row>
-            <div class="padding70"> </div>
+            <div className="padding10"> </div>
             <Navbar color="light" light expand="md"></Navbar>
             {
                 orders && orders.map((oItem, idx) => {

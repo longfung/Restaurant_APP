@@ -61,86 +61,87 @@ function NavTab(props) {
     };
 
     return (
-        <AppBar position="static" color="primary">
+        <div>
+            <AppBar position="static" color="primary">
+                <Toolbar>
+                    <Grid container direction="row">
+                        <Grid item xs={1} >
+
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/")}>
+                                {/* <Typography variant='subtitle1' className={classes.appbar}> */}
+                                {t("Home")}
+
+                            </Button>
+
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/Restaurant")}>
+
+                                {t("Restaurant")}
 
 
-            <Toolbar>
-                <Grid container direction="row">
-                    <Grid item xs={1} >
-
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/")}>
-                            {/* <Typography variant='subtitle1' className={classes.appbar}> */}
-                            {t("Home")}
-
-                        </Button>
-
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/Menu")} >
+                                {t("Menu")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/Category")} >
+                                {t("Category")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/Topping")} >
+                                {t("ToppingName")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/Order")} >
+                                {t("Order")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/EntityT")} >
+                                {t("Translator")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/QueueA")} >
+                                {t("QueueA")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => goComponent("/QueueD")} >
+                                {t("QueueD")}
+                            </Button>
+                        </Grid>
+                        <Grid item xs={2} sm={2} className={classes.navbarButtonStyle}>
+                            <Language />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant="text" className={classes.navbarButtonStyle}
+                                onClick={() => props.history.push("/user")} >
+                                <MdAccountCircle color="white" size="2rem" /> {username}
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/Restaurant")}>
-
-                            {t("Restaurant")}
-
-
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/Menu")} >
-                            {t("Menu")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/Category")} >
-                            {t("Category")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/Topping")} >
-                            {t("ToppingName")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/Order")} >
-                            {t("Order")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/EntityT")} >
-                            {t("Translator")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/QueueA")} >
-                            {t("QueueA")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => goComponent("/QueueD")} >
-                            {t("QueueD")}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={2} sm={2} className={classes.navbarButtonStyle}>
-                        <Language />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth variant="text" className={classes.navbarButtonStyle}
-                            onClick={() => props.history.push("/user")} >
-                            <MdAccountCircle color="white" size="2rem" /> {username}
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Toolbar>
+                </Toolbar>
 
 
-        </AppBar >
+            </AppBar >
+            <div className="padding05"> </div>
+        </div>
     )
 }
 

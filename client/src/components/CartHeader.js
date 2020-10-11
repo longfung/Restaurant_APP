@@ -69,7 +69,7 @@ function CartHeader(props) {
     return (
         <div className={classes.root}>
             <AppBar position="static" color="primary">
-                <Toolbar fullwidth>
+                <Toolbar>
                     <Grid container direction="row">
                         <Grid item xs={2} >
                             {setDetail == undefined
@@ -109,7 +109,7 @@ function CartHeader(props) {
                     </Grid>
                 </Toolbar>
             </AppBar >
-            <div class="padding05"> </div>
+            <div className="padding05"> </div>
         </div>
 
 

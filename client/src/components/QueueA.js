@@ -48,29 +48,39 @@ function QueueA(props) {
 
     const getToppingList = () => {
         const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
+        let isMounted = true;
         Promise.resolve(promise1)
             // axios
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
             .then((res) => {
-                getOrderList();
-                setupToppingMap(res.data);
+                if (isMounted) {
+                    getOrderList();
+                    setupToppingMap(res.data);
+                }
             }).catch((err) => {
                 // let errorObject = JSON.parse(JSON.stringify(err));
                 setMessage({ status: 404, msg: err.message });
+            }).finally(() => {
+                isMounted = false;
             });
     }
 
     const getOrderList = () => {
         const dateId = new Date().toLocaleDateString().split('/').reverse().join('');
         const promise1 = access.fetchOrdersByActive(restaurantId, dateId);
+        let isMounted2 = true;
         Promise.resolve(promise1)
             .then(res => {
                 res.data.sort((a, b) => { return a.id - b.id; });
-                setOrders(res.data);
+                if (isMounted2) {
+                    setOrders(res.data);
+                }
             }).catch((err) => {
                 // let errorObject = JSON.parse(JSON.stringify(err));
                 setMessage({ status: 404, msg: err.message });
-            });
+            }).finally(() => {
+                isMounted2 = false;
+            });;
     }
 
     const setupToppingMap = oList => {
@@ -151,7 +161,7 @@ function QueueA(props) {
                     </React.Fragment>
                 </Nav>
             </Row>
-            <div class="padding70"> </div>
+            <div className="padding10"> </div>
             <Navbar color="light" light expand="md"></Navbar>
             {
                 orders && orders.map((oItem, idx) => {

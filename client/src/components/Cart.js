@@ -154,7 +154,7 @@ function Cart(props) {
             {/* <div class="padding70"> </div> */}
 
             <Grid container spacing={0}>
-                <Grid xs="12">
+                <Grid item xs={12}>
                     {toppingApplyOrder && toppingApplyOrder.length > 0 ?
                         <b>{t("Note")}:&nbsp;&nbsp;</b>
                         :
@@ -193,11 +193,11 @@ function Cart(props) {
                         <div key={idx}>
 
                             <Grid container spacing={0}>
-                                <Grid xs="4" >
+                                <Grid item xs={4} >
                                     <Typography className={classes.textNameContent}>{idx + 1}.&nbsp;&nbsp;{elem.name}</Typography>
                                     {/* <ItemTopping elem={elem} toppingMap={toppingMap} /> */}
                                     {elem.isTopping > 0 ?
-                                        <Grid xs="12" >
+                                        <Grid item xs={12} >
                                             <Typography className={classes.textDescContent} component="p">
                                                 {t("Note")}:&nbsp;&nbsp;
                                             </Typography>
@@ -216,22 +216,22 @@ function Cart(props) {
                                                     if (elem.toppingResult[idx] == true) {
                                                         if (idx != 0)
                                                             return (
-                                                                <Typography className={classes.textDescContent} component="p">
+                                                                <Typography key={idx} className={classes.textDescContent} component="p">
                                                                     ,&nbsp;&nbsp;{n}{p > 0 ? '($' + p + ")" : null}
                                                                 </Typography>)
                                                         else
-                                                            return <Typography className={classes.textDescContent} component="p">
+                                                            return <Typography key={idx} className={classes.textDescContent} component="p">
                                                                 {n}{p > 0 ? '($' + p + ")" : null}
                                                             </Typography>
                                                     }
                                                 } else {
                                                     const res = toppingMap[elem.toppingResult[idx]];
                                                     if (idx != 0)
-                                                        return <Typography className={classes.textDescContent} component="p">
+                                                        return <Typography key={idx} className={classes.textDescContent} component="p">
                                                             ,&nbsp;&nbsp;{res[0]}
                                                         </Typography>
                                                     else
-                                                        return <Typography className={classes.textDescContent} component="p">
+                                                        return <Typography key={idx} className={classes.textDescContent} component="p">
                                                             {res[0]}
                                                         </Typography>
                                                 }
@@ -240,7 +240,7 @@ function Cart(props) {
                                         </Grid>
                                         : null}
                                 </Grid>
-                                <Grid xs="2">
+                                <Grid item xs={2}>
                                     ${elem.price}
                         &nbsp;
 
@@ -250,10 +250,10 @@ function Cart(props) {
                                     {elem.size == 4 && elem.isMultiple == true ? t("X") : null}
 
                                 </Grid>
-                                <Grid xs="1">
+                                <Grid item xs={1}>
                                     {elem.quantity}
                                 </Grid>
-                                <Grid xs="2">
+                                <Grid item xs={1}>
                                     ${(elem.price * elem.quantity).toFixed(2)}
                                     {tSum !== 0 ?
                                         <Grid xs="12" >
@@ -264,13 +264,13 @@ function Cart(props) {
                                         : null}
 
                                 </Grid>
-                                <Grid xs="3">
+                                <Grid item xs={3}>
                                     <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)}>
-                                        <AddCircleOutlineIcon classname={classes.icon} />
+                                        <AddCircleOutlineIcon className={classes.icon} />
                                     </Link>
                                     {isQuantity(elem, elem.size) ?
                                         <Link to='#!' onClick={e => removeFromOrder(e, elem, elem.size)}>
-                                            <RemoveCircleOutlineIcon classname={classes.icon} />
+                                            <RemoveCircleOutlineIcon className={classes.icon} />
                                         </Link>
                                         : null}
                                 </Grid>
@@ -283,29 +283,29 @@ function Cart(props) {
             }
             <hr />
             <Grid container >
-                <Grid xs="7">
+                <Grid item xs={7}>
                     <Typography className={classes.textSubContent} >
                         {t("SubTotal")}:
                     </Typography>
                 </Grid>
-                <Grid xs="5">
+                <Grid item xs={5}>
                     <Typography className={classes.textNameContent} >
                         ${cartTotal.toFixed(2)}
                     </Typography>
                 </Grid>
 
 
-                <Grid xs="4">
+                <Grid item xs={4}>
                     <Typography className={classes.textSubContent} >
                         {t("Tax")}:
                     </Typography>
                 </Grid>
-                <Grid xs="3">
+                <Grid item xs={3}>
                     <Typography className={classes.textNameContent} >
                         {taxRate.toFixed(2)}%
                     </Typography>
                 </Grid>
-                <Grid xs="5">
+                <Grid item xs={5}>
                     <Typography className={classes.textNameContent} >
                         ${(cartTotal * taxRate / 100).toFixed(2)}
                     </Typography>
@@ -314,12 +314,12 @@ function Cart(props) {
 
                 <hr />
 
-                <Grid xs="7">
+                <Grid item xs={7}>
                     <Typography className={classes.textSubContent} >
                         {t("Total")}:
                     </Typography>
                 </Grid>
-                <Grid xs="5">
+                <Grid item xs={5}>
                     <Typography className={classes.textNameContent} >
 
                         ${(cartTotal + (cartTotal * taxRate / 100)).toFixed(2)}

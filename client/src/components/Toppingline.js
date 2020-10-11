@@ -55,7 +55,7 @@ function Toppingline(props) {
 
 
     return (
-        <Grid xs={12}>
+        <Grid item xs={12}>
 
             {toppingApplyOrder && toppingApplyOrder.map((elem, idx) => {
                 // debugger;
@@ -63,6 +63,7 @@ function Toppingline(props) {
                 if (g == 'G0') {
                     return (
                         <FormControlLabel
+                            key={idx}
                             control={
                                 <Checkbox
                                     checked={toppingOrderResult[idx]}

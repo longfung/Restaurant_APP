@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 function Toppingmenuline(props) {
     const { t } = useTranslation();
     const [count, setcount] = useState(0);
-    debugger;
     const itemId = props.item.id;
     const itemSeq = props.item.cloneSequence;
     const toppingApplyMenu = props.toppingApplyMenu;
@@ -111,6 +110,7 @@ function Toppingmenuline(props) {
                                     null}
 
                                 <FormControlLabel
+                                    key={idx}
                                     control={
                                         <Checkbox className={classes.quantityBox}
                                             checked={toppingMenuResult[idx]}
@@ -142,7 +142,7 @@ function Toppingmenuline(props) {
                         <Grid item xs="12" className={classes.content}>
                             <FormControl component="fieldset">
 
-                                <FormLabel component="span" >
+                                <FormLabel component="span" key={idx}>
                                     <Typography variant="caption" display="block">
                                         {idx + 1}: {g} (Select one)
                                         </Typography>

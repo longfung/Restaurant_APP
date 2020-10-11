@@ -35,9 +35,9 @@ import Modal from '@material-ui/core/Modal';
 // import { allowedLocale } from "../util/config.json";
 const config = require("../util/config.json");
 
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
+// function rand() {
+//     return Math.round(Math.random() * 20) - 10;
+// }
 
 // function getModalStyle() {
 //     const top = 50 + rand();
@@ -69,23 +69,19 @@ function Customer(props) { // console.log("In Restaurant");
     const { t } = useTranslation();
     const shareContext = useContext(store);
     const setMessage = props.setMessage;
-    const [customer, setCustomer] = useState({
-        orderId: "",
-        name: "",
-    });
-    const [open, setOpen] = useState(true);
+    // const [customer, setCustomer] = useState({
+    //     orderId: "12",
+    //     name: "Tom",
+    // });
+    const [open, setOpen] = useState(shareContext.state.customer == undefined || shareContext.state.customer == null ? true : false);
     // const [modalStyle] = React.useState(getModalStyle);
 
-    const submit = (node) => {
+    const handleSubmit = (node) => {
         if (!node.orderId) {
             let m = t("LoginFirst");
             setMessage({ status: 400, msg: m });
             return;
         }
-        // if (!node.name) {
-        //     setCustomer(...ProgressEvent, { name: customer.orderId });
-        // }
-        debugger;
         shareContext.dispatch({
             type: "setCustomer",
             value: {
@@ -93,23 +89,30 @@ function Customer(props) { // console.log("In Restaurant");
                 name: node.name
             }
         });
-        setOpen(false);
-        props.history.push("/order");
+        handleClose();
+        // setOpen(false);
+        // props.history.push("/order");
+        // return;
     }
+
+    const handleClose = () => {
+
+        setOpen(false);
+    };
 
     const userModal = (
         <div className={classes.paper}>
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    orderId: customer.orderId === null ||
-                        customer.orderId === undefined
-                        ? ""
-                        : customer.orderId,
-                    name: customer.name === null ||
-                        customer.name === undefined
-                        ? ""
-                        : customer.name,
+                    orderId: shareContext.state.customer === null ||
+                        shareContext.state.customer === undefined
+                        ? "Tom"
+                        : shareContext.state.customer.orderId,
+                    name: shareContext.state.customer === null ||
+                        shareContext.state.customer === undefined
+                        ? "12"
+                        : shareContext.state.customer.name,
                 }}
                 validate={values => {
                     const errors = {};
@@ -124,12 +127,14 @@ function Customer(props) { // console.log("In Restaurant");
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                     setTimeout(() => {
                         setSubmitting(false);
-                        submit(values);
+                        // handleClose();
+                        handleSubmit(values);
                         resetForm({});
+
                     }, 500);
                 }}
             >
-                {({ submitForm, isSubmitting }) => (
+                {({ submitForm, isSubmitting, values }) => (
                     <Form>
                         <Grid container spacing={2} >
                             <Grid item xs={12} sm={12} margin={0} padding={0}>
@@ -155,29 +160,45 @@ function Customer(props) { // console.log("In Restaurant");
                                 </Box>
                             </Grid>
                             {isSubmitting && <LinearProgress />}
-                            <Grid item xs={12} sm={6} >
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isSubmitting}
-                                    onClick={submitForm}
-                                >
-                                    Submit
-            </Button>
+                            <Grid container spacing={0} alignItems="center">
+                                <Grid item xs={12} sm={6} >
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={isSubmitting}
+                                        onClick={submitForm}
+                                    >
+                                        Submit
+                                </Button>
+                                &nbsp;
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={isSubmitting}
+                                        onClick={handleClose}
+                                    >
+                                        Close
+                                </Button >
+
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Form>
-                )}
-            </Formik>
-        </div>
+                )
+                }
+            </Formik >
+        </div >
     )
 
     return (
         <div>
-            <NavTab {...props} />
+            {/* <NavTab {...props} /> */}
 
             <Modal
                 open={open}
+
+                onClose={handleClose}
+
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >

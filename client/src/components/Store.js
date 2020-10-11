@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import i18next from "i18next";
+
 
 const initialState = {
 
@@ -30,7 +30,7 @@ const StateProvider = ({ children }) => {
       case "setMenuFormat":
         return { ...state, menuFormat: action.value };
       case "setLocale":
-        i18next.changeLanguage(action.value);
+        // i18next.changeLanguage(action.value);
         return { ...state, locale: action.value };
       case "setOrderId":
         return { ...state, orderId: action.value };

@@ -116,11 +116,12 @@ function App(props) {
               path="/queueD"
               render={(props) => <QueueD {...props} setMessage={setMessage} />}
             />
-            <Route
+            {/* <Route
               exact
               path="/customer"
               render={(props) => <Customer {...props} setMessage={setMessage} />}
-            />            <Route
+            /> */}
+            <Route
               path="/Login"
               render={(props) => <Login {...props} setMessage={setMessage} />}
             />

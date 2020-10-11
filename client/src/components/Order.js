@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import Cart from "./Cart";
 import Toppingline from "./Toppingline";
 import Toppingmenuline from "./Toppingmenuline";
+import Customer from "./Customer";
 import Select from "react-select";
 import { MdAddCircle, MdRemoveCircle, MdDone, MdEventNote, MdContentCopy, MdDelete, MdComment, MdCenterFocusStrong } from "react-icons/md";
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
@@ -126,9 +127,10 @@ function Order(props) {
     setMessage({ status: 400, msg: m });
     props.history.push("/Login");
   }
-  if (!shareContext.state.customer) {
-    props.history.push("/Customer");
-  }
+  // debugger;
+  // if (!shareContext.state.customer) {
+  //   props.history.push("/Customer");
+  // }
   const userMode = shareContext.state.userMode;
   // const restaurant = shareContext.state.restaurant;
   //   const restaurantId = restaurant.id;
@@ -171,21 +173,28 @@ function Order(props) {
     // debugger;
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+    let isMounted = true;
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
     Promise.resolve(promise1)
       .then((res) => {
-        setCategoryList([]);
-        res.data.map((item) =>
-          setCategoryList((prevState) => [
-            ...prevState,
-            { id: item.id, label: item.namet == null ? item.category_name : item.namet },
-          ])
-        );
+        if (isMounted) {
+          setCategoryList([]);
+          res.data.map((item) =>
+            setCategoryList((prevState) => [
+              ...prevState,
+              { id: item.id, label: item.namet == null ? item.category_name : item.namet },
+            ])
+          );
+        }
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
         setMessage({ status: 404, msg: err.message });
+      }).finally(() => {
+        isMounted = false;
       });
+
     getToppingList();
+    return () => isMounted = false;
   }, [shareContext.state.locale]);
 
   // useEffect(() => {
@@ -207,6 +216,7 @@ function Order(props) {
 
   const fetchMenuList = (categoryId) => {
     // debugger;
+    let isMounted3 = true;
     let promise1 = '';
     // let catId = '';
     // if (categoryId == 0)
@@ -228,55 +238,59 @@ function Order(props) {
       //   })
       .then((res) => {
         // debugger;
-        setMenuList([]);
-        const newMenuList = res.data.map(item => {
-          if (item.name_t != null) item.name = item.name_t;
-          if (item.description_t != null) item.description = item.description_t;
-          let cnt = 0;
-          if (item.price_s > 0) cnt++;
-          if (item.price_m > 0) cnt++;
-          if (item.price_l > 0) cnt++;
-          if (item.price_x > 0) cnt++;
-          item['isMultiple'] = cnt > 1 ? true : false;
-          item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
-          const tList = item.topping && item.topping.length ? setupToppingApplyMenu(item) : [];
-          // debugger;
-          item['hasTopping'] = tList && tList.length ? true : false;
-          item['toppingResult'] = tList && tList.length ? tList[0] : null;
-          item['defaultTopping'] = tList && tList.length ? tList[1] : null;
-          // item['defaultTopping'] = tList != undefined && tList.length > 0 ? fetchToppingNameList(tList) : null;
-          item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
-          item['inCart'] = false;
-          if (shareContext.state.username !== 'demo' && shareContext.state.username !== 'demo2')
-            access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
-          // setMenuList(prevState => [...prevState, item])
-          // update cart list if there is any
-          cartList.forEach(elem => {
-            // console.log("before" + elem.name);
-            if (elem.id === item.id && elem.cloneSequence === 0) {
-              elem.name = item.name;
-              item.toppingResult = elem.toppingResult;
-              item['inCart'] = true;
-            }
+        if (isMounted3) {
+          setMenuList([]);
+          const newMenuList = res.data.map(item => {
+            if (item.name_t != null) item.name = item.name_t;
+            if (item.description_t != null) item.description = item.description_t;
+            let cnt = 0;
+            if (item.price_s > 0) cnt++;
+            if (item.price_m > 0) cnt++;
+            if (item.price_l > 0) cnt++;
+            if (item.price_x > 0) cnt++;
+            item['isMultiple'] = cnt > 1 ? true : false;
+            item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
+            const tList = item.topping && item.topping.length ? setupToppingApplyMenu(item) : [];
+            // debugger;
+            item['hasTopping'] = tList && tList.length ? true : false;
+            item['toppingResult'] = tList && tList.length ? tList[0] : null;
+            item['defaultTopping'] = tList && tList.length ? tList[1] : null;
+            // item['defaultTopping'] = tList != undefined && tList.length > 0 ? fetchToppingNameList(tList) : null;
+            item['cloneSequence'] = 0;    // 0 - roiginal, others - cloned
+            item['inCart'] = false;
+            if (shareContext.state.username !== 'demo' && shareContext.state.username !== 'demo2')
+              access.doDownload(restaurantId, item.image_path, shareContext, null, setMessage);
+            // setMenuList(prevState => [...prevState, item])
+            // update cart list if there is any
+            cartList.forEach(elem => {
+              // console.log("before" + elem.name);
+              if (elem.id === item.id && elem.cloneSequence === 0) {
+                elem.name = item.name;
+                item.toppingResult = elem.toppingResult;
+                item['inCart'] = true;
+              }
 
-            // console.log("after" + elem.name);
+              // console.log("after" + elem.name);
+            })
+            return item;
           })
-          return item;
-        })
-        // if (categoryId === 0) {
-        // newMenuList.sort((a, b) => {
-        //   return a.category_id - b.category_id;
-        // })
-        // }
-        // debugger;
-        const completedMenu = mergeChoiceToppingToMenu(newMenuList);
-        completedMenu.sort((a, b) => {
-          return a.id - b.id;
-        })
-        setMenuList([...completedMenu]);
+          // if (categoryId === 0) {
+          // newMenuList.sort((a, b) => {
+          //   return a.category_id - b.category_id;
+          // })
+          // }
+          // debugger;
+          const completedMenu = mergeChoiceToppingToMenu(newMenuList);
+          completedMenu.sort((a, b) => {
+            return a.id - b.id;
+          })
+          setMenuList([...completedMenu]);
+        }
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
         setMessage({ status: 404, msg: err.message });
+      }).finally(() => {
+        isMounted3 = false;
       });
   };
 
@@ -318,18 +332,23 @@ function Order(props) {
 
 
   const getToppingList = () => {
+    let isMounted2 = true;
     const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       // axios
       //   .get("/api/category", { params: { restaurant_id: restaurantId } })
       .then((res) => {
-        setupToppingMap(res.data);
-        const cId = shareContext.state.categoryId == null ? 0 : shareContext.state.categoryId;
-        fetchMenuList(cId);
+        if (isMounted2) {
+          setupToppingMap(res.data);
+          const cId = shareContext.state.categoryId == null ? 0 : shareContext.state.categoryId;
+          fetchMenuList(cId);
+        }
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
         setMessage({ status: 404, msg: err.message });
-      });
+      }).finally(() => {
+        isMounted2 = false;
+      });;
   }
 
   const setupToppingMap = oList => {
@@ -732,13 +751,18 @@ function Order(props) {
       name: shareContext.state.customer.name
     };
     // props.history.push("/Queue", { toppingMap: toppingMap });
+    let isMounted4 = true;
     const promise1 = access.addOrders(data);
     Promise.resolve(promise1)
       .then(res => {
-        let m = "Order id " + res.data[0].id + " is created Successfully !!!";
-        setMessage({ status: 200, msg: m });
-        props.history.push("/Queue", { toppingMap: toppingMap });
-      });
+        if (isMounted4) {
+          let m = "Order id " + res.data[0].id + " is created Successfully !!!";
+          setMessage({ status: 200, msg: m });
+          props.history.push("/Queue", { toppingMap: toppingMap });
+        }
+      }).finally(() => {
+        isMounted4 = false;
+      });;
   }
 
 
@@ -747,7 +771,7 @@ function Order(props) {
       <Grid container spacing={1}>
         <Grid item xs={4} sm={4}>
           <Box className={classes.priceBox}>
-            <Typography >
+            <Typography className={classes.content}>
               ${price}
             </Typography>
           </Box>
@@ -760,16 +784,8 @@ function Order(props) {
             </b>
           </Typography >
         </Grid>
-        <Grid item xs={3} sm={3} alignItems="top">
-          {/* <Link
-            to="#!"
-            onClick={(e) => addToOrder(e, item, price, size)}
-            className="flow-right"
-          >
-            <MdAddCircle color="Primary" size="2rem" />
-          </Link> */}
-
-          <Link href="#" onClick={(e) => addToOrder(e, item, price, size)} >
+        <Grid item xs={3} sm={3}>
+          <Link to='#!' onClick={(e) => addToOrder(e, item, price, size)} >
             <AddCircleOutlineIcon />
           </Link>
           &nbsp;&nbsp;&nbsp;&nbsp;
@@ -794,13 +810,13 @@ function Order(props) {
             //     <RemoveCircleOutlineIcon />
             //   </Tooltip>
             // </IconButton>
-            <Link href="#" onClick={(e) => removeFromOrder(e, item, size)} >
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
               <RemoveCircleOutlineIcon />
             </Link>
           ) : null}
 
         </Grid>
-        <Grid item xs={3} sm={3} alignItems="bottom">
+        <Grid item xs={3} sm={3}>
           <Typography className={classes.quantityBox}>
             {getQuantity(item, size)}
             {/* <CheckIcon /> */}
@@ -849,12 +865,12 @@ function Order(props) {
               </Typography>
             </Grid>
 
-            <Grid xs={4}>
+            <Grid item xs={4}>
               {
                 item.rating_size != 0 ?
 
                   <Box component="fieldset" mb={0} borderColor="transparent">
-                    <Link href="#" onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                    <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
                       <Rating
                         readOnly
                         // name="simple-controlled"
@@ -869,7 +885,7 @@ function Order(props) {
 
 
 
-                  <Link href="#" onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                  <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
                     <Tooltip title="Be first one to commnet" aria-label="Toppings">
                       <Typography variant="caption" component="h2" className={classes.content} noWrap>
                         No Commnet yet</Typography>
@@ -882,7 +898,7 @@ function Order(props) {
             </Grid>
           </Grid>
 
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="body2" color="textSecondary" component="div">
             {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
             {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
             {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
@@ -898,14 +914,14 @@ function Order(props) {
           item.hasTopping ?
             <CardActions>
               {item.cloneSequence === 0 ?
-                <Link href="#" onClick={(e) => cloneMenuItem(item)} >
+                <Link to='#!' onClick={(e) => cloneMenuItem(item)} >
                   <Tooltip title="For order with other toppings" aria-label="Toppings">
                     <FileCopyIcon />
                   </Tooltip>
                 </Link>
                 :
                 <Link
-                  href="#"
+                  to='#!'
                   onClick={(e) => removeCloneMenuItem(item)}
                 >
                   <Tooltip title="For removing addition menu item" aria-label="Toppings">
@@ -919,7 +935,7 @@ function Order(props) {
                   if (isNotDone && item.id === elem.id && item.cloneSequence == elem.cloneSequence) {
                     isNotDone = false;
                     return (
-                      <ItemTopping elem={elem} toppingMap={toppingMap} />
+                      <ItemTopping key={idx} elem={elem} toppingMap={toppingMap} />
                     )
                   }
                 })
@@ -1105,7 +1121,10 @@ function Order(props) {
 
 
     < div >
-
+      {shareContext.state.customer == undefined || shareContext.state.customer == null
+        ? <Customer {...props} setMessage={setMessage} />
+        : null
+      }
 
       {/* {shareContext.state.userMode == 1 ? <NavTab {...props} /> : null} */}
       {
@@ -1156,7 +1175,7 @@ function Order(props) {
                   {shareContext.state.menuFormat != 2 ?
                     <Grid container spacing={1}>
                       {menuList && menuList.map((item, idx) =>
-                        <Grid item xs="12" sm="4">
+                        <Grid item xs={12} sm={4} key={idx}>
 
                           {dishCard(item, idx)}
                         </Grid>

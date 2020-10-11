@@ -23,7 +23,7 @@ function ItemTopping(props) {
     return (
         <Grid container spacing={0}>
             { elem.isTopping > 0 ?
-                <Grid xs="12" >
+                <Grid item xs={12} >
                     {/* <span className="SmallFont font-weight-bold">{t("Note")}:&nbsp;&nbsp;</span> */}
                     <Typography variant="body2" className={classes.textContent}>
                         {t("Note")}:
@@ -38,20 +38,20 @@ function ItemTopping(props) {
                         if (g == 'G0') {
                             if (elem.toppingResult[idx] == true) {
                                 if (idx != 0)
-                                    return <Typography variant="body2" component="span" className={classes.textContent}>
+                                    return <Typography key={idx} variant="body2" component="span" className={classes.textContent}>
                                         ,&nbsp;&nbsp;{n}{p > 0 ? '($' + p + ")" : null}
                                     </Typography>
                                 else
-                                    return <Typography variant="body2" className={classes.textContent}>
+                                    return <Typography key={idx} variant="body2" className={classes.textContent}>
                                         {n}{p > 0 ? '($' + p + ")" : null}
                                     </Typography>
                             }
                         } else {
                             const res = toppingMap[elem.toppingResult[idx]];
                             if (idx != 0)
-                                return <Typography variant="body2" component="span" className={classes.textContent}>,&nbsp;&nbsp;{res[0]}</Typography>
+                                return <Typography key={idx} variant="body2" component="span" className={classes.textContent}>,&nbsp;&nbsp;{res[0]}</Typography>
                             else
-                                return <Typography variant="body2" component="span" className={classes.textContent}>{res[0]}</Typography>
+                                return <Typography key={idx} variant="body2" component="span" className={classes.textContent}>{res[0]}</Typography>
                         }
                     })}
                 </Grid>

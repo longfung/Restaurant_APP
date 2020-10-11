@@ -38,14 +38,18 @@ function Queue(props) {
         debugger;
         const dateId = new Date().toLocaleDateString().split('/').reverse().join('');
         const promise1 = access.fetchOrdersByActive(restaurantId, dateId, access.Status.submit);
+        let isMounted = true;
         Promise.resolve(promise1)
             .then(res => {
                 res.data.sort((a, b) => { return a.id - b.id; });
-                setOrders(res.data);
+                if (isMounted) {
+                    setOrders(res.data);
+                }
             }).catch((err) => {
                 // let errorObject = JSON.parse(JSON.stringify(err));
                 setMessage({ status: 404, msg: err.message });
             });
+        return () => isMounted = false;
     }, []);
 
     return (
@@ -68,7 +72,7 @@ function Queue(props) {
                     </React.Fragment>
                 </Nav>
             </Row>
-            <div class="padding70"> </div>
+            <div className="padding10"> </div>
             <Navbar color="light" light expand="md"></Navbar>
             {
                 orders && orders.map((oItem, idx) => {
@@ -83,7 +87,7 @@ function Queue(props) {
                             </Row>
                             {oItem.order_id == shareContext.state.customer.orderId && cart && cart.map((elem, idx) => {
                                 return (
-                                    <div>
+                                    <div key={idx}>
 
                                         <Row>
                                             <Col sm="1" xs="1">

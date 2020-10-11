@@ -5,11 +5,38 @@ import {
 } from "reactstrap";
 import { MdAccountCircle } from "react-icons/md";
 import { store } from "./Store";
+import i18next from "i18next";
 import { useTranslation } from 'react-i18next';
 import "../index.css"
+import { Grid } from "@material-ui/core";
+import { Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { makeStyles } from "@material-ui/styles";
 
+
+const useStyles = makeStyles((theme) => ({
+
+    textContent: {
+        fontSize: "20px",
+        fontWeight: 500,
+        align: 'justify',
+        marginTop: theme.spacing(2),
+        fontWeight: 'fontWeightBold',
+        display: 'inline-block',
+    },
+    whiteColor: {
+        color: theme.palette.neutral.white,
+        // backgroundColor: theme.palette.neutral.black,
+    },
+    blueColor: {
+        color: theme.palette.neutral.white,
+        backgroundColor: theme.palette.neutral.blue,
+    },
+
+}));
 
 function Language(props) {
+    const classes = useStyles();
     const shareContext = useContext(store);
     const { t } = useTranslation();
     const username = shareContext.state.username;
@@ -26,42 +53,37 @@ function Language(props) {
             setSupportLocale(arr);
         } else {
             setSupportLocale(['en', 'tw', 'zh'])
+            shareContext.dispatch({ type: "setLocale", value: 'en' });
         }
 
     }, [rId])
 
     const setLanguage = (locale) => {
         shareContext.dispatch({ type: "setLocale", value: locale });
+        i18next.changeLanguage(locale);
     };
 
     return (
 
-        <Col sm={12} className="float-left">
+        <Grid>
             {supportLocale.map((elem, idx) => {
-                return (<Link key={idx} to="#!"
-                    onClick={
-                        () => setLanguage(elem)
-                    }
-                    className={shareContext.state.locale == elem ? 'btn-primary text-white' : 'text-white'}>
-                    {t(elem)}
-                        &nbsp;
-                </Link>
+                return (
+                    <Button key={idx}
+                        // variant={shareContext.state.locale == elem ? 'outlined' : 'text'}
+                        variant="text"
+                        onClick={
+                            () => setLanguage(elem)
+                        }
+                        // component={Link}
+                        className={shareContext.state.locale == elem ? classes.blueColor : classes.whiteColor}
+                    >
+                        <Typography className={classes.whiteColor}>
+                            {t(elem)}
+                        </Typography>
+                    </Button>
                 )
             })}
-
-            {/* {shareContext.state.userMode != 2 ?
-                    null
-                    :
-                    <Link to="#!"
-                        onClick={
-                            () => props.history.push("/user")
-                        }
-                        className="font-weight-bold text-Dark">
-                        <MdAccountCircle color="gold" size="2.2rem" /> {username} </Link>
-                } */}
-
-
-        </Col>
+        </Grid>
 
     );
 }

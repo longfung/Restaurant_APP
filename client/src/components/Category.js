@@ -106,15 +106,19 @@ function Category(props) {
 
   useEffect(() => {
     initializeCategory();
+    let isMounted = true;
     const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       .then(res => {
-        setCategoryList(res.data);
+        if (isMounted) {
+          setCategoryList(res.data);
+        }
       })
       .catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
         setMessage({ status: 404, msg: err.message });
       });
+    return () => isMounted = false;
   }, []);
 
   const handleAddCategory = (node) => {
@@ -299,12 +303,12 @@ function Category(props) {
                     </TableCell>
                     <TableCell style={{ width: '20%' }} align="left">
                       <IconButton edge="end" aria-label="edit" onClick={() => setEdit(item)} >
-                        <Tooltip title={t("Edit")} arror>
+                        <Tooltip title={t("Edit")}>
                           <EditIcon />
                         </Tooltip>
                       </IconButton>
                       <IconButton edge="end" aria-label="delete" onClick={() => setDelete(item)} >
-                        <Tooltip title={t("Delete")} arror>
+                        <Tooltip title={t("Delete")}>
                           <DeleteIcon />
                         </Tooltip>
                       </IconButton>

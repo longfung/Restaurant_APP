@@ -311,9 +311,9 @@ function EntityT(props) {
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={6} padding={0}>
-                                {support_locale && support_locale.map(elem =>
+                                {support_locale && support_locale.map((elem, idx) =>
                                     elem !== defaultLanguage ?
-                                        <span>
+                                        <span key={idx}>
                                             <Button
                                                 variant="contained"
                                                 className={`${lang == elem ? classes.buttonA : classes.buttonD}`}
@@ -485,12 +485,12 @@ function EntityT(props) {
                                         </TableCell>
                                         <TableCell style={{ width: '20%' }} align="left">
                                             <IconButton edge="end" aria-label="edit" onClick={() => setEdit(item)} >
-                                                <Tooltip title={t("Edit")} arror>
+                                                <Tooltip title={t("Edit")}>
                                                     <EditIcon />
                                                 </Tooltip>
                                             </IconButton>
                                             {/* <IconButton edge="end" aria-label="delete" onClick={() => setDelete(item)} >
-                                                <Tooltip title={t("Delete")} arror>
+                                                <Tooltip title={t("Delete")}>
                                                     <DeleteIcon />
                                                 </Tooltip>
                                             </IconButton> */}

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import Select from "react-select";
+// import Select from "react-select";
 import axios from "axios";
 import NavTab from "./NavTab";
 import {
-    Form,
-    Input,
-    Row,
+    // Form,
+    // Input,
+    // Row,
     Col,
-    Button,
-    FormGroup,
+    // Button,
+    // FormGroup,
     Label,
-    Card
+    // Card
 } from "reactstrap";
 import { store } from "./Store";
 import "../index.css";
@@ -19,6 +19,129 @@ import { s3, doConfig } from "../digitalocean";
 import access from "../util/access";
 import { useTranslation } from "react-i18next"
 import Editpan from "./Editpan";
+import { Formik, Form, Field } from 'formik';
+import {
+    Button,
+    LinearProgress,
+    Grid,
+    Box,
+    Select,
+} from '@material-ui/core';
+import {
+    TextField,
+} from 'formik-material-ui';
+import Input from '@material-ui/core/Input';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+
+
+const config = require("../util/config.json");
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        width: '100%',
+        padding: '0px 0px',
+        margin: '0px 0px',
+    },
+    container: {
+        maxHeight: 500,
+        margin: '0px 0px',
+        padding: '0px 0px'
+    },
+    content: {
+        // backgroundColor: 'primary',
+        // color: 'white',
+        fontStyle: 'oblique',
+        fontSize: "30px",
+        fontWeight: 500,
+        textAlign: "left",
+        fontWeight: 'fontWeightBold',
+    },
+    mediaRoot: {
+        width: '100%',
+        padding: '0px 0px',
+        margin: '0px 0px',
+    },
+    media: {
+        // height: 140,
+        width: 385,
+        // maxWidth: 320,
+        height: 280,
+        // maxHeight: 240,
+        marginLeft: 10,
+        marginBottom: 0,
+        paddingBottom: 0,
+        align: "left",
+    },
+    description: {
+        // height: 140,
+        width: 385,
+        // maxWidth: 320,
+        height: 280,
+        // maxHeight: 240,
+        marginLeft: 10,
+        marginBottom: 0,
+        paddingBottom: 0,
+        // align: "left",
+    },
+    button: {
+        fontSize: '24px',
+        color: theme.palette.neutral.white,
+        backgroundColor: theme.palette.neutral.black,
+        marginTop: theme.spacing(1),
+
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 300,
+    },
+
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+function getStyles(name, selectedTopping, theme) {
+    return {
+        fontWeight:
+            selectedTopping && selectedTopping.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
 
 function Menu(props) {
     // debugger;
@@ -26,6 +149,7 @@ function Menu(props) {
     const shareContext = useContext(store);
     const username = shareContext.state.username;
     const setMessage = props.setMessage;
+    const theme = useTheme();
 
     const restaurantId =
         shareContext.state.restaurant != null
@@ -61,6 +185,18 @@ function Menu(props) {
     const [toppingSelected, setToppingSelected] = useState([])
     const [toppingMap, setToppingMap] = useState({});
     const [category, setCategory] = useState({});
+    const classes = useStyles();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(8);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
 
     useEffect(() => {
         // const restaurantId = 45000
@@ -71,6 +207,8 @@ function Menu(props) {
     }, [shareContext.state.locale]);
 
     const getImage = async (imageName) => {
+        debugger;
+        if (!imageName || imageName == "") return;
         access.doDownload(restaurantId, imageName, shareContext, setImage2, setMessage);
         return;
         // try {
@@ -101,11 +239,12 @@ function Menu(props) {
     };
 
     const handleSelector = (e) => {
+        debugger;
         e.preventDefault();
         if (e.target.files.length == 0) return;
         var image = e.target.files[0];
         const formdata = new FormData();
-        if (shareContext.state.userMode === 2) {
+        if (shareContext.state.username == 'demo' || shareContext.state.username == 'demo2') {
             formdata.append("file", image);
             formdata.append("pathId", restaurantId);
             fileUpload(formdata);
@@ -120,6 +259,7 @@ function Menu(props) {
     };
 
     const getMenuList = () => {
+        let isMounted = true;
         const promise1 = access.fetchMenuByRestaurantId(
             restaurantId,
             shareContext.state.locale
@@ -127,63 +267,89 @@ function Menu(props) {
         Promise.resolve(promise1)
             .then((res) => {
                 //    console.log(res)
-                const obj = res.data.map((elem) =>
-                    elem.name_t != null ? { ...elem, name: elem.name_t } : elem
-                );
-                setMenuList(obj);
+                if (isMounted) {
+                    const obj = res.data.map((elem) =>
+                        elem.name_t != null ? { ...elem, name: elem.name_t } : elem
+                    );
+                    setMenuList(obj);
+                }
             })
-            .catch((error) => console.log("Error"));
+            .catch((err) => {
+                setMessage({ status: 404, msg: err.message });
+            }).finally(() => {
+                isMounted = false;
+            });
     };
 
     const getCategoryList = () => {
+        let isMounted2 = true;
         const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
         Promise.resolve(promise1)
             // axios
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
             .then((res) => {
-                setCategoryList([]);
-                res.data.map((item) =>
-                    setCategoryList((prevState) => [
-                        ...prevState,
-                        { id: item.id, label: item.namet == null ? item.category_name : item.namet },
-                    ])
-                );
+                if (isMounted2) {
+                    setCategoryList([]);
+                    res.data.map((item) =>
+                        setCategoryList((prevState) => [
+                            ...prevState,
+                            { id: item.id, label: item.namet == null ? item.category_name : item.namet },
+                        ])
+                    );
+                }
             })
-            .catch((error) => console.log(error));
+            .catch((err) => {
+                setMessage({ status: 404, msg: err.message });
+            }).finally(() => {
+                isMounted2 = false;
+            });
     }
 
     const getToppingList = () => {
+        let isMounted3 = true;
         const promise1 = access.fetchToppingByRestaurantId(restaurantId, shareContext.state.locale);
         Promise.resolve(promise1)
             // axios
             //   .get("/api/category", { params: { restaurant_id: restaurantId } })
             .then((res) => {
-                setToppingList([]);
-                arrangeToppingSelect(res.data);
-
+                if (isMounted3) {
+                    setToppingList([]);
+                    arrangeToppingSelect(res.data);
+                };
             })
-            .catch((error) => console.log(error));
+            .catch((err) => {
+                setMessage({ status: 404, msg: err.message });
+            }).finally(() => {
+                isMounted3 = false;
+            });
     }
 
     const arrangeToppingSelect = oList => {
         let m = {};
-        oList.map((item) => {
+        setToppingList([]);
+        const options = oList.map((item) => {
             if (item.apply_item) {
                 if (item.topping_group == 'G0' || item.apply_default) {
                     let label = item.namet == null ? item.name : item.namet;
                     if (item.topping_group != 'G0')
                         label = item.topping_group + ':' + label;
-                    setToppingList((prevState) => [
-                        ...prevState,
-                        { value: item.id, label: label },
-                    ])
+                    // setToppingList((prevState) => [
+                    //     ...prevState,
+                    //     { value: item.id, label: label },
+                    // ])
 
                     m[item.id] = { label: label, group: item.topping_group };
-
+                    return ({ value: item.id, label: label });
                 }
             }
-
         });
+        debugger;
+        var filtered = options.filter(function (elem) {
+            return elem != undefined;
+        });
+        setToppingList(filtered);
+        // setToppingList(prev => [...prev, filtered]);
+        // setToppingList([{ value: 1, label: "One" }, { value: 2, label: "Two" }])
         setToppingMap(m);
     }
 
@@ -202,7 +368,7 @@ function Menu(props) {
             const { filename, filepath } = res.data;
             setMenu({ ...menu, image_path: filepath });
         } catch (err) {
-            console.log("error:" + err.error);
+            setMessage({ status: 404, msg: err.message });
         }
     };
 
@@ -240,9 +406,11 @@ function Menu(props) {
                     setMenu({ ...menu, image_path: res.data });
                     getImage(res.data);
                 })
-                .catch((error) => console.log("Error"));
+                .catch((err) => {
+                    setMessage({ status: 404, msg: err.message });
+                });
         } catch (err) {
-            console.log("error:" + err.error);
+            setMessage({ status: 404, msg: err.message });
         }
     };
 
@@ -265,7 +433,9 @@ function Menu(props) {
                     },
                     (error) => {
                         // error function ....
-                        console.log(error);
+
+                        setMessage({ status: 404, msg: err.message });
+
                     },
                     () => {
                         // complete function ....
@@ -274,7 +444,9 @@ function Menu(props) {
                             .child(image.name)
                             .getDownloadURL()
                             .then((url) => {
-                                console.log(url);
+
+                                setMessage({ status: 404, msg: err.message });
+
                                 setMenu(prevMenu => ({ ...menu, image_path: url }));
                             });
                     }
@@ -290,9 +462,11 @@ function Menu(props) {
             (snapshot) => {
                 // progrss function ....
             },
-            (error) => {
+            (err) => {
                 // error function ....
-                console.log(error);
+
+                setMessage({ status: 404, msg: err.message });
+
             },
             () => {
                 // complete function ....
@@ -301,24 +475,26 @@ function Menu(props) {
                     .child(image.name)
                     .getDownloadURL()
                     .then((url) => {
-                        console.log(url);
+
+                        setMessage({ status: 404, msg: "error occurs in firebaseUpload2" });
+
                         setMenu(prevMenu => ({ ...prevMenu, image_path: url }));
                     });
             }
         );
     };
 
-    const handleCreateOrUpdateMenu = () => {
+    const handleCreateOrUpdateMenu = (obj) => {
         if (menu.id != "") {
-            postUpdateMenu();
+            postUpdateMenu(obj);
         } else {
-            postCreateMenu();
+            postCreateMenu(obj);
         }
 
         initialMenu();
     };
 
-    const postCreateMenu = () => {
+    const postCreateMenu = (obj) => {
         // debugger;
         // let data = {
         //     name: menu.name,
@@ -334,7 +510,7 @@ function Menu(props) {
         //     restaurant_id: restaurantId,
         //     category_id: category.id,
         // };
-        const data = moveCorrespond();
+        const data = moveCorrespond(obj);
         const promise1 = access.addMenu(data);
         Promise.resolve(promise1)
             .then((res) => {
@@ -347,7 +523,7 @@ function Menu(props) {
             });
     };
 
-    const postUpdateMenu = () => {
+    const postUpdateMenu = (obj) => {
         // debugger;
         // let data = {
         //     id: menu.id,
@@ -363,7 +539,7 @@ function Menu(props) {
         //     restaurant_id: restaurantId,
         //     category_id: category.id,
         // };
-        const data = moveCorrespond();
+        const data = moveCorrespond(obj);
         const promise1 = access.updateMenu(data);
         Promise.resolve(promise1)
             .then((res) => {
@@ -376,15 +552,15 @@ function Menu(props) {
             });
     };
 
-    const moveCorrespond = () => {
+    const moveCorrespond = (obj) => {
         // let temp = '';
         let g0 = [];
         let g1 = [];
-        toppingSelected.forEach(elem => {
-            if ((toppingMap[elem.value]).group == 'G0')
-                g0.push(elem.value);
+        toppingSelected.forEach(eId => {
+            if (toppingMap && (toppingMap[eId]).group == 'G0')
+                g0.push(eId);
             else
-                g1.push(elem.value);
+                g1.push(eId);
         })
         g1 = g1.concat(g0);
         // debugger;
@@ -393,18 +569,18 @@ function Menu(props) {
         // });
         let data = {
             id: menu.id,
-            name: menu.name,
+            name: obj.name,
             locale: shareContext.state.locale,
             description: shareContext.state.menuDescription,
             entityId: access.Entity.menu,
-            price_s: menu.price_s,
-            price_m: menu.price_m,
-            price_l: menu.price_l,
-            price_x: menu.price_x,
+            price_s: obj.price_s,
+            price_m: obj.price_m,
+            price_l: obj.price_l,
+            price_x: obj.price_x,
             image_path: menu.image_path,
             restaurant_id: restaurantId,
-            category_id: category.id,
-            available: menu.available,
+            category_id: obj.category_id,
+            available: obj.available,
             topping: g1.toString()
         };
         return data;
@@ -440,19 +616,20 @@ function Menu(props) {
             type: "setMenuDescription",
             value: obj.description
         });
-        buildToppingSelectedd(obj.topping);
+        buildToppingSelected(obj.topping);
     };
 
-    const buildToppingSelectedd = (selected) => {
+    const buildToppingSelected = (selected) => {
         debugger;
         if (selected) {
-            const arr = selected.split(',').map(str => parseInt(str));
-            const options = arr.map(v => ({
-                value: v,
-                label: t(`${toppingMap[v].label}`)
-            }));
-            setToppingSelected(options)
-        }
+            // const arr = selected.split(',').map(str => parseInt(str));
+            // const options = arr.map(v => ({
+            //     value: v,
+            //     label: t(`${toppingMap[v].label}`)
+            // }));
+            setToppingSelected(selected.split(',').map(e => parseInt(e)));
+        } else
+            setToppingSelected([]);
     }
 
     const setDelete = (obj) => {
@@ -465,8 +642,10 @@ function Menu(props) {
                 getMenuList();
                 initialMenu();
             })
-
-            .catch((err) => console.log(err.error));
+            .catch((err) => {
+                let m = " menu => setDelete failed !!!" + err.error;
+                setMessage({ status: 200, msg: m });
+            });
     };
 
     const initialMenu = () => {
@@ -508,9 +687,342 @@ function Menu(props) {
         return res;
     }
 
+    const handleChange = (event, values) => {
+        debugger;
+        setToppingSelected(event.target.value);
+        values.selectedTopping = event.target.value;
+    };
+
     return (
         <div>
             <NavTab {...props} />
+            <Formik
+                enableReinitialize={true}
+                initialValues={{
+                    id: menu.id,
+                    name: menu.name === null ||
+                        menu.name === undefined
+                        ? ""
+                        : menu.name,
+                    description: menu.description === null ||
+                        menu.description === undefined
+                        ? ""
+                        : menu.description,
+                    price_s: menu.price_s === null ||
+                        menu.price_s === undefined
+                        ? 0
+                        : menu.price_s,
+                    price_m: menu.price_m === null ||
+                        menu.price_m === undefined
+                        ? 0
+                        : menu.price_m,
+                    price_l: menu.price_l === null ||
+                        menu.price_l === undefined
+                        ? 0
+                        : menu.price_l,
+                    price_x: menu.price_x === null ||
+                        menu.price_x === undefined
+                        ? 0
+                        : menu.price_x,
+                    category_id: !menu || menu.category_id === null ||
+                        menu.category_id === undefined
+                        ? ''
+                        : menu.category_id,
+                    available: menu.available === null ||
+                        menu.available === undefined
+                        ? ""
+                        : menu.available,
+                    image_path: menu.image_path === null ||
+                        menu.image_path === undefined
+                        ? ""
+                        : menu.image_path,
+                    selectedTopping: menu.topping === null ||
+                        menu.topping === undefined
+                        ? []
+                        : menu.topping.split(','),
+                    restaurant_id: restaurantId,
+                }}
+                validate={values => {
+                    const errors = {};
+                    if (!values.name) {
+                        errors.name = t("E010");
+                    }
+                    if (!values.category_id) {
+                        errors.category_id = t("E010");
+                    }
+                    if (values.price_s == 0) {
+                        errors.price_s = t("E010");
+                    }
+                    if (isNaN(values.price_s)) {
+                        errors.price_s = t("E011");
+                    }
+                    if (isNaN(values.price_m)) {
+                        errors.price_m = t("E011");
+                    }
+                    if (isNaN(values.price_l)) {
+                        errors.price_l = t("E011");
+                    }
+                    if (isNaN(values.price_x)) {
+                        errors.price_x = t("E011");
+                    }
+                    return errors;
+                }}
+                onSubmit={(values, { setSubmitting, resetForm }) => {
+                    setTimeout(() => {
+                        setSubmitting(false);
+                        handleCreateOrUpdateMenu(values);
+                        resetForm({});
+                    }, 500);
+                }}
+            >
+                {({ submitForm, isSubmitting, values, setFieldValue }) => (
+                    <Form>
+                        <Grid container spacing={0} >
+                            <Grid item xs={12} sm={6} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"name"}
+                                        type="text"
+                                        label={t("DishName")}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={6} margin={0} padding={0}>
+                                <Box margin={1}>
+                                    <FormControl>
+                                        <InputLabel shrink={true} htmlFor="category">
+                                            {t("Category")}
+                                        </InputLabel>
+                                        <Field
+                                            component={TextField}
+                                            type="text"
+                                            name="category_id"
+                                            select
+                                            variant="standard"
+                                            // helperText="Please select a category"
+                                            margin="normal"
+                                            InputLabelProps={{
+                                                shrink: false,
+                                            }}
+                                            inputProps={{ name: 'category_id', id: 'category' }}
+                                        >
+                                            {categoryList.map(option => (
+                                                <MenuItem key={option.id} value={option.id}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Field>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"price_s"}
+                                        type="text"
+                                        label={t("Regular")}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"price_m"}
+                                        type="text"
+                                        label={t("Medium")}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"price_l"}
+                                        type="text"
+                                        label={t("Large")}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"price_x"}
+                                        type="text"
+                                        label={t("Extra")}
+                                    />
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={8} sm={3} margin={0} padding={0}>
+                                <Card className={classes.mediaRoot}>
+                                    {menu && (menu.image_path != '' || image2 != '') ?
+                                        <CardMedia
+                                            className={classes.media}
+                                            component="img"
+                                            image={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? menu.image_path : image2}
+                                            title={menu.name} >
+                                            {/* <img src={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? menu.image_path : image2} /> */}
+                                        </CardMedia>
+                                        :
+                                        null}
+                                </Card>
+                            </Grid>
+
+                            <Grid item xs={4} sm={3} margin={0} padding={0}>
+
+                                <input
+                                    accept="image/*"
+                                    // style={{ display: 'none' }}
+                                    id="icon-button-photo"
+                                    onChange={handleSelector}
+                                    type="file"
+                                />
+                            </Grid>
+                            <Col xs={12} sm="6">
+                                <Typography> Detail Description</Typography>
+                                <Editpan setMenu={setMenu} menu={menu} />
+                            </Col>
+
+                            <Grid item xs={12} sm={6} >
+
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="demo-mutiple-name-label">{t("ToppingList")}</InputLabel>
+                                    <Select
+                                        labelId="demo-mutiple-name-label"
+                                        id="demo-mutiple-name"
+                                        multiple
+                                        value={toppingSelected}
+                                        onChange={e => handleChange(e, values)}
+                                        input={<Input />}
+                                        renderValue={
+                                            toppingSelected.length > 0
+                                                ? undefined
+                                                : () => <em>Placeholder</em>
+                                        }
+                                        MenuProps={MenuProps}
+                                    >
+                                        {toppingList.map((name) => (
+                                            <MenuItem key={name} value={name.value} style={getStyles(name.value, toppingSelected, theme)}>
+                                                {name.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6} sm={4} margin={0} padding={0}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={values.available}
+                                            onChange={() => setFieldValue("available", !values.available)}
+                                            name="available"
+                                            color="primary"
+                                        />
+                                    }
+                                    label={t("Available")}
+                                />
+
+                            </Grid>
+
+                            {isSubmitting && <LinearProgress />}
+                            <Grid item xs={6} sm={2} >
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={isSubmitting}
+                                    onClick={submitForm}
+                                >
+                                    {t("Submit")}
+                                </Button>
+                                &nbsp;
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={isSubmitting}
+                                    onClick={initialMenu}
+                                >
+                                    {t("Cancel")}
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Form>
+                )}
+            </Formik>
+
+            <Paper className={classes.root}>
+                <TableContainer className={classes.container}>
+                    <Table stickyHeader aria-label="sticky table" size="small" aria-label="a dense table" >
+                        <TableBody>
+                            {menuList && menuList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, rId) => {
+                                return (
+                                    <TableRow key={rId} style={{ padding: '0px', margin: '0px', backgroundColor: "#eaeaea", }} >
+                                        <TableCell style={{ width: '30%' }} align="left">
+                                            <Typography variant="body1">
+                                                {item.name}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell style={{ width: '10%' }} align="left">
+                                            <Typography variant="body1">
+                                                {item.price_s}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell style={{ width: '10%' }} align="left">
+                                            <Typography variant="body1">
+                                                {item.price_m}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell style={{ width: '10%' }} align="left">
+                                            <Typography variant="body1">
+                                                {item.price_l}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell style={{ width: '10%' }} align="left">
+                                            <Typography variant="body1">
+                                                {item.price_x}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell style={{ width: '10%' }} align="left">
+                                            {fetchCategoryName(item.category_id)}
+                                        </TableCell>
+                                        <TableCell style={{ width: '20%' }} align="left">
+                                            <IconButton edge="end" size="small" aria-label="edit" onClick={() => setEdit(item)} >
+                                                <Tooltip title={t("Edit")}>
+                                                    <EditIcon />
+                                                </Tooltip>
+                                            </IconButton>
+                                            <IconButton edge="end" size="small" aria-label="delete" onClick={() => setDelete(item)} >
+                                                <Tooltip title={t("Delete")}>
+                                                    <DeleteIcon />
+                                                </Tooltip>
+                                            </IconButton>
+
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                {menuList && menuList.length > rowsPerPage ?
+                    <TablePagination
+                        rowsPerPageOptions={[8, 25, 100]}
+                        component="div"
+                        count={menuList.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                    : null}
+            </Paper>
+
+
+
+            {/* <NavTab {...props} />
             <Form>
                 <Row>
                     <Col xs="6" sm="6">
@@ -609,12 +1121,13 @@ function Menu(props) {
                         </Card>
                     </Col>
                     <Col sm="6">
-
-
+<Card>
+<div className="imgblock">
                         <Label> Detail Description</Label>
 
                         <Editpan setMenu={setMenu} menu={menu} />
-
+                        </div>
+  </Card>
                     </Col>
                     <Col xs="6" sm="6">
                         <FormGroup className="float-left" style={{ width: "275px" }}>
@@ -687,7 +1200,7 @@ function Menu(props) {
                         </Row>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div >
     );
 }
