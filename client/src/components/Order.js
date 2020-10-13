@@ -295,7 +295,7 @@ function Order(props) {
   };
 
   const getImage = (imageName) => {
-    debugger;
+    // debugger;
     let imageMap = shareContext.state.imageMap;
     if (imageMap && imageMap.has(imageName))
       return imageMap.get(imageName);
@@ -402,7 +402,7 @@ function Order(props) {
     let nList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
-    debugger;
+    // debugger;
     const toppingArray = obj.topping.split(',');
     toppingArray.forEach((elem, idx) => {
       const rId = parseInt(elem);
@@ -431,7 +431,7 @@ function Order(props) {
   }
 
   const fetchToppingNameList = oList => {
-    debugger;
+    // debugger;
     let rList = [];
     oList && oList.map((item, idx) => {
       const n = (toppingMap[item])[0];
@@ -660,7 +660,7 @@ function Order(props) {
   }
 
   const mergeChoiceToppingToMenu = menuList => {
-    debugger;
+    // debugger;
     if (chosenToppingMap == "")
       return menuList;
     const completedMenu = menuList.reduce((acc, item) => {
@@ -739,7 +739,7 @@ function Order(props) {
     //   handleUpdateCategory();
     //   return;
     // }
-    debugger;
+    // debugger;
     let data = {
       status: access.Status.submit,
       cart: JSON.stringify(cartList),

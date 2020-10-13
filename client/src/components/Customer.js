@@ -73,7 +73,8 @@ function Customer(props) { // console.log("In Restaurant");
     //     orderId: "12",
     //     name: "Tom",
     // });
-    const [open, setOpen] = useState(shareContext.state.customer == undefined || shareContext.state.customer == null ? true : false);
+    // const [open, setOpen] = useState(shareContext.state.customer == undefined || shareContext.state.customer == null ? true : false);
+    const [open, setOpen] = useState(true);
     // const [modalStyle] = React.useState(getModalStyle);
 
     const handleSubmit = (node) => {
@@ -89,7 +90,7 @@ function Customer(props) { // console.log("In Restaurant");
                 name: node.name
             }
         });
-        handleClose();
+        // handleClose();
         // setOpen(false);
         // props.history.push("/order");
         // return;
