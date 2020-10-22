@@ -5,12 +5,16 @@ import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
     textContent: {
-        fontSize: "12px",
-        fontWeight: 300,
-        align: 'justify',
-        marginTop: theme.spacing(0),
-        fontWeight: 'fontWeightBold',
+        color: theme.palette.neutral.black,
+        fontSize: "0.6rem",
+        fontWeight: 500,
+        // verticalAlign: 'center',
+        // textAlign: 'right',
+        // marginTop: theme.spacing(1),
+        // marginRight: '1rem',
+        // fontWeight: 'fontWeightBold',
         display: 'inline-block',
+        textTransform: 'none',
     }
 
 }));
@@ -26,7 +30,8 @@ function ItemTopping(props) {
                 <Grid item xs={12} >
                     {/* <span className="SmallFont font-weight-bold">{t("Note")}:&nbsp;&nbsp;</span> */}
                     <Typography variant="body2" className={classes.textContent}>
-                        {t("Note")}:
+                        {/* {t("Note")}: */}
+                        **&nbsp;
                     </Typography>
                     {elem.toppingArray && elem.toppingArray.map((item, idx) => {
                         const g = (toppingMap[item])[1];

@@ -79,12 +79,32 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     fontWeight: 'fontWeightBold',
   },
+  formControlSmall: {
+    margin: theme.spacing(0),
+    minWidth: 240,
+    color: theme.palette.neutral.white,
+    // borderColor: 'secondary',
+    fontSize: "px",
+    fontWeight: 500,
+    textAlign: "left",
+    fontWeight: 'fontWeightBold',
+  },
   FormatformControl: {
     margin: theme.spacing(0),
     minWidth: 120,
     color: theme.palette.neutral.white,
     // borderColor: 'secondary',
     fontSize: "24px",
+    fontWeight: 500,
+    textAlign: "left",
+    fontWeight: 'fontWeightBold',
+  },
+  FormatformControlSmall: {
+    margin: theme.spacing(0),
+    minWidth: 120,
+    color: theme.palette.neutral.white,
+    // borderColor: 'secondary',
+    fontSize: "12px",
     fontWeight: 500,
     textAlign: "left",
     fontWeight: 'fontWeightBold',
@@ -108,8 +128,24 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "middle",
     fontWeight: 'fontWeightBold',
   },
+  iconContentSmall: {
+    color: theme.palette.neutral.gold,
+    fontStyle: 'oblique',
+    fontSize: "20px",
+    fontWeight: 500,
+    verticalAlign: "middle",
+    fontWeight: 'fontWeightBold',
+  },
   textContent: {
     fontSize: "20px",
+    fontWeight: 500,
+    align: 'justify',
+    marginTop: theme.spacing(2),
+    fontWeight: 'fontWeightBold',
+    display: 'inline-block',
+  },
+  textContentSmall: {
+    fontSize: "10px",
     fontWeight: 500,
     align: 'justify',
     marginTop: theme.spacing(2),
@@ -405,7 +441,7 @@ function CategoryNav(props) {
                     root: classes.whiteColor,
                     icon: classes.whiteColor,
                   }}
-                  className={classes.formControl}
+                  className={classes.formControlSmall}
                   value={catValue}
                   onChange={handleCatOption}
                   // MenuProps={catOptions}
@@ -439,7 +475,7 @@ function CategoryNav(props) {
                     root: classes.whiteColor,
                     icon: classes.whiteColor,
                   }}
-                  className={classes.FormatformControl}
+                  className={classes.formControlSmall}
                   value={formatValue}
                   onChange={switchMenuFormat2}
                   inputProps={{ 'aria-label': 'Without label' }}
@@ -466,7 +502,7 @@ function CategoryNav(props) {
                       root: classes.whiteColor,
                       icon: classes.whiteColor,
                     }}
-                    className={classes.formControl}
+                    className={classes.formControlSmall}
                     value={langValue}
                     onChange={setLanguage}
                     inputProps={{ 'aria-label': 'Without label' }}
@@ -494,8 +530,8 @@ function CategoryNav(props) {
                 onClick={() => setIsOrder(false)}
                 className="font-weight-bold text-white float-left text-sm-left"
               >
-                <ShoppingCartIcon className={classes.iconContent} />
-                <Typography variant="caption" className={classes.textContent}>
+                <ShoppingCartIcon className={classes.iconContentSmall} />
+                <Typography variant="caption" className={classes.textContentSmall}>
 
                   ${cartTotal.toFixed(2)}
                 </Typography>

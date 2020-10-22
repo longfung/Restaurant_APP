@@ -9,6 +9,7 @@ import Menu from "./components/Menu";
 import Category from "./components/Category";
 import Topping from "./components/Topping";
 import Order from "./components/Order";
+import OrderHome from "./components/OrderHome"
 import Queue from "./components/Queue";
 import QueueA from "./components/QueueA";
 import QueueD from "./components/QueueD";
@@ -94,7 +95,7 @@ function App(props) {
             <Route
               exact
               path="/order/:id"
-              render={(props) => <Order {...props} setMessage={setMessage} />}
+              render={(props) => <OrderHome {...props} setMessage={setMessage} />}
             />
             <Route
               exact

@@ -10,6 +10,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CheckIcon from '@material-ui/icons/Check';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import access from '../util/access';
 // import img1 from "../images/img7.jpg"
 // import img1 from "../../../server/images/img3.jpg"
@@ -37,7 +39,8 @@ import {
 } from "reactstrap";
 import { Radio, RadioGroup } from 'react-radio-group'
 import CategoryNav from "./CatagoryNav";
-import Detail from "./Detail";
+import OrderNav from './OrderNav'
+import OrderDetail from "./OrderDetail";
 import UserRate from "./UserRate";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
@@ -69,30 +72,41 @@ import ItemTopping from './ItemTopping';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 385,
+    maxWidth: '100%',
   },
   Card: {
-    width: 300,
+    width: "90%",
     height: 240,
     margin: 'auto'
   },
   media: {
     // height: 140,
-    width: 385,
+    // maxWidth: 140,
     // maxWidth: 320,
-    height: 280,
+    height: 100,
     // maxHeight: 240,
     marginLeft: 10,
+    marginTop: 10,
     marginBottom: 0,
     paddingBottom: 0,
-    align: "left",
+    align: "center",
   },
   content: {
     aligh: 'left',
     marginTop: 0,
     marginBottom: 0,
-    paddingTop: 2,
-    paddingBottom: 2,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  textRight: {
+    textAlign: 'right',
+    paddingRight: '1rem',
+    paddingTop: '0.2rem',
+  },
+  textLeft: {
+    textAlign: 'left',
+    paddingLeft: 0,
+    paddingBottom: 0,
   },
   priceBox: {
     backgroundColor: theme.palette.primary.main,
@@ -103,17 +117,95 @@ const useStyles = makeStyles(theme => ({
     align: 'center',
   },
   quantityBox: {
-
     color: theme.palette.neutral.blue,
-
     marginBottom: 0,
     paddingBottom: 0,
     marginTop: 0,
     paddingTop: 0,
-  }
+  },
+  categoryBox: {
+    backgroundColor: theme.palette.neutral.grey,
+    color: theme.palette.neutral.white,
+    width: '100%',
+    margin: 0,
+    padding: 0,
+    align: 'center',
+  },
+  nameContent: {
+    // backgroundColor: 'primary',
+    // color: 'theme.palette.red',
+    // fontStyle: 'oblique',
+    fontSize: "16px",
+    fontWeight: 500,
+    padding: 3,
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  priceContent: {
+    // backgroundColor: 'primary',
+    color: theme.palette.red.main,
+    // fontStyle: 'oblique',
+    fontSize: "16px",
+    fontWeight: 500,
+    padding: 3,
+    textAlign: 'right',
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  sizeContent: {
+    // backgroundColor: 'primary',
+    color: theme.palette.black,
+    // fontStyle: 'oblique',
+    fontSize: "16px",
+    fontWeight: 500,
+    padding: 3,
+    // textAlign: 'right',
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  priceIcon: {
+    verticalAlign: 'top',
+    display: 'inline-flex'
+  },
+  catTitleContent: {
+    color: theme.palette.neutral.white,
+    fontSize: "1.4rem",
+    fontWeight: 500,
+    // verticalAlign: 'center',
+    // textAlign: 'right',
+    marginTop: theme.spacing(1),
+    marginLeft: '1rem',
+    // fontWeight: 'fontWeightBold',
+    display: 'inline-block',
+    // textTransform: 'none',
+  },
+  viewAllContent: {
+    color: theme.palette.neutral.white,
+    fontSize: "1.4rem",
+    fontWeight: 500,
+    // verticalAlign: 'center',
+    // textAlign: 'right',
+    // marginTop: theme.spacing(1),
+    marginRight: '1rem',
+    // fontWeight: 'fontWeightBold',
+    display: 'inline-block',
+    textTransform: 'none',
+  },
+  toppingContent: {
+    color: theme.palette.neutral.black,
+    fontSize: "0.6rem",
+    fontWeight: 500,
+    // verticalAlign: 'center',
+    // textAlign: 'right',
+    // marginTop: theme.spacing(1),
+    // marginRight: '1rem',
+    // fontWeight: 'fontWeightBold',
+    display: 'inline-block',
+    textTransform: 'none',
+  },
 }));
 
-function Order(props) {
+function OrderHome(props) {
   const { t } = useTranslation();
   const shareContext = useContext(store);
   const setMessage = props.setMessage;
@@ -162,7 +254,7 @@ function Order(props) {
   });
   const [chosenToppingMap, setChosenToppingMap] = useState({});
   const toppingMapRef = useRef([]);
-
+  const [category, setCategory] = useState(null);
 
   let catId = 0;
 
@@ -402,7 +494,7 @@ function Order(props) {
     let nList = [];
     let cnt = 0;
     const tMap = toppingMapRef.current;
-    debugger;
+    // debugger;
     const toppingArray = obj.topping.split(',');
     toppingArray.forEach((elem, idx) => {
       const rId = parseInt(elem);
@@ -431,7 +523,7 @@ function Order(props) {
   }
 
   const fetchToppingNameList = oList => {
-    debugger;
+    // debugger;
     let rList = [];
     oList && oList.map((item, idx) => {
       const n = (toppingMap[item])[0];
@@ -531,8 +623,9 @@ function Order(props) {
         //   <MdDone color="Primary" size="2rem" /> {q}
         // </CardText>
         <span>
-          <CheckIcon />
-        &nbsp;&nbsp;
+          {/* <CheckIcon />
+        &nbsp;&nbsp; */}
+
           { q}
         </span>
       );
@@ -660,7 +753,7 @@ function Order(props) {
   }
 
   const mergeChoiceToppingToMenu = menuList => {
-    debugger;
+    // debugger;
     if (chosenToppingMap == "")
       return menuList;
     const completedMenu = menuList.reduce((acc, item) => {
@@ -739,7 +832,7 @@ function Order(props) {
     //   handleUpdateCategory();
     //   return;
     // }
-    debugger;
+    // debugger;
     let data = {
       status: access.Status.submit,
       cart: JSON.stringify(cartList),
@@ -768,34 +861,39 @@ function Order(props) {
 
   const dishPrice = (item, price, size, symbol) => {
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={4} sm={4}>
-          <Box className={classes.priceBox}>
-            <Typography className={classes.content}>
-              ${price}
-            </Typography>
-          </Box>
-        </Grid>
-        {/* &nbsp; */}
-        <Grid item xs={1} sm={1}>
-          <Typography >
-            <b>
-              {item.isMultiple == true ? t(symbol) : null}
-            </b>
+      <Grid container spacing={0} >
+        <Grid item xs={6} sm={6} className={classes.textLeft}>
+          {/* <Box className={classes.priceBox}> */}
+          <Typography display="inline" className={classes.priceContent}>
+            ${price}
+          </Typography>
+          {/* </Box> */}
+          <Typography display="inline" className={classes.sizeContent}>
+
+            {item.isMultiple == true ? t(symbol) : null}
+
           </Typography >
         </Grid>
-        <Grid item xs={3} sm={3}>
+        {/* &nbsp; */}
+        <Grid item xs={6} sm={6} className={classes.textLeft}>
+
+          {/* </Grid> */}
+          {/* <Grid item xs={3} sm={3}> */}
           <Link to='#!' onClick={(e) => addToOrder(e, item, price, size)} >
-            <AddCircleOutlineIcon />
+            <Box component='span' mt={-1}>
+              <AddCircleOutlineIcon className={classes.priceIcon} />
+            </Box>
           </Link>
-          &nbsp;&nbsp;&nbsp;&nbsp;
+          {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
           {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
             <Tooltip title={t("Add")} arror>
               <AddCircleOutlineIcon />
             </Tooltip>
           </IconButton> */}
-
+          <Typography className={classes.priceContent} display="inline">
+            {getQuantity(item, size)}
+          </Typography>
 
           {isQuantity(item, size) ? (
             // <Link
@@ -810,17 +908,18 @@ function Order(props) {
             //     <RemoveCircleOutlineIcon />
             //   </Tooltip>
             // </IconButton>
-            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
-              <RemoveCircleOutlineIcon />
+
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
+              <RemoveCircleOutlineIcon className={classes.priceIcon} />
             </Link>
           ) : null}
 
-        </Grid>
-        <Grid item xs={3} sm={3}>
-          <Typography className={classes.quantityBox}>
-            {getQuantity(item, size)}
-            {/* <CheckIcon /> */}
-          </Typography>
+          {/* </Grid> */}
+          {/* <Grid item xs={3} sm={3}> */}
+          {/* <Typography className={classes.quantityBox}>
+            {getQuantity(item, size)} */}
+          {/* <CheckIcon /> */}
+          {/* </Typography> */}
         </Grid>
       </Grid >
     )
@@ -836,210 +935,260 @@ function Order(props) {
 
 
       <Card className={classes.root}>
-        <CardActionArea
-          onClick={(e) => setDetail(
-            {
-              isDetail: true,
-              menu: item,
-              // getImage: getImage,
-              // dishPrice: dishPrice,
-              // setMenuToppingBox: setMenuToppingBox,
-              // setMenuToppingRadio: setMenuToppingRadio,
-              // Toppingmenuline: Toppingmenuline,
-              // toppingGroupMap: toppingGroupMap,
-              // toppingMap: toppingMap
+        <Grid container spaceing={1} alignItems="flex-start">
+          <Grid item xs={2}>
+            <CardActionArea
+              onClick={(e) => setDetail(
+                {
+                  isDetail: true,
+                  menu: item,
+                  // getImage: getImage,
+                  // dishPrice: dishPrice,
+                  // setMenuToppingBox: setMenuToppingBox,
+                  // setMenuToppingRadio: setMenuToppingRadio,
+                  // Toppingmenuline: Toppingmenuline,
+                  // toppingGroupMap: toppingGroupMap,
+                  // toppingMap: toppingMap
 
 
-            })} >
-          <CardMedia
-            className={classes.media}
-            image={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? item.image_path : getImage(item.image_path)}
-            title={item.name}
-          />
-        </CardActionArea>
-        <CardContent className={classes.content}>
-          <Grid container spacing={0}>
-            <Grid item xs={8}>
-              <Typography variant="h6" component="h2" className={classes.content} noWrap>
-                {item.name}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={4}>
-              {
-                item.rating_size != 0 ?
-
-                  <Box component="fieldset" mb={0} borderColor="transparent">
-                    <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
-                      <Rating
-                        readOnly
-                        // name="simple-controlled"
-                        value={item.rating_sum / item.rating_size}
-                        size="small"
-                        precision={0.5}
-                      // onChange={(e) => setToComment({ isComment: true, menu: item })}
-                      />({item.rating_size})
-                  </Link>
-                  </Box>
-                  :
-
-
-
-                  <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
-                    <Tooltip title="Be first one to commnet" aria-label="Toppings">
-                      <Typography variant="caption" component="h2" className={classes.content} noWrap>
-                        No Commnet yet</Typography>
-                    </Tooltip>
-
-                  </Link>
-
-              }
-
-            </Grid>
+                })} >
+              <CardMedia
+                className={classes.media}
+                image={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? item.image_path : getImage(item.image_path)}
+                title={item.name}
+              />
+            </CardActionArea>
           </Grid>
+          <Grid item xs={10}>
+            <CardContent className={classes.content}>
+              <Grid container spacing={0}>
+                <Grid item xs={7}>
+                  <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
+                    <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+                      {item.name}
+                    </Typography>
 
-          <Typography variant="body2" color="textSecondary" component="div">
-            {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
-            {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
-            {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
-            {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
-          </Typography>
-          {/* <Typography variant="body2" color="textSecondary" component="p">
+                  </Box>
+                </Grid>
+                <Grid item xs={5} >
+                  {
+                    item.rating_size != 0 ?
+
+                      <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+                        <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                          <Rating
+                            readOnly
+                            // name="simple-controlled"
+                            value={item.rating_sum / item.rating_size}
+                            size="small"
+                            precision={0.5}
+                          // onChange={(e) => setToComment({ isComment: true, menu: item })}
+                          />({item.rating_size})
+                  </Link>
+                      </Box>
+                      :
+
+
+                      <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+                        <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
+                          <Tooltip title="Be first one to commnet" aria-label="Toppings">
+                            <Typography variant="caption" component="h2" className={classes.content} noWrap>
+                              No Commnet yet</Typography>
+                          </Tooltip>
+
+                        </Link>
+                      </Box>
+                  }
+
+                </Grid>
+                <Grid item xs={8}>
+                  <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
+                    <Typography variant="body2" component="div" className={classes.content} wrap="true">
+                      This is a description of menu and length is limited to 128 chars.
+                      This is a description of menu and length is limited to 128 chars.
+                    </Typography>
+                    {item.inCart ?
+                      // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
+                      cartList.map((elem, idx) => {
+                        if (isNotDone && item.id === elem.id && item.cloneSequence == elem.cloneSequence) {
+                          isNotDone = false;
+                          return (
+
+                            <ItemTopping key={idx} elem={elem} toppingMap={toppingMap} />
+
+                          )
+                        }
+                      })
+                      :
+                      <Typography variant="caption" className={classes.toppingContent}>
+                        {item.defaultTopping && item.defaultTopping.length ?
+                          fetchToppingNameList(item.defaultTopping)
+                          :
+                          null}
+                      </Typography>
+                    }
+                  </Box>
+
+
+                </Grid>
+                <Grid item xs={4}>
+                  {!category ?
+                    <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                      $ {item.price_s}
+                    </Typography>
+                    :
+
+
+                    <Typography variant="body2" color="textSecondary" component="div" className={classes.textRight}>
+                      {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+                      {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+                      {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+                      {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+                    </Typography>
+                  }
+
+                  {detail.isDetail == true ?
+                    <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+
+                      <Link
+                        to='#!'
+                        onClick={
+                          (e) => setDetail({
+                            ...detail,
+
+                            isDetail: false,
+                            menu: null
+                          })
+                        } >
+                        <Tooltip title="see more about menu ..." aria-label="Toppings">
+                          <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                            <ExpandLessIcon />
+                          </Typography>
+                        </Tooltip>
+
+                      </Link>
+                    </Box>
+                    :
+                    <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+
+                      <Link
+                        to='#!'
+                        onClick={
+                          (e) => setDetail(
+                            {
+                              ...detail,
+                              isDetail: true,
+                              menu: item
+                            })
+                        } >
+                        <Tooltip title="see more about menu ..." aria-label="Toppings">
+                          <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                            <ExpandMoreIcon />
+                          </Typography>
+                        </Tooltip>
+
+                      </Link>
+                    </Box>
+
+                  }
+
+                </Grid>
+              </Grid>
+
+
+
+
+
+
+              {/* <Typography variant="body2" color="textSecondary" component="p">
+                    {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
+                    {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
+                    {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
+                    {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+                  </Typography> */}
+
+              {/* <Typography variant="body2" color="textSecondary" component="p">
               Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
               across all continents except Antarctica
           </Typography> */}
-        </CardContent>
-        {/* </CardActionArea> */}
-        {
-          item.hasTopping ?
-            <CardActions>
-              {item.cloneSequence === 0 ?
-                <Link to='#!' onClick={(e) => cloneMenuItem(item)} >
-                  <Tooltip title="For order with other toppings" aria-label="Toppings">
-                    <FileCopyIcon />
-                  </Tooltip>
-                </Link>
-                :
-                <Link
-                  to='#!'
-                  onClick={(e) => removeCloneMenuItem(item)}
-                >
-                  <Tooltip title="For removing addition menu item" aria-label="Toppings">
-                    < DeleteOutlineIcon />
-                  </Tooltip>
-                </Link>
-              }
-              {item.inCart ?
-                // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
-                cartList.map((elem, idx) => {
-                  if (isNotDone && item.id === elem.id && item.cloneSequence == elem.cloneSequence) {
-                    isNotDone = false;
-                    return (
-                      <ItemTopping key={idx} elem={elem} toppingMap={toppingMap} />
-                    )
-                  }
-                })
-                :
-                <Typography variant="caption">
-                  {item.defaultTopping && item.defaultTopping.length ?
-                    fetchToppingNameList(item.defaultTopping)
-                    :
-                    t("ChooseTopping")}
-                </Typography>
-              }
-            </CardActions>
-            :
-            // <Typography variant="caption">
-            //   <Tooltip title={t("NoTopping")}y aria-label="Toppings">
-            //     <FileCopyIcon readOnly />
-            //   </Tooltip>
-            //   {t("NoTopping")}
-            // </Typography>
-            null
+            </CardContent>
+          </Grid>
+
+          {/* {
+            item.hasTopping ?
+              <CardActions>
+                {item.cloneSequence === 0 ?
+                  <Link to='#!' onClick={(e) => cloneMenuItem(item)} >
+                    <Tooltip title="For order with other toppings" aria-label="Toppings">
+                      <FileCopyIcon />
+                    </Tooltip>
+                  </Link>
+                  :
+                  <Link
+                    to='#!'
+                    onClick={(e) => removeCloneMenuItem(item)}
+                  >
+                    <Tooltip title="For removing addition menu item" aria-label="Toppings">
+                      < DeleteOutlineIcon />
+                    </Tooltip>
+                  </Link>
+                }
+                {item.inCart ?
+                  // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
+                  cartList.map((elem, idx) => {
+                    if (isNotDone && item.id === elem.id && item.cloneSequence == elem.cloneSequence) {
+                      isNotDone = false;
+                      return (
+                        <ItemTopping key={idx} elem={elem} toppingMap={toppingMap} />
+                      )
+                    }
+                  })
+                  :
+                  <Typography variant="caption">
+                    {item.defaultTopping && item.defaultTopping.length ?
+                      fetchToppingNameList(item.defaultTopping)
+                      :
+                      t("ChooseTopping")}
+                  </Typography>
+                }
+              </CardActions>
+              :
+              // <Typography variant="caption">
+              //   <Tooltip title={t("NoTopping")}y aria-label="Toppings">
+              //     <FileCopyIcon readOnly />
+              //   </Tooltip>
+              //   {t("NoTopping")}
+              // </Typography>
+              null
+          } */}
+
+        </Grid>
+        {detail.isDetail && item.id == detail.menu.id && item.cloneSequence == detail.menu.cloneSequence ?
+
+          <Grid item xs={12}>
+
+            <OrderDetail {...props}
+              menu={detail.menu}
+              setDetail={setDetail}
+              taxRate={restaurant.tax_rate}
+              cartTotal={cartTotal}
+              getImage={getImage}
+              dishPrice={dishPrice}
+              setMenuToppingBox={setMenuToppingBox}
+              setMenuToppingRadio={setMenuToppingRadio}
+              Toppingmenuline={Toppingmenuline}
+              toppingGroupMap={toppingGroupMap}
+              toppingMap={toppingMap}
+              cloneMenuItem={cloneMenuItem}
+              removeCloneMenuItem={removeCloneMenuItem}
+            />
+
+          </Grid>
+
+          :
+          null
         }
-
       </Card >
-      //   </Grid>
-      // </Grid>
-      // <Col sm="4" key={idx}>
-      //   <Card className="border-0">
-      //     <div className="imgblock">
-      //       <CardImg
-      //         top
-      //         width="100%"
-      //         className="imgbox h-100 d-inline-block"
-      //         // src={item.image_path}
-      //         src={shareContext.state.userMode === 2 ? item.image_path : getImage(item.image_path)}
-
-      //         // src={getImage(item.image_path)}
-      //         alt="Card image cap"
-      //       />
-      //     </div>
-
-      //     <CardBody className="text-left py-0 by-0 pl-0 bl-0">
-      //       {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
-      //       {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
-      //       {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
-      //       {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
-      //     </CardBody>
-      //     <CardBody className="text-left pt-0 bt-0 pl-0 bl-0">
-      // {item.cloneSequence === 0 ?
-      //   <Link
-      //     to="#!"
-      //     onClick={(e) => cloneMenuItem(item)}
-      //     className=" flow-left"
-      //   >
-      //     <MdContentCopy color="Primary" size="2rem" />
-      //   </Link>
-      //   :
-      //   <Link
-      //     to="#!"
-      //     onClick={(e) => removeCloneMenuItem(item)}
-      //     className=" flow-left"
-      //   >
-      //     <MdDelete color="Primary" size="2rem" />
-      //   </Link>
-      // }
-
-      //       <Link
-      //         to="#!"
-      //         onClick={(e) => setDetail({
-      //           isDetail: true,
-      //           menu: item
-      //         })}
-      //         className=" flow-left"
-      //       >
-      //         <MdEventNote color="Primary" size="2rem" />
-      //       </Link>
-      //       <Link
-      //         to="#!"
-      //         onClick={(e) => setToComment({
-      //           isComment: true,
-      //           menu: item
-      //         })}
-      //         className=" flow-left"
-      //       >
-      //         <MdComment color="Primary" size="2rem" />
-      //       </Link>
-      //       &nbsp;
-      //       {item.name}
-      //       {item.toppingResult && item.toppingResult.length > 0 ?
-      //         <Toppingmenuline
-      //           item={item}
-      //           toppingApplyMenu={item.toppingArray}
-      //           toppingGroupMap={toppingGroupMap}
-      //           toppingMap={toppingMap}
-      //           toppingMenuResult={item.toppingResult}
-      //           setMenuToppingBox={setMenuToppingBox}
-      //           setMenuToppingRadio={setMenuToppingRadio}
-      //         />
-      //         :
-      //         null
-      //       }
-
-      //     </CardBody>
-      //   </Card>
-      // </Col>
     );
   };
 
@@ -1117,6 +1266,104 @@ function Order(props) {
     );
   };
 
+  const orderMain = () => {
+    return (
+      <Grid container spacing={1}>
+        {categoryList && categoryList.map((cItem, idx) => {
+          let prev = cItem;
+          let cnt = 0;
+          let result = [];
+          result[0] = (
+            <Grid container spacing={0} className={classes.categoryBox} key={idx}>
+              <Grid item xs={6} sm={6}>
+                {/* <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}> */}
+                <Typography variant="caption" className={classes.catTitleContent}>
+                  {cItem.label}
+                </Typography>
+                {/* </Box> */}
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+                  <Button
+                    onClick={(e) => setCategory(cItem)}
+                    variant="text"
+                  >
+
+
+                    <Typography className={classes.viewAllContent}>
+                      View All
+                </Typography>
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>)
+          for (let i = 0; cnt < 2 && i < menuList.length; i++) {
+            if (menuList[i].category_id == cItem.id) {
+              const k = idx * 1000 + cnt + 100;
+              cnt++;
+              result[cnt] = (
+                <Grid item xs={12} sm={6} key={k}>
+                  {dishCard(menuList[i], k)}
+                </Grid>
+              )
+            }
+          }
+          return (
+            <Grid container spacing={1} className={classes.categoryBox} key={idx}>
+              {result}
+            </Grid>
+          )
+        })}
+      </Grid>
+    )
+  }
+
+  const orderCategory = (cId) => {
+    let cnt = 0;
+    let result = [];
+
+    for (let i = 0; i < menuList.length; i++) {
+      if (menuList[i].category_id == cId) {
+        result[cnt] = (
+          // <Grid container key={cnt}>
+          <Grid item xs={12} sm={6} key={cnt}>
+            {dishCard(menuList[i], cnt)}
+          </Grid>
+          // </Grid>
+        )
+        // if (detail.isDetail && menuList[i].id == detail.menu.id) {
+        //   cnt++;
+        //   result[cnt] =
+        //     <Grid item xs={12} sm={6} key={cnt}>
+        //       <OrderDetail {...props}
+        //         menu={detail.menu}
+        //         setDetail={setDetail}
+        //         taxRate={restaurant.tax_rate}
+        //         cartTotal={cartTotal}
+        //         getImage={getImage}
+        //         dishPrice={dishPrice}
+        //         setMenuToppingBox={setMenuToppingBox}
+        //         setMenuToppingRadio={setMenuToppingRadio}
+        //         Toppingmenuline={Toppingmenuline}
+        //         toppingGroupMap={toppingGroupMap}
+        //         toppingMap={toppingMap}
+        //       />
+        //     </Grid>
+        // }
+        cnt++;
+      }
+    }
+    return (
+      <Grid container spacing={1} className={classes.categoryBox}>
+        { result}
+      </Grid>
+    )
+  }
+
+  const resetCategory = () => {
+    setCategory(null);
+  }
+
   return (
 
 
@@ -1133,36 +1380,20 @@ function Order(props) {
             <div>
               <UserRate {...props} menu={toComment.menu} setToComment={setToComment} />
             </div>
-            :
-            detail.isDetail == true ?
+
+            : (
               <div>
-                <Detail {...props}
-                  menu={detail.menu}
-                  setDetail={setDetail}
-                  taxRate={restaurant.tax_rate}
+                <OrderNav
+                  {...props}
+                  restaurant={restaurant}
+                  fetchMenuList={fetchMenuList}
                   cartTotal={cartTotal}
-                  getImage={getImage}
-                  dishPrice={dishPrice}
-                  setMenuToppingBox={setMenuToppingBox}
-                  setMenuToppingRadio={setMenuToppingRadio}
-                  Toppingmenuline={Toppingmenuline}
-                  toppingGroupMap={toppingGroupMap}
-                  toppingMap={toppingMap}
-
-
+                  setIsOrder={setIsOrder}
+                  category={category}
+                  setCategory={setCategory}
                 />
-              </div>
-              : (
-                <div>
-                  <CategoryNav
-                    {...props}
-                    restaurant={restaurant}
-                    fetchMenuList={fetchMenuList}
-                    cartTotal={cartTotal}
-                    setIsOrder={setIsOrder}
-                  />
 
-                  {toppingOrderResult && toppingOrderResult.length > 0 ?
+                {/* {toppingOrderResult && toppingOrderResult.length > 0 ?
                     <Toppingline
                       toppingApplyOrder={toppingApplyOrder}
                       toppingGroupMap={toppingGroupMap}
@@ -1171,24 +1402,20 @@ function Order(props) {
                       setOrderToppingBox={setOrderToppingBox}
                       setOrderToppingRadio={setOrderToppingRadio}
                     />
-                    : null}
-                  {shareContext.state.menuFormat != 2 ?
-                    <Grid container spacing={1}>
-                      {menuList && menuList.map((item, idx) =>
-                        <Grid item xs={12} sm={4} key={idx}>
-
-                          {dishCard(item, idx)}
-                        </Grid>
-                      )}
-
-                    </Grid>
+                    : null} */}
+                {shareContext.state.menuFormat != 2 ?
+                  category == null ?
+                    orderMain()
                     :
-                    <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
-                  }
+                    orderCategory(category.id)
 
 
-                </div>
-              )
+
+                  :
+                  <Row>{menuList && menuList.map((item, idx) => dishList(item, idx))}</Row>
+                }
+              </div>
+            )
         ) : (
             <Cart
               addToOrder={addToOrder}
@@ -1209,4 +1436,4 @@ function Order(props) {
   );
 }
 
-export default Order;
+export default OrderHome;

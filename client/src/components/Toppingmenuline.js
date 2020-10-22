@@ -54,6 +54,20 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: 0,
         marginTop: 0,
         paddingTop: 0,
+    },
+    toppingContent: {
+        color: theme.palette.neutral.black,
+        fontSize: "0.8rem",
+        fontWeight: 300,
+        // verticalAlign: 'center',
+        // textAlign: 'right',
+        // marginTop: theme.spacing(1),
+        // marginRight: '1rem',
+        // fontWeight: 'fontWeightBold',
+        margin: 0,
+        padding: 0,
+        display: 'inline-block',
+        textTransform: 'none',
     }
 }));
 
@@ -121,9 +135,13 @@ function Toppingmenuline(props) {
                                     }
                                     label={
                                         <Box component="p" fontSize={15} className={classes.quantityBox}>
-                                            {(toppingMap[elem])[0]}
+                                            <Typography className={classes.toppingContent}>
+                                                {(toppingMap[elem])[0]}
+                                            </Typography>
                                         &nbsp;
-                                        {p > 0 ? '$(' + p + ")" : null}
+                                        <Typography className={classes.toppingContent}>
+                                                {p > 0 ? '$(' + p + ")" : null}
+                                            </Typography>
                                         &nbsp;
                                     </Box>
 
@@ -143,7 +161,7 @@ function Toppingmenuline(props) {
                             <FormControl component="fieldset">
 
                                 <FormLabel component="span" key={idx}>
-                                    <Typography variant="caption" display="block">
+                                    <Typography variant="caption" display="block" className={classes.toppingContent}>
                                         {idx + 1}: {g} (Select one)
                                         </Typography>
                                 </FormLabel>
@@ -155,12 +173,10 @@ function Toppingmenuline(props) {
                                                 checked={toppingMenuResult[idx] == elem}
                                                 value={elem}
                                                 control={<Radio color="primary" />}
-                                                label={(toppingMap[elem])[0]}
+                                                label={<Typography className={classes.toppingContent}>{(toppingMap[elem])[0]}</Typography>}
                                                 labelPlacement="end"
                                             />
-
                                         )
-
                                     })}
                                 </RadioGroup>
 
@@ -192,7 +208,7 @@ function Toppingmenuline(props) {
 
 
             })}
-        </Grid>
+        </Grid >
 
     );
 }

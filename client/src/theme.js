@@ -29,6 +29,9 @@ const theme = createMuiTheme({
         grey: {
             main: "#FFFFFF",
         },
+        red: {
+            main: "#FF0000",
+        },
         textPrimary: {
             main: "#FFFFFF",
         },
@@ -41,7 +44,8 @@ const theme = createMuiTheme({
             white: 'white',
             black: 'black',
             gold: 'gold',
-            grey: 'grey'
+            grey: 'grey',
+            red: 'red',
         },
     },
 })
