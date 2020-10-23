@@ -145,7 +145,7 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
-    fontSize: "16px",
+    fontSize: "0.7rem",
     fontWeight: 500,
     padding: 3,
     textAlign: 'right',
@@ -156,7 +156,7 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.black,
     // fontStyle: 'oblique',
-    fontSize: "16px",
+    fontSize: "0.7rem",
     fontWeight: 500,
     padding: 3,
     // textAlign: 'right',
@@ -194,6 +194,18 @@ const useStyles = makeStyles(theme => ({
   toppingContent: {
     color: theme.palette.neutral.black,
     fontSize: "0.6rem",
+    fontWeight: 500,
+    // verticalAlign: 'center',
+    // textAlign: 'right',
+    // marginTop: theme.spacing(1),
+    // marginRight: '1rem',
+    // fontWeight: 'fontWeightBold',
+    display: 'inline-block',
+    textTransform: 'none',
+  },
+  descContent: {
+    color: theme.palette.neutral.black,
+    fontSize: "0.7rem",
     fontWeight: 500,
     // verticalAlign: 'center',
     // textAlign: 'right',
@@ -862,7 +874,7 @@ function OrderHome(props) {
   const dishPrice = (item, price, size, symbol) => {
     return (
       <Grid container spacing={0} >
-        <Grid item xs={6} sm={6} className={classes.textLeft}>
+        <Grid item xs={4} className={classes.textLeft}>
           {/* <Box className={classes.priceBox}> */}
           <Typography display="inline" className={classes.priceContent}>
             ${price}
@@ -875,7 +887,7 @@ function OrderHome(props) {
           </Typography >
         </Grid>
         {/* &nbsp; */}
-        <Grid item xs={6} sm={6} className={classes.textLeft}>
+        <Grid item xs={8} className={classes.textLeft}>
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
@@ -927,7 +939,7 @@ function OrderHome(props) {
 
 
 
-  const dishCard = (item, idx, isNotDone = true) => {
+  const dishCard = (item, idx, bDetail, isNotDone = true) => {
     // debugger;
     return (
       // <Grid container spacing={2}>
@@ -1001,9 +1013,9 @@ function OrderHome(props) {
                   }
 
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={7}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
-                    <Typography variant="body2" component="div" className={classes.content} wrap="true">
+                    <Typography component="p" className={classes.descContent} wrap="true">
                       This is a description of menu and length is limited to 128 chars.
                       This is a description of menu and length is limited to 128 chars.
                     </Typography>
@@ -1031,15 +1043,15 @@ function OrderHome(props) {
 
 
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   {!category ?
-                    <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                    <Typography variant="body2" color="textSecondary" component="p" className={classes.textLeft}>
                       $ {item.price_s}
                     </Typography>
                     :
 
 
-                    <Typography variant="body2" color="textSecondary" component="div" className={classes.textRight}>
+                    <Typography variant="body2" color="textSecondary" component="div" className={classes.textLeft}>
                       {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
                       {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
                       {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
@@ -1047,50 +1059,51 @@ function OrderHome(props) {
                     </Typography>
                   }
 
-                  {detail.isDetail == true ?
-                    <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
+                  {bDetail ?
+                    detail.isDetail == true ?
+                      <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
 
-                      <Link
-                        to='#!'
-                        onClick={
-                          (e) => setDetail({
-                            ...detail,
-
-                            isDetail: false,
-                            menu: null
-                          })
-                        } >
-                        <Tooltip title="see more about menu ..." aria-label="Toppings">
-                          <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
-                            <ExpandLessIcon />
-                          </Typography>
-                        </Tooltip>
-
-                      </Link>
-                    </Box>
-                    :
-                    <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
-
-                      <Link
-                        to='#!'
-                        onClick={
-                          (e) => setDetail(
-                            {
+                        <Link
+                          to='#!'
+                          onClick={
+                            (e) => setDetail({
                               ...detail,
-                              isDetail: true,
-                              menu: item
+
+                              isDetail: false,
+                              menu: null
                             })
-                        } >
-                        <Tooltip title="see more about menu ..." aria-label="Toppings">
-                          <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
-                            <ExpandMoreIcon />
-                          </Typography>
-                        </Tooltip>
+                          } >
+                          <Tooltip title="see more about menu ..." aria-label="Toppings">
+                            <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                              <ExpandLessIcon />
+                            </Typography>
+                          </Tooltip>
 
-                      </Link>
-                    </Box>
+                        </Link>
+                      </Box>
+                      :
+                      <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
 
-                  }
+                        <Link
+                          to='#!'
+                          onClick={
+                            (e) => setDetail(
+                              {
+                                ...detail,
+                                isDetail: true,
+                                menu: item
+                              })
+                          } >
+                          <Tooltip title="see more about menu ..." aria-label="Toppings">
+                            <Typography variant="body2" color="textSecondary" component="p" className={classes.textRight}>
+                              <ExpandMoreIcon />
+                            </Typography>
+                          </Tooltip>
+
+                        </Link>
+                      </Box>
+                    : null}
+
 
                 </Grid>
               </Grid>
@@ -1303,7 +1316,7 @@ function OrderHome(props) {
               cnt++;
               result[cnt] = (
                 <Grid item xs={12} sm={6} key={k}>
-                  {dishCard(menuList[i], k)}
+                  {dishCard(menuList[i], k, false)}
                 </Grid>
               )
             }
@@ -1327,7 +1340,7 @@ function OrderHome(props) {
         result[cnt] = (
           // <Grid container key={cnt}>
           <Grid item xs={12} sm={6} key={cnt}>
-            {dishCard(menuList[i], cnt)}
+            {dishCard(menuList[i], cnt, true)}
           </Grid>
           // </Grid>
         )
