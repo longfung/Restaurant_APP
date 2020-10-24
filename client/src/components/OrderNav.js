@@ -377,7 +377,7 @@ function OrderNav(props) {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h5" color="inherit" className={classes.nameContent}>
-                {shareContext.state.restaurant.name}
+                {/* {shareContext.state.restaurant.name} */}
               </Typography>
             </div>
 
