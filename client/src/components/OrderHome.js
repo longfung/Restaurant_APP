@@ -1181,7 +1181,7 @@ function OrderHome(props) {
 
           <Grid item xs={12}>
 
-            {/* <OrderDetail {...props}
+            <OrderDetail {...props}
               menu={detail.menu}
               setDetail={setDetail}
               taxRate={restaurant.tax_rate}
@@ -1195,7 +1195,7 @@ function OrderHome(props) {
               toppingMap={toppingMap}
               cloneMenuItem={cloneMenuItem}
               removeCloneMenuItem={removeCloneMenuItem}
-            /> */}
+            />
 
           </Grid>
 

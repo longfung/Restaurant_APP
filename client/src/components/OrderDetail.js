@@ -188,7 +188,7 @@ function OrderDetail(props) {
     return (
         <Grid container spaceing={1} alignItems="stretch" direction="column">
 
-            {/* <Grid item xs={12} className={classes.content}>
+            <Grid item xs={12} className={classes.content}>
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
@@ -196,56 +196,8 @@ function OrderDetail(props) {
                         title={menu.name}
                     />
                 </CardActionArea>
-            </Grid> */}
-            <Grid item xs={12} className={classes.content}>
-                <CardContent>
-                    {/* <Typography variant="h5" component="h2" className={classes.content} noWrap>
-                        {menu.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {menu.price_s > 0 ? dishPrice(menu, menu.price_s, 1, 'S') : null}
-                        {menu.price_m > 0 ? dishPrice(menu, menu.price_m, 2, 'M') : null}
-                        {menu.price_l > 0 ? dishPrice(menu, menu.price_l, 3, 'L') : null}
-                        {menu.price_x > 0 ? dishPrice(menu, menu.price_x, 4, 'X') : null}
-                    </Typography> */}
-                    <Typography variant="body2" className={classes.content}>
-                        {menu.toppingResult && menu.toppingResult.length > 0 ?
-                            <Toppingmenuline
-                                item={menu}
-                                toppingApplyMenu={menu.toppingArray}
-                                toppingGroupMap={toppingGroupMap}
-                                toppingMap={toppingMap}
-                                toppingMenuResult={menu.toppingResult}
-                                setMenuToppingBox={setMenuToppingBox}
-                                setMenuToppingRadio={setMenuToppingRadio}
-                            />
-                            :
-                            null
-                        }
-                    </Typography>
-                    {menu.hasTopping ?
-                        <Typography>
-                            {menu.cloneSequence === 0 ?
-                                <Link to='#!' onClick={(e) => cloneMenuItem(menu)} >
-                                    <Tooltip title="For order with other toppings" aria-label="Toppings">
-                                        <span>order same dish with other options</span>
-                                    </Tooltip>
-                                </Link>
-                                :
-                                <Link
-                                    to='#!'
-                                    onClick={(e) => removeCloneMenuItem(menu)}
-                                >
-                                    <Tooltip title="For removing addition menu item" aria-label="Toppings">
-                                        <span>Remove dish</span>
-                                    </Tooltip>
-                                </Link>}
-
-                        </Typography>
-                        : null}
-
-                </CardContent>
             </Grid>
+
             {/* <Grid item xs={12}>
 
                 <div className={className.containerRoot}>
