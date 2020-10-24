@@ -100,8 +100,8 @@ const useStyles = makeStyles(theme => ({
   },
   textRight: {
     textAlign: 'right',
-    paddingRight: '1rem',
-    paddingTop: '0.2rem',
+    paddingRight: '0',
+    paddingTop: '0',
   },
   textLeft: {
     textAlign: 'left',
@@ -158,14 +158,15 @@ const useStyles = makeStyles(theme => ({
     // fontStyle: 'oblique',
     fontSize: "0.7rem",
     fontWeight: 500,
-    padding: 3,
+    padding: 1,
     // textAlign: 'right',
     // textAlign: "left",
     // fontWeight: 'fontWeightBold',
   },
   priceIcon: {
     verticalAlign: 'top',
-    display: 'inline-flex'
+    display: 'inline-flex',
+    fontSize: '1rem'
   },
   catTitleContent: {
     color: theme.palette.neutral.white,
@@ -874,7 +875,7 @@ function OrderHome(props) {
   const dishPrice = (item, price, size, symbol) => {
     return (
       <Grid container spacing={0} >
-        <Grid item xs={4} className={classes.textLeft}>
+        <Grid item xs={6} className={classes.textLeft}>
           {/* <Box className={classes.priceBox}> */}
           <Typography display="inline" className={classes.priceContent}>
             ${price}
@@ -887,7 +888,7 @@ function OrderHome(props) {
           </Typography >
         </Grid>
         {/* &nbsp; */}
-        <Grid item xs={8} className={classes.textLeft}>
+        <Grid item xs={6} className={classes.textLeft}>
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}

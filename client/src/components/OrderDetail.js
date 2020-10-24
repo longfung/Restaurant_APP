@@ -188,7 +188,7 @@ function OrderDetail(props) {
     return (
         <Grid container spaceing={1} alignItems="stretch" direction="column">
 
-            <Grid item xs={12} className={classes.content}>
+            {/* <Grid item xs={12} className={classes.content}>
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
@@ -196,7 +196,7 @@ function OrderDetail(props) {
                         title={menu.name}
                     />
                 </CardActionArea>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} className={classes.content}>
                 <CardContent>
                     {/* <Typography variant="h5" component="h2" className={classes.content} noWrap>
