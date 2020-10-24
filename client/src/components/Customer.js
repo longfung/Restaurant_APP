@@ -53,9 +53,9 @@ const config = require("../util/config.json");
 const useStyles = makeStyles((theme) => ({
     paper: {
         position: 'absolute',
-        top: '200px',
-        left: '600px',
-        width: 400,
+        top: '20%',
+        left: '10%',
+        width: "20rem",
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
