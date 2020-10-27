@@ -17,6 +17,7 @@ function Home(props) {
   const { t } = useTranslation();
   return (
     <div >
+
       <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
         <Row>
           <Col sm={10} xs={10}>

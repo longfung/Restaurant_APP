@@ -32,6 +32,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import {
 
@@ -39,10 +40,28 @@ import {
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  appBar: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    height: '3rem',
+  },
+  toolBar: {
+
+    maxWidth: 1170,
+    width: "100%"
+  },
+  appbarBorder: {
+    padding: 0,
+    margin: 0,
+  },
   iconContent: {
     color: theme.palette.neutral.gold,
     fontStyle: 'oblique',
-    fontSize: "2.2rem",
+    fontSize: "1.8rem",
     fontWeight: 500,
     verticalAlign: "middle",
     aligh: 'right',
@@ -50,16 +69,16 @@ const useStyles = makeStyles((theme) => ({
   },
   textContent: {
     color: theme.palette.neutral.white,
-    fontSize: "1.2rem",
+    fontSize: "0.9rem",
     fontWeight: 500,
     textAlign: 'right',
-    marginTop: theme.spacing(2.5),
+    marginTop: theme.spacing(2.8),
     // fontWeight: 'fontWeightBold',
     display: 'inline-block',
   },
   nameContent: {
     color: theme.palette.neutral.white,
-    fontSize: "1.2rem",
+    fontSize: "1.0rem",
     fontWeight: 700,
     textAlign: 'right',
     marginTop: theme.spacing(2),
@@ -68,12 +87,13 @@ const useStyles = makeStyles((theme) => ({
   },
   langContent: {
     color: theme.palette.neutral.white,
-    fontSize: "1.2rem",
+    fontSize: "0.9rem",
     fontWeight: 500,
     textAlign: 'right',
-    marginTop: theme.spacing(0.7),
+    marginTop: theme.spacing(2),
     // fontWeight: 'fontWeightBold',
     display: 'inline-block',
+    height: '1,2rem',
   },
   whiteColor: {
     color: theme.palette.neutral.white,
@@ -349,9 +369,11 @@ function OrderNav(props) {
   };
 
   return (
-    <div>
-      <AppBar position="static" color="primary">
-        <Toolbar >
+    <div className={classes.root}>
+
+      <CssBaseline />
+      <AppBar position="fixed" color="primary" className={classes.appBar}>
+        <Toolbar variant="dense" className={classes.toolBar}>
           {shareContext.state.userMode == 1 ?
             <Grid item xs={1}>
 
@@ -398,13 +420,13 @@ function OrderNav(props) {
 
           <section className={classes.rightToolbar}>
             {shareContext.state.userMode == 2 || shareContext.state.userMode == 1 ?
-              <FormControl variant="outlined" className={classes.langContent}>
+              <FormControl className={classes.nameContent}>
                 <Select
                   classes={{
                     root: classes.whiteColor,
                     icon: classes.whiteColor,
                   }}
-                  // className={classes.formControlSmall}
+                  // className={classes.langContent}
                   value={langValue}
                   onChange={setLanguage}
                   inputProps={{ 'aria-label': 'Without label' }}
@@ -421,8 +443,10 @@ function OrderNav(props) {
 
                   {langOptions.map(option => (
                     <MenuItem key={option.value} value={option.value}>
-
+                      {/* <Typography className={classes.langContent}> */}
                       {option.label}
+                      {/* </Typography> */}
+
 
                     </MenuItem>
                   ))}
@@ -452,7 +476,7 @@ function OrderNav(props) {
 
         </Toolbar>
       </AppBar >
-      <div className="padding05"> </div>
+      <div className="padding70"> </div>
     </div >
   );
 }

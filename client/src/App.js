@@ -147,9 +147,11 @@ function App(props) {
     // </div>
 
     <StateProvider>
-      <Container className="themed-container" fluid={true}>
-        {mainBody()}
-      </Container>
+
+      {/* <Container className="themed-container" fluid={true}> */}
+
+      {mainBody()}
+      {/* </Container> */}
     </StateProvider>
   );
 }

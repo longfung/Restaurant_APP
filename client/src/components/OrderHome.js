@@ -145,8 +145,8 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
-    fontSize: "0.7rem",
-    fontWeight: 500,
+    fontSize: "0.8rem",
+    fontWeight: 300,
     padding: 3,
     textAlign: 'right',
     // textAlign: "left",
@@ -1282,7 +1282,7 @@ function OrderHome(props) {
 
   const orderMain = () => {
     return (
-      <Grid container spacing={1}>
+      <Grid container spacing={0}>
         {categoryList && categoryList.map((cItem, idx) => {
           let prev = cItem;
           let cnt = 0;
@@ -1368,7 +1368,7 @@ function OrderHome(props) {
       }
     }
     return (
-      <Grid container spacing={1} className={classes.categoryBox}>
+      <Grid container spacing={2} className={classes.categoryBox}>
         { result}
       </Grid>
     )
