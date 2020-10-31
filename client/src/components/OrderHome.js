@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     // color: 'theme.palette.red',
     // fontStyle: 'oblique',
-    fontSize: "16px",
+    fontSize: props => 0.15 * props.wordSize + 'rem',
     fontWeight: 500,
     padding: 3,
     // textAlign: "left",
@@ -146,7 +146,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
     fontSize: "0.8rem",
-    fontWeight: 300,
+    fontWeight: 500,
     padding: 3,
     textAlign: 'right',
     // textAlign: "left",
@@ -166,7 +166,7 @@ const useStyles = makeStyles(theme => ({
   priceIcon: {
     verticalAlign: 'top',
     display: 'inline-flex',
-    fontSize: '1rem'
+    fontSize: '1.3rem'
   },
   catTitleContent: {
     color: theme.palette.neutral.white,
@@ -206,8 +206,8 @@ const useStyles = makeStyles(theme => ({
   },
   descContent: {
     color: theme.palette.neutral.black,
-    fontSize: "0.7rem",
-    fontWeight: 500,
+    fontSize: props => 0.1 * props.wordSize + 'rem',
+    fontWeight: 300,
     // verticalAlign: 'center',
     // textAlign: 'right',
     // marginTop: theme.spacing(1),
@@ -217,6 +217,26 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'none',
   },
 }));
+
+function ShowDesc(props) {
+  const classes = useStyles(props);
+  return (
+    <Typography component="p" className={classes.descContent} wrap="true" >
+      This is a description of menu and length is limited to 128 chars.
+      This is a description of menu and length is limited to 128 chars.
+
+    </Typography>
+  );
+}
+
+function ShowName(props) {
+  const classes = useStyles(props);
+  return (
+    <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+      {props.name}
+    </Typography>
+  );
+}
 
 function OrderHome(props) {
   const { t } = useTranslation();
@@ -268,6 +288,7 @@ function OrderHome(props) {
   const [chosenToppingMap, setChosenToppingMap] = useState({});
   const toppingMapRef = useRef([]);
   const [category, setCategory] = useState(null);
+  const [wordSize, setWordSize] = useState(10);
 
   let catId = 0;
 
@@ -684,7 +705,7 @@ function OrderHome(props) {
   const setMenuToppingRadio = (e, idx, id, seq, result) => {
     // debugger;
     let nResult = result;
-    nResult[idx] = e;
+    nResult[idx] = e.target.value;
     setMenuList(menuList.map(elem => elem.id === id && elem.cloneSequence === seq ? { ...elem, toppingResult: nResult } : elem));
 
     // toppingOrderResult[idx] = e;
@@ -977,9 +998,10 @@ function OrderHome(props) {
               <Grid container spacing={0}>
                 <Grid item xs={7}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
-                    <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+                    <ShowName wordSize={wordSize} name={item.name} />
+                    {/* <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
                       {item.name}
-                    </Typography>
+                    </Typography> */}
 
                   </Box>
                 </Grid>
@@ -1016,10 +1038,11 @@ function OrderHome(props) {
                 </Grid>
                 <Grid item xs={7}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
-                    <Typography component="p" className={classes.descContent} wrap="true">
+                    {/* <Typography component="p" className={classes.descContent} wrap="true">
                       This is a description of menu and length is limited to 128 chars.
                       This is a description of menu and length is limited to 128 chars.
-                    </Typography>
+                    </Typography> */}
+                    <ShowDesc wordSize={wordSize} />
                     {item.inCart ?
                       // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
                       cartList.map((elem, idx) => {
@@ -1195,6 +1218,7 @@ function OrderHome(props) {
               toppingMap={toppingMap}
               cloneMenuItem={cloneMenuItem}
               removeCloneMenuItem={removeCloneMenuItem}
+              wordSize={wordSize}
             />
 
           </Grid>
@@ -1262,6 +1286,7 @@ function OrderHome(props) {
                   toppingMenuResult={item.toppingResult}
                   setMenuToppingBox={setMenuToppingBox}
                   setMenuToppingRadio={setMenuToppingRadio}
+                  wordSize={wordSize}
                 />
                 :
                 null
@@ -1378,6 +1403,21 @@ function OrderHome(props) {
     setCategory(null);
   }
 
+  const reduceWordSize = () => {
+    if (wordSize > 5) {
+      let nSize = wordSize - 1;
+      setWordSize(nSize);
+    }
+  }
+
+  const increaseWordSize = () => {
+    if (wordSize < 15) {
+      let nSize = wordSize + 1;
+      setWordSize(nSize);
+    }
+
+  }
+
   return (
 
 
@@ -1405,6 +1445,8 @@ function OrderHome(props) {
                   setIsOrder={setIsOrder}
                   category={category}
                   setCategory={setCategory}
+                  reduceWordSize={reduceWordSize}
+                  increaseWordSize={increaseWordSize}
                 />
 
                 {/* {toppingOrderResult && toppingOrderResult.length > 0 ?

@@ -57,6 +57,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         textAlign: 'left',
+        fontSize: "0.7rem",
         marginLeft: 0,
         paddingLeft: 0,
         paddingTop: 2,
@@ -81,8 +82,8 @@ const useStyles = makeStyles(theme => ({
     },
     toppingContent: {
         color: theme.palette.neutral.black,
-        fontSize: "0.8rem",
-        fontWeight: 300,
+        fontSize: "0.7rem",
+        fontWeight: 500,
         // verticalAlign: 'center',
         // textAlign: 'right',
         // marginTop: theme.spacing(1),
@@ -132,6 +133,7 @@ function OrderDetail(props) {
     const setIsOrder = props.setIsOrder;
     const taxRate = props.taxRate;
     const cartTotal = props.cartTotal;
+    const wordSize = props.wordSize;
     // useEffect(() => {
     //     // debugger;
     //     // const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
@@ -218,6 +220,7 @@ function OrderDetail(props) {
                                 toppingMenuResult={menu.toppingResult}
                                 setMenuToppingBox={setMenuToppingBox}
                                 setMenuToppingRadio={setMenuToppingRadio}
+                                wordSize={wordSize}
                             />
                             :
                             null

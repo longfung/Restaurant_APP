@@ -33,6 +33,8 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import CssBaseline from '@material-ui/core/CssBaseline';
+import FontDownloadIcon from '@material-ui/icons/FontDownload';
+import FontDownloadSharpIcon from '@material-ui/icons/FontDownloadSharp';
 
 import {
 
@@ -66,6 +68,25 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "middle",
     aligh: 'right',
     fontWeight: 'fontWeightBold',
+  },
+  largeIcon: {
+    color: theme.palette.neutral.black,
+    backgroundColor: theme.palette.neutral.white,
+    // borderColor: theme.palette.neutral.white,
+    fontSize: "1.8rem",
+    fontWeight: 500,
+    verticalAlign: "middle",
+    padding: 0,
+    margin: 0,
+  },
+  smallIcon: {
+    color: theme.palette.neutral.black,
+    backgroundColor: theme.palette.neutral.white,
+    fontSize: "1.2rem",
+    fontWeight: 500,
+    verticalAlign: "middle",
+    padding: 0,
+    margin: 0,
   },
   textContent: {
     color: theme.palette.neutral.white,
@@ -136,7 +157,7 @@ function OrderNav(props) {
   // const setIsOrder = props.setIsOrder;
   // const category = props.category;
   // const setCategory = props.setcategory;
-  const { fetchMenuList, cartTotal, setIsOrder, category, setCategory } = props;
+  const { fetchMenuList, cartTotal, setIsOrder, category, setCategory, increaseWordSize, reduceWordSize } = props;
   const [categoryList, setCategoryList] = useState([]);
   const [catOptions, setCatOptions] = useState([]);
   const [catValue, setCatValue] = useState(0);
@@ -456,6 +477,22 @@ function OrderNav(props) {
               null
             }
 
+            <Link
+              to="#!"
+              onClick={() => reduceWordSize()}
+            >
+
+              <FontDownloadSharpIcon className={classes.smallIcon} />
+&nbsp;
+            </Link>
+            <Link
+              to="#!"
+              onClick={() => increaseWordSize()}
+            >
+
+              <FontDownloadIcon className={classes.largeIcon} />
+
+            </Link>
             <Link
               to="#!"
               onClick={() => setIsOrder(false)}
