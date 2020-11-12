@@ -264,7 +264,7 @@ function Cart(props) {
                                         : null}
 
                                 </Grid>
-                                <Grid item xs={3}>
+                                {/* <Grid item xs={3}>
                                     <Link to='#!' onClick={e => addToOrder(e, elem, elem.price, elem.size)}>
                                         <AddCircleOutlineIcon className={classes.icon} />
                                     </Link>
@@ -273,7 +273,7 @@ function Cart(props) {
                                             <RemoveCircleOutlineIcon className={classes.icon} />
                                         </Link>
                                         : null}
-                                </Grid>
+                                </Grid> */}
                             </Grid>
 
                         </div>

@@ -1,0 +1,19 @@
+div.DraftEditor-root {
+  max-height: 320px;
+  position: absolute;
+  max-width: 240px;
+  overflow-y: auto;
+  background-color: beige;
+}
+
+div.DraftEditor-editorContainer, div.public-DraftEditor-content {
+  height: 100%;
+  width: 100%;
+}
+
+div.DisplayContainer {
+  border: 1px solid  beige;
+  min-width: 240px;
+  min-height: 320px;
+  background-color: beige;
+}

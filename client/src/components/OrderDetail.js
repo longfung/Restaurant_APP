@@ -12,6 +12,8 @@ import { MdArrowBack } from 'react-icons/md';
 import { convertToHTML } from 'draft-convert'
 import { store } from "./Store";
 import "../index.css";
+// import '../displaypan.css';
+import DisplayPan from './DisplayPan';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -163,6 +165,7 @@ function OrderDetail(props) {
             // );
             const newState = convertFromRaw(JSON.parse(menu.description));
             // const state = ContentState.createFromBlockArray(blocksFromHTML);
+            debugger;
             setEditorState(EditorState.createWithContent(newState));
         }
 
@@ -249,19 +252,11 @@ function OrderDetail(props) {
 
                 </CardContent>
             </Grid>
-            {/* <Grid item xs={12}>
+            <Col xs={12} >
 
-                <div className={className.containerRoot}>
-                    <Editor
-                        readOnly={true}
-                        // ref={refEditor}
-                        editorState={editorState}
-                        onChange={(editorState) => onChange(editorState)}
-                        // placeholder="Tell a story..."
-                        placeholder=""
-                    />
-                </div>
-            </Grid> */}
+                <DisplayPan menu={menu} />
+
+            </Col>
 
 
 

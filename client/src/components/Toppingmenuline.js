@@ -255,10 +255,6 @@ function Toppingmenuline(props) {
                                                 control={<StyledRadio weight={wordSize} />}
                                                 label={<Typography noWrap className={classes.toppingContent}>{(toppingMap[elem])[0]}  </Typography>}
                                                 labelPlacement="end"
-
-                                            // icon={<RadioButtonUncheckedIcon style={{ fontSize: '2rem' }} />}
-                                            // checkedIcon={<RadioButtonCheckedIcon style={{ fontSize: '2rem' }} />}
-                                            // size="small"
                                             />
                                         )
                                     })}

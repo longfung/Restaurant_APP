@@ -96,7 +96,7 @@ function CartHeader(props) {
                                 </Button>
                             }
                         </Grid>
-                        <Grid item xs={2} >
+                        {/* <Grid item xs={2} >
 
                             <ShoppingCartIcon className={classes.iconContent} />
                             <Typography variant="caption" className={classes.iconTextContent}>
@@ -105,7 +105,7 @@ function CartHeader(props) {
                             </Typography>
 
 
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Toolbar>
             </AppBar >

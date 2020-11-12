@@ -1084,15 +1084,13 @@ function OrderHome(props) {
                   }
 
                   {bDetail ?
-                    detail.isDetail == true ?
+                    detail.menu && detail.menu.id === item.id == true ?
                       <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
-
                         <Link
                           to='#!'
                           onClick={
                             (e) => setDetail({
                               ...detail,
-
                               isDetail: false,
                               menu: null
                             })
@@ -1107,7 +1105,6 @@ function OrderHome(props) {
                       </Box>
                       :
                       <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
-
                         <Link
                           to='#!'
                           onClick={
