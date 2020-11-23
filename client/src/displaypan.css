@@ -1,7 +1,7 @@
 div.DraftEditor-root {
-  max-height: 320px;
+  height: 100%;
   position: absolute;
-  max-width: 240px;
+  width: 100%;
   overflow-y: auto;
   background-color: beige;
 }
