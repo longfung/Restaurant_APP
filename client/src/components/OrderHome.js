@@ -38,7 +38,7 @@ import {
   ModalFooter
 } from "reactstrap";
 import { Radio, RadioGroup } from 'react-radio-group'
-import CategoryNav from "./CatagoryNav";
+import OrderCatNav from "./OrderCatNav";
 import OrderNav from './OrderNav'
 import OrderDetail from "./OrderDetail";
 import UserRate from "./UserRate";
@@ -60,6 +60,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Rating from '@material-ui/lab/Rating';
+import DisplayDesc from './DisplayDesc';
 
 import {
 
@@ -68,6 +69,7 @@ import {
   Box,
 } from '@material-ui/core';
 import ItemTopping from './ItemTopping';
+import { forEach } from "axios/lib/utils";
 // import { IoTSecureTunneling } from "aws-sdk";
 
 const useStyles = makeStyles(theme => ({
@@ -219,11 +221,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function ShowDesc(props) {
+  debugger;
   const classes = useStyles(props);
+  const item = props.item;
   return (
     <Typography component="p" className={classes.descContent} wrap="true" >
-      This is a description of menu and length is limited to 128 chars.
-      This is a description of menu and length is limited to 128 chars.
+      <DisplayDesc menu={item} />
 
     </Typography>
   );
@@ -269,6 +272,8 @@ function OrderHome(props) {
   // debugger;
 
   const [categoryList, setCategoryList] = useState([]);
+  const [topCategory, setTopCategory] = useState(0);
+  const [topCategoryList, setTopCategoryList] = useState([]);
   const [toppingMap, setToppingMap] = useState({});   // all toppings with [namet, toppingGroup]
   const [toppingGroupMap, setToppingGroupMap] = useState({});  // all toppingGroup with [items...]
   const [toppingApplyOrder, setToppingApplyOrder] = useState([]); // list of order toppings [G1, item..., G2...]
@@ -305,12 +310,24 @@ function OrderHome(props) {
       .then((res) => {
         if (isMounted) {
           setCategoryList([]);
-          res.data.map((item) =>
-            setCategoryList((prevState) => [
-              ...prevState,
-              { id: item.id, label: item.namet == null ? item.category_name : item.namet },
-            ])
-          );
+          const tmpCList = [];
+          const tmpMList = [];
+          res.data.forEach(item => {
+            const tmpCat = { id: item.id, pid: item.pid, label: item.namet == null ? item.category_name : item.namet };
+            if (item.is_top)
+              tmpMList.push(tmpCat);
+            else
+              tmpCList.push(tmpCat);
+          })
+          setCategoryList(tmpCList);
+          setTopCategoryList(tmpMList);
+          // debugger;
+          // res.data.map((item) =>
+          //   setCategoryList((prevState) => [
+          //     ...prevState,
+          //     { id: item.id, label: item.namet == null ? item.category_name : item.namet },
+          //   ])
+          // );
         }
       }).catch((err) => {
         // let errorObject = JSON.parse(JSON.stringify(err));
@@ -1039,10 +1056,11 @@ function OrderHome(props) {
                 <Grid item xs={7}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
                     {/* <Typography component="p" className={classes.descContent} wrap="true">
-                      This is a description of menu and length is limited to 128 chars.
-                      This is a description of menu and length is limited to 128 chars.
+                      // This is a description of menu and length is limited to 128 chars.
+                      // This is a description of menu and length is limited to 128 chars.
                     </Typography> */}
-                    <ShowDesc wordSize={wordSize} />
+
+                    <ShowDesc wordSize={wordSize} item={item} />
                     {item.inCart ?
                       // <ItemTopping elem={cartList[0]} toppingMap={toppingMap} />
                       cartList.map((elem, idx) => {
@@ -1306,6 +1324,9 @@ function OrderHome(props) {
     return (
       <Grid container spacing={0}>
         {categoryList && categoryList.map((cItem, idx) => {
+          // debugger;
+          if (topCategory != 0 && topCategory != cItem.pid)
+            return null;
           let prev = cItem;
           let cnt = 0;
           let result = [];
@@ -1445,6 +1466,17 @@ function OrderHome(props) {
                   reduceWordSize={reduceWordSize}
                   increaseWordSize={increaseWordSize}
                 />
+                {topCategoryList && topCategoryList.length > 1 && category == null && shareContext.state.menuFormat != 2 ?
+                  <OrderCatNav
+                    {...props}
+                    setTopCategory={setTopCategory}
+                    topCategory={topCategory}
+                    topCategoryList={topCategoryList}
+                  />
+                  :
+                  null
+                }
+
 
                 {/* {toppingOrderResult && toppingOrderResult.length > 0 ?
                     <Toppingline

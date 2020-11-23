@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
 
 function StyledRadio(props) {
     const classes = useStyles(props);
-    debugger;
+    // debugger;
     return (
 
         <Radio
@@ -163,7 +163,7 @@ function Toppingmenuline(props) {
 
 
             {toppingApplyMenu && toppingApplyMenu.map((elem, idx) => {
-                debugger;
+                // debugger;
                 const g = (toppingMap[elem])[1];
                 const p = (toppingMap[elem])[2];
                 let fSize = (wordSize * 0.1) + 'rem'
@@ -235,7 +235,7 @@ function Toppingmenuline(props) {
                     const g = (toppingMap[elem])[1];
                     const gItemArr = toppingGroupMap[g];
                     const gn = g + itemId + itemSeq;
-                    debugger;
+                    // debugger;
                     return (
                         <Grid item xs="12" className={classes.content}>
                             <FormControl component="fieldset">

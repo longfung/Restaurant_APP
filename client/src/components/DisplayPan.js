@@ -31,7 +31,8 @@ function DisplayPan({ menu, setMenu }) {
     const shareContext = useContext(store);
 
     useEffect(() => {
-        // debugger;
+        debugger;
+        const plainText = editorState.getCurrentContent().getPlainText('\u0001');
         const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
         const val = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n').trim();
         if (val != null) {

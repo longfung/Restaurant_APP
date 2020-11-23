@@ -4,7 +4,7 @@ import { Col, Row } from "reactstrap";
 import { store } from "./Store";
 import access from "../util/access";
 import { useTranslation } from "react-i18next";
-import { FormControl } from "@material-ui/core";
+import { FormControl, MenuItem, FormControlLabel, InputLabel, Checkbox } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
 import {
   Button,
@@ -131,6 +131,8 @@ function Category(props) {
       locale: shareContext.state.restaurant.locale,
       entityId: access.Entity.category,
       category_description: node.category_description,
+      pid: node.pid,
+      is_top: node.is_top,
       restaurantId: node.restaurant_id
     };
     const promise1 = access.addCategory(data);
@@ -153,6 +155,8 @@ function Category(props) {
       locale: shareContext.state.restaurant.locale,
       entityId: access.Entity.category,
       category_description: node.category_description,
+      is_top: node.is_top,
+      pid: node.pid,
       restaurantId: node.restaurant_id
     };
 
@@ -208,6 +212,8 @@ function Category(props) {
       id: "",
       category_name: null,
       category_description: "",
+      is_top: false,
+      pid: "",
       restaurant_id: restaurantId
     })
     );
@@ -228,6 +234,14 @@ function Category(props) {
             category.category_description === undefined
             ? ""
             : category.category_description,
+          is_top: !category || category.is_top === null ||
+            category.is_top === undefined
+            ? false
+            : category.is_top,
+          pid: !category || category.pid === null ||
+            category.pid === undefined
+            ? 0
+            : category.pid,
           restaurant_id: restaurantId,
         }}
         validate={values => {
@@ -245,10 +259,10 @@ function Category(props) {
           }, 500);
         }}
       >
-        {({ submitForm, isSubmitting }) => (
+        {({ submitForm, isSubmitting, values, setFieldValue }) => (
           <Form>
             <Grid container spacing={2} >
-              <Grid item xs={12} sm={12} margin={0} padding={0}>
+              <Grid item xs={6} sm={6} margin={0} padding={0}>
                 <Box margin={0} padding={0}>
                   <Field
                     component={TextField}
@@ -256,6 +270,51 @@ function Category(props) {
                     type="text"
                     label={t("Category")}
                   />
+                </Box>
+              </Grid>
+              <Grid item xs={6} sm={2} margin={0} padding={0}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={values.is_top}
+                      onChange={() => setFieldValue("is_top", !values.is_top)}
+                      name="is_top"
+                      color="primary"
+                    />
+                  }
+                  label={t("IsTop")}
+                />
+
+              </Grid>
+              <Grid item xs={6} sm={4} margin={0} padding={0}>
+                <Box margin={1}>
+                  <FormControl>
+                    <InputLabel shrink={true} htmlFor="pCategory">
+                      {t("pCategory")}
+                    </InputLabel>
+                    <Field
+                      component={TextField}
+                      type="text"
+                      name="pid"
+                      select
+                      variant="standard"
+                      // helperText="Please select a category"
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: false,
+                      }}
+                      inputProps={{ name: 'pid', id: 'category' }}
+                    >
+                      {categoryList.map(option => (
+                        option.is_top ?
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.category_name}
+                          </MenuItem>
+                          :
+                          null
+                      ))}
+                    </Field>
+                  </FormControl>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={12} margin={0} padding={0}>

@@ -120,7 +120,7 @@ function OrderDetail(props) {
     if (!shareContext.state.customer) {
         props.history.push("/Customer");
     }
-    debugger;
+    // debugger;
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const menu = props.menu;
     const getImage = props.getImage;
@@ -165,7 +165,7 @@ function OrderDetail(props) {
             // );
             const newState = convertFromRaw(JSON.parse(menu.description));
             // const state = ContentState.createFromBlockArray(blocksFromHTML);
-            debugger;
+            // debugger;
             setEditorState(EditorState.createWithContent(newState));
         }
 

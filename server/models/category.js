@@ -7,7 +7,7 @@ class Category {
         const entityId = query.entityId;
         db.query(
             // "select * from menu where restaurant_id = $1 and category_id = $2",
-            "select c.id, c.category_name, c.category_description, c.restaurant_id, t.text as namet from category as c \
+            "select c.id, c.category_name, c.category_description, c.restaurant_id, c.pid, c.is_top, t.text as namet from category as c \
             left join entity_t as t on c.id = t.id and t.lang = $1 and t.entity_id = $2 where c.restaurant_id = $3",
             [locale, entityId, restaurantId],
             function (err, res) {
@@ -33,8 +33,8 @@ class Category {
 
     static put(node, callback) {
         // let idInt = parseint(obj.id);
-        db.query(`update category set category_name = '${node.category_name}', category_description = '${node.category_description}' 
-            where id = ${node.id};`, function (err, res) {
+        db.query(`update category set category_name = '${node.category_name}', category_description = '${node.category_description}', 
+            pid = '${node.pid}', is_top = '${node.is_top}' where id = ${node.id};`, function (err, res) {
             if (err)
                 return callback(err);
             db.query(
@@ -61,8 +61,8 @@ class Category {
     }
 
     static insert(node, callback) {
-        db.query('INSERT INTO category (category_name, category_description, restaurant_id) VALUES ($1, $2, $3) returning id',
-            [node.category_name, node.category_description, node.restaurantId],
+        db.query('INSERT INTO category (category_name, category_description, restaurant_id, pid, is_top) VALUES ($1, $2, $3, $4, $5) returning id',
+            [node.category_name, node.category_description, node.restaurantId, node.pid, node.is_top],
             (err, res) => {
                 // db.query('INSERT INTO restaurant (name VALUES ($1)', function (err, res) { 
                 if (err)

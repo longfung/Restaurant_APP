@@ -151,7 +151,7 @@ function OrderNav(props) {
     setMessage({ status: 400, msg: m });
     props.history.push("/Login");
   }
-  debugger;
+  // debugger;
   // const fetchMenuList = props.fetchMenuList;
   // const cartTotal = props.cartTotal;
   // const setIsOrder = props.setIsOrder;
