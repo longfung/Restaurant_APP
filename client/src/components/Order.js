@@ -1173,7 +1173,7 @@ function Order(props) {
                     />
                     : null}
                   {shareContext.state.menuFormat != 2 ?
-                    <Grid container spacing={1}>
+                    <Grid container spacing={0}>
                       {menuList && menuList.map((item, idx) =>
                         <Grid item xs={12} sm={4} key={idx}>
 

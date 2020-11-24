@@ -191,7 +191,7 @@ function OrderDetail(props) {
     }
 
     return (
-        <Grid container spaceing={1} alignItems="stretch" direction="column">
+        <Grid container spaceing={0} alignItems="stretch" direction="column">
 
             <Grid item xs={12} className={classes.content}>
                 <CardActionArea>
@@ -252,11 +252,13 @@ function OrderDetail(props) {
 
                 </CardContent>
             </Grid>
-            <Col xs={12} >
+            <div style={{ padding: 0, margin: 0 }}>
+                <Col xs={12}>
 
-                <DisplayPan menu={menu} />
+                    <DisplayPan menu={menu} />
 
-            </Col>
+                </Col>
+            </div>
 
 
 
