@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { store } from "./Store";
 import access from '../util/access';
 import { useTranslation } from 'react-i18next';
+import i18next from "i18next";
 // import Select, { components } from "react-select";
 import { isUndefined } from "axios/lib/utils";
 import { AppBar } from '@material-ui/core';
@@ -151,7 +152,7 @@ function OrderNav(props) {
     setMessage({ status: 400, msg: m });
     props.history.push("/Login");
   }
-  // debugger;
+  debugger;
   // const fetchMenuList = props.fetchMenuList;
   // const cartTotal = props.cartTotal;
   // const setIsOrder = props.setIsOrder;
@@ -387,6 +388,7 @@ function OrderNav(props) {
 
   const setLanguage = (e) => {
     shareContext.dispatch({ type: "setLocale", value: e.target.value });
+    i18next.changeLanguage(e.target.value);
   };
 
   return (

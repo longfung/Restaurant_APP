@@ -40,6 +40,7 @@
     "CreateUser": "創建用戶",
     "DishName": "單品名稱",
     "MenuList": "菜單列表",
+    "MenuNote": "菜單特注",
     "SelectCategory": "選擇一個類別",
     "UploadPicture": "上傳圖片",
     "Edit": "編輯",
@@ -82,5 +83,7 @@
     "E010": "必填",
     "E101": "密碼長度必須為4個字符或更長",
     "E102": "無效的電子郵件格式",
+    "NoComment": "暫無評論",
+    "FirstComment": "成為第一個發表評論的人",
     "dummy": ""
 }

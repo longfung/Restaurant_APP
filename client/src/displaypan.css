@@ -1,7 +1,8 @@
 div.DraftEditor-root {
-  min-height: 320px;
+
   position: absolute;
-  min-width: 220px;
+  min-width: 10rem;
+  min-height: 18rem;
   overflow-y: auto;
   margin: 0;
   padding: 0;
@@ -17,7 +18,9 @@ div.DisplayContainer {
   border: 1px solid  beige;
   margin: 0;
   padding: 0;
-  min-width: 220px;
-  min-height: 320px;
+  /* min-width: 220px;
+  min-height: 320px; */
+  min-width: 10rem;
+  min-height: 18rem;
   background-color: beige;
 }

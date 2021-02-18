@@ -40,6 +40,7 @@
     "Login": "登录",
     "CreateUser": "创建用户",
     "DishName": "单品名称",
+    "MenuNote": "菜单特注",
     "MenuList": "菜单列表",
     "SelectCategory": "选择一个类别",
     "UploadPicture": "上传图片",
@@ -82,5 +83,7 @@
     "E010": "必填",
     "E101": "密码长度必须为4个字符或更长",
     "E102": "无效的电子邮件格式",
+    "NoComment": "暂无评论",
+    "FirstComment": "成为第一个发表评论的人",
     "dummy": ""
 }

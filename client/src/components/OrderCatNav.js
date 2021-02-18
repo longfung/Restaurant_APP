@@ -203,78 +203,78 @@ function OrderCatNav(props) {
   const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
-    let isMounted = true;
-    setCategoryList([]);
-    const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
-    Promise.resolve(promise1)
-      // axios
-      //   .get("/api/category", { params: { restaurant_id: restaurantId } })
-      .then(res => {
-        if (isMounted) {
-          res.data.map(item =>
-            setCategoryList(prevState => [
-              ...prevState,
-              { id: item.id, label: item.namet == null ? item.category_name : item.namet }
-            ])
-          );
-          // debugger;
-          setCatOptions([])
-          let catOpt = res.data.map(item => ({
-            value: item.id,
-            label: item.namet == null ? item.category_name : item.namet
-          }));
-          const temp = t("AllCategory");
-          const tempObj = { value: 0, label: temp };
-          catOpt.unshift(tempObj);
-          // setCatValue(catOptions);
-          if (catValue == null || catValue == 0) {
-            setCatValue(0);
-          } else {
-            catOpt.forEach((elem) => {
-              if (elem.value == catValue.value) {
-                catValue.label = elem.label;
-              }
-            })
-          }
-          setCatOptions(catOpt);
-          // format options
-          let formatOpt = [];
-          setFormatOptions([])
-          const temp1 = t("CardFormat");
-          const temp1Obj = { value: 1, label: temp1 };
-          formatOpt.push(temp1Obj);
-          const temp2 = t("ListFormat");
-          const temp2Obj = { value: 2, label: temp2 };
-          formatOpt.push(temp2Obj);
-          // setCatValue(catOptions);
-          // if (formatValue == 1) {
-          //   setFormatValue(1);
-          // } else {
-          //   setFormatValue(2);
-          // }
-          setFormatOptions(formatOpt);
-          // Language switch
-          if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
-            const arr = shareContext.state.restaurant.support_locale.split(',')
-            let formatOpt = [];
-            setLangOptions([])
-            let langOpt = arr.map(lang => ({
-              value: lang,
-              label: t(lang)
-            }));
-            // setCatValue(catOptions);
-            const temp3 = t(shareContext.state.locale);
-            const temp3Obj = { value: shareContext.state.locale, label: temp3 };
-            setLangValue(shareContext.state.locale);
-            setLangOptions(langOpt);
-          }
-        }
-      })
-      .catch(error => console.log(error))
-      .finally(() => {
-        isMounted = false;
-      });
-    return () => isMounted = false;
+    // let isMounted = true;
+    // setCategoryList([]);
+    // const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
+    // Promise.resolve(promise1)
+    //   // axios
+    //   //   .get("/api/category", { params: { restaurant_id: restaurantId } })
+    //   .then(res => {
+    //     if (isMounted) {
+    //       res.data.map(item =>
+    //         setCategoryList(prevState => [
+    //           ...prevState,
+    //           { id: item.id, label: item.namet == null ? item.category_name : item.namet }
+    //         ])
+    //       );
+    //       // debugger;
+    //       setCatOptions([])
+    //       let catOpt = res.data.map(item => ({
+    //         value: item.id,
+    //         label: item.namet == null ? item.category_name : item.namet
+    //       }));
+    //       const temp = t("AllCategory");
+    //       const tempObj = { value: 0, label: temp };
+    //       catOpt.unshift(tempObj);
+    //       // setCatValue(catOptions);
+    //       if (catValue == null || catValue == 0) {
+    //         setCatValue(0);
+    //       } else {
+    //         catOpt.forEach((elem) => {
+    //           if (elem.value == catValue.value) {
+    //             catValue.label = elem.label;
+    //           }
+    //         })
+    //       }
+    //       setCatOptions(catOpt);
+    //       // format options
+    //       let formatOpt = [];
+    //       setFormatOptions([])
+    //       const temp1 = t("CardFormat");
+    //       const temp1Obj = { value: 1, label: temp1 };
+    //       formatOpt.push(temp1Obj);
+    //       const temp2 = t("ListFormat");
+    //       const temp2Obj = { value: 2, label: temp2 };
+    //       formatOpt.push(temp2Obj);
+    //       // setCatValue(catOptions);
+    //       // if (formatValue == 1) {
+    //       //   setFormatValue(1);
+    //       // } else {
+    //       //   setFormatValue(2);
+    //       // }
+    //       setFormatOptions(formatOpt);
+    //       // Language switch
+    //       if (shareContext.state.restaurant && shareContext.state.restaurant.support_locale) {
+    //         const arr = shareContext.state.restaurant.support_locale.split(',')
+    //         let formatOpt = [];
+    //         setLangOptions([])
+    //         let langOpt = arr.map(lang => ({
+    //           value: lang,
+    //           label: t(lang)
+    //         }));
+    //         // setCatValue(catOptions);
+    //         const temp3 = t(shareContext.state.locale);
+    //         const temp3Obj = { value: shareContext.state.locale, label: temp3 };
+    //         setLangValue(shareContext.state.locale);
+    //         setLangOptions(langOpt);
+    //       }
+    //     }
+    //   })
+    //   .catch(error => console.log(error))
+    //   .finally(() => {
+    //     isMounted = false;
+    //   });
+    // return () => isMounted = false;
   }, [shareContext.state.locale]);
 
   useEffect(() => {
@@ -425,7 +425,7 @@ function OrderCatNav(props) {
   };
 
   const handleChange = (event, newValue) => {
-    debugger;
+    // debugger;
     setTabValue(newValue);
     setTopCategory(topCategoryList[newValue].id);
   };

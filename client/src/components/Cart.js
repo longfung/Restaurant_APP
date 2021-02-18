@@ -70,6 +70,28 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: theme.spacing(0),
         // display: 'inline-block',
     },
+    priceContent: {
+        // backgroundColor: 'primary',
+        color: theme.palette.red.main,
+        // fontStyle: 'oblique',
+        fontSize: "1.2rem",
+        fontWeight: 500,
+        padding: 3,
+        textAlign: 'right',
+        // textAlign: "left",
+        // fontWeight: 'fontWeightBold',
+    },
+    discountContent: {
+        // backgroundColor: 'primary',
+        color: theme.palette.red.main,
+        // fontStyle: 'oblique',
+        fontSize: "0.8rem",
+        fontWeight: 500,
+        padding: 3,
+        textAlign: 'right',
+        // textAlign: "left",
+        // fontWeight: 'fontWeightBold',
+    },
     icon: {
         fontSize: 'small',
         color: theme.palette.neutral.black,
@@ -189,6 +211,7 @@ function Cart(props) {
             {
                 cartList && cartList.map((elem, idx) => {
                     tSum = 0;
+                    debugger;
                     return (
                         <div key={idx}>
 
@@ -241,10 +264,12 @@ function Cart(props) {
                                         : null}
                                 </Grid>
                                 <Grid item xs={2}>
-                                    ${elem.price}
-                        &nbsp;
-
-                        {elem.size == 1 && elem.isMultiple == true ? t("S") : null}
+                                    ${parseFloat(elem.final_price).toFixed(2)} &nbsp;&nbsp;
+                                    {elem.discount != 0 ? <Typography display="inline" className={classes.discountContent} style={{ textDecorationLine: 'line-through' }}>
+                                        <b>[</b>&nbsp;${parseFloat(elem.price).toFixed(2)}<b>&nbsp;]</b>
+                                    </Typography>
+                                        : null}
+                                    {elem.size == 1 && elem.isMultiple == true ? t("S") : null}
                                     {elem.size == 2 && elem.isMultiple == true ? t("M") : null}
                                     {elem.size == 3 && elem.isMultiple == true ? t("L") : null}
                                     {elem.size == 4 && elem.isMultiple == true ? t("X") : null}
@@ -254,7 +279,7 @@ function Cart(props) {
                                     {elem.quantity}
                                 </Grid>
                                 <Grid item xs={1}>
-                                    ${(elem.price * elem.quantity).toFixed(2)}
+                                    ${(elem.final_price * elem.quantity).toFixed(2)}
                                     {tSum !== 0 ?
                                         <Grid xs="12" >
                                             <Typography className={classes.textDescContent} >

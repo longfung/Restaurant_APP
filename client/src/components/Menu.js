@@ -182,6 +182,7 @@ function Menu(props) {
     const [imageName, setImageName] = useState("Choose Image");
     const [categoryList, setCategoryList] = useState([]);
     const [toppingList, setToppingList] = useState([]);
+    const [discountMethod, setDiscountMethod] = useState([]);
     const [toppingSelected, setToppingSelected] = useState([])
     const [toppingMap, setToppingMap] = useState({});
     const [category, setCategory] = useState({});
@@ -204,6 +205,7 @@ function Menu(props) {
         getMenuList();
         getCategoryList();
         getToppingList();
+        arrangeDiscountMethod();
     }, [shareContext.state.locale]);
 
     const getImage = async (imageName) => {
@@ -239,7 +241,7 @@ function Menu(props) {
     };
 
     const handleSelector = (e) => {
-        debugger;
+        // debugger;
         e.preventDefault();
         if (e.target.files.length == 0) return;
         var image = e.target.files[0];
@@ -343,7 +345,7 @@ function Menu(props) {
                 }
             }
         });
-        debugger;
+        // debugger;
         var filtered = options.filter(function (elem) {
             return elem != undefined;
         });
@@ -351,6 +353,11 @@ function Menu(props) {
         // setToppingList(prev => [...prev, filtered]);
         // setToppingList([{ value: 1, label: "One" }, { value: 2, label: "Two" }])
         setToppingMap(m);
+    }
+
+    const arrangeDiscountMethod = () => {
+        setToppingList([]);
+        setDiscountMethod([{ value: 1, label: 'Fixed Amount' }, { value: 2, label: 'Percent Discount' }])
     }
 
     // upload to client/public folder, not used now, using firebase instead
@@ -563,13 +570,17 @@ function Menu(props) {
                 g1.push(eId);
         })
         g1 = g1.concat(g0);
-        // debugger;
+        debugger;
         // toppingSelected.map(elem => {
         //     temp == '' ? temp += elem.value : temp = temp + ',' + elem.value;
         // });
         let data = {
             id: menu.id,
             name: obj.name,
+            note: obj.note,
+            discount: obj.discount,
+            discount_method: obj.discount_method,
+            is_new: obj.is_new,
             locale: shareContext.state.locale,
             description: shareContext.state.menuDescription,
             entityId: access.Entity.menu,
@@ -600,6 +611,10 @@ function Menu(props) {
             id: obj.id,
             name: obj.name_t == null ? obj.name : obj.name_t,
             description: obj.description,
+            note: obj.note,
+            discount: obj.discount,
+            discount_method: obj.discount_method,
+            is_new: obj.is_new,
             locale: shareContext.state.restaurant.locale,
             price_s: obj.price_s == null ? 0 : obj.price_s,
             price_m: obj.price_m == null ? 0 : obj.price_m,
@@ -620,7 +635,7 @@ function Menu(props) {
     };
 
     const buildToppingSelected = (selected) => {
-        debugger;
+        // debugger;
         if (selected) {
             // const arr = selected.split(',').map(str => parseInt(str));
             // const options = arr.map(v => ({
@@ -654,6 +669,10 @@ function Menu(props) {
             id: "",
             name: "",
             description: menu.description == "" ? " " : "",
+            note: "",
+            discount: 0,
+            discount_method: 1,
+            is_new: true,
             locale: shareContext.state.locale,
             price_s: 0,
             price_m: 0,
@@ -688,7 +707,7 @@ function Menu(props) {
     }
 
     const handleChange = (event, values) => {
-        debugger;
+        // debugger;
         setToppingSelected(event.target.value);
         values.selectedTopping = event.target.value;
     };
@@ -708,6 +727,22 @@ function Menu(props) {
                         menu.description === undefined
                         ? ""
                         : menu.description,
+                    note: menu.note === null ||
+                        menu.note === undefined
+                        ? ""
+                        : menu.note,
+                    discount: menu.discount === null ||
+                        menu.discount === undefined
+                        ? 0
+                        : menu.discount,
+                    discount_method: menu.discount_method === null ||
+                        menu.discount_method === undefined
+                        ? 1
+                        : menu.discount_method,
+                    is_new: menu.is_new === null ||
+                        menu.is_new === undefined
+                        ? ""
+                        : menu.is_new,
                     price_s: menu.price_s === null ||
                         menu.price_s === undefined
                         ? 0
@@ -778,7 +813,7 @@ function Menu(props) {
                 {({ submitForm, isSubmitting, values, setFieldValue }) => (
                     <Form>
                         <Grid container spacing={0} >
-                            <Grid item xs={12} sm={6} margin={0} padding={0}>
+                            <Grid item xs={12} sm={4} margin={0} padding={0}>
                                 <Box margin={0} padding={0}>
                                     <Field
                                         component={TextField}
@@ -788,7 +823,7 @@ function Menu(props) {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={6} margin={0} padding={0}>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
                                 <Box margin={1}>
                                     <FormControl>
                                         <InputLabel shrink={true} htmlFor="category">
@@ -816,7 +851,17 @@ function Menu(props) {
                                     </FormControl>
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                            <Grid item xs={12} sm={6} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"note"}
+                                        type="text"
+                                        label={t("Menu_Note")}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
                                 <Box margin={0} padding={0}>
                                     <Field
                                         component={TextField}
@@ -826,7 +871,7 @@ function Menu(props) {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
                                 <Box margin={0} padding={0}>
                                     <Field
                                         component={TextField}
@@ -836,7 +881,7 @@ function Menu(props) {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
                                 <Box margin={0} padding={0}>
                                     <Field
                                         component={TextField}
@@ -846,7 +891,7 @@ function Menu(props) {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={3} margin={0} padding={0}>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
                                 <Box margin={0} padding={0}>
                                     <Field
                                         component={TextField}
@@ -856,7 +901,44 @@ function Menu(props) {
                                     />
                                 </Box>
                             </Grid>
-
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
+                                <Box margin={1}>
+                                    <FormControl>
+                                        <InputLabel shrink={true} htmlFor="category">
+                                            {t("Discount_Method")}
+                                        </InputLabel>
+                                        <Field
+                                            component={TextField}
+                                            type="text"
+                                            name="discount_method"
+                                            select
+                                            variant="standard"
+                                            // helperText="Please select a category"
+                                            margin="normal"
+                                            InputLabelProps={{
+                                                shrink: false,
+                                            }}
+                                            inputProps={{ name: 'discount_method', id: 'discount_method' }}
+                                        >
+                                            {discountMethod.map(option => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Field>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={2} margin={0} padding={0}>
+                                <Box margin={0} padding={0}>
+                                    <Field
+                                        component={TextField}
+                                        name={"discount"}
+                                        type="text"
+                                        label={t("Discount")}
+                                    />
+                                </Box>
+                            </Grid>
                             <Grid item xs={8} sm={3} margin={0} padding={0}>
                                 <Card className={classes.mediaRoot}>
                                     {menu && (menu.image_path != '' || image2 != '') ?
@@ -913,7 +995,7 @@ function Menu(props) {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6} sm={4} margin={0} padding={0}>
+                            <Grid item xs={6} sm={2} margin={0} padding={0}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -925,9 +1007,20 @@ function Menu(props) {
                                     }
                                     label={t("Available")}
                                 />
-
                             </Grid>
-
+                            <Grid item xs={6} sm={2} margin={0} padding={0}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={values.is_new}
+                                            onChange={() => setFieldValue("is_new", !values.is_new)}
+                                            name="is_new"
+                                            color="primary"
+                                        />
+                                    }
+                                    label={t("is_new")}
+                                />
+                            </Grid>
                             {isSubmitting && <LinearProgress />}
                             <Grid item xs={6} sm={2} >
                                 <Button

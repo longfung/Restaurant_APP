@@ -227,11 +227,13 @@ function EntityT(props) {
     const switchLanguage = (elem) => {
         setLang(elem);
         getMenuTList(elem, entity);
+        initialMenuT();
     }
 
     const switchEntity = (elem) => {
         setEntity(elem);
         getMenuTList(lang, elem);
+        initialMenuT();
     }
 
 
@@ -301,6 +303,7 @@ function EntityT(props) {
                                 >
                                     {t("MenuDesc")}
                                 </Button>
+
                                 <Button
                                     variant="contained"
                                     className={`${entity == 4 ? classes.buttonA : classes.buttonD}`}
@@ -308,6 +311,14 @@ function EntityT(props) {
                                     onClick={() => switchEntity(4)}
                                 >
                                     {t("TopppingDesc")}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className={`${entity == 5 ? classes.buttonA : classes.buttonD}`}
+                                    disabled={isSubmitting}
+                                    onClick={() => switchEntity(5)}
+                                >
+                                    {t("MenuNote")}
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={6} padding={0}>
@@ -474,7 +485,8 @@ function EntityT(props) {
                                                 {entity == 3 ?
                                                     item.description ? item.description.substring(0, 24) : null
                                                     :
-                                                    (item.name)
+                                                    item.name
+
                                                 }
                                             </Typography>
                                         </TableCell>

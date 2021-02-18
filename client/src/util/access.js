@@ -14,7 +14,8 @@ const Entity = {
   menu: 1,
   category: 2,
   desc: 3,
-  topping: 4
+  topping: 4,
+  note: 5,
 }
 
 const Status = {
@@ -142,7 +143,8 @@ async function deleteMenuById(id) {
 }
 
 async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
-  let data = { restaurantId: restaurantId, locale: lang, entityId: entityId };
+  const l_lang = lang == null ? 'en' : lang;
+  let data = { restaurantId: restaurantId, locale: l_lang, entityId: entityId };
   if (entityId === Entity.category)
     return await axios.get(apiUrl + "/api/entityT/category", { params: data });
   else if (entityId === Entity.menu)
@@ -151,6 +153,8 @@ async function fetchEntityTByRestaurantId(restaurantId, lang, entityId) {
     return await axios.get(apiUrl + "/api/entityT/desc", { params: data });
   else if (entityId === Entity.topping)
     return await axios.get(apiUrl + "/api/entityT/topping", { params: data });
+  else if (entityId === Entity.note)
+    return await axios.get(apiUrl + "/api/entityT/note", { params: data });
 }
 
 async function addEntityT(entityT) {

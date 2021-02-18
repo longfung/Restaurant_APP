@@ -72,6 +72,21 @@ router.get("/topping", (req, res) => {
   });
 });
 
+router.get("/note", (req, res) => {
+  console.log("in NoteT Get");
+
+  var node = req.query;
+
+  EntityT.retrieveNoteTByRestaurant(node, (err, menu) => {
+
+    if (err) return res.status(404).send(err);;
+    const nMenu = menu.filter(item => item.name != null);
+    // const nMenu = menu;
+    console.log(nMenu);
+    return res.json(nMenu);
+  });
+});
+
 router.post("/", (req, res) => {
   // var name = req.body.name;
   // if(req.files == null) {

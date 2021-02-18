@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 // import { Editor, EditorState } from 'draft-js';
 import Draft from 'draft-js';
 import { store } from "./Store";
-import '../index.css';
+import '../editpan.css';
 import {
     Form,
     Input,
@@ -121,6 +121,7 @@ function Editpan({ menu, setMenu }) {
     }
 
     return (
+        // <div className="<DisplayContainer">"
         <div className="ToolbarContainer">
 
 
@@ -149,6 +150,7 @@ function Editpan({ menu, setMenu }) {
                 </div>
             </div>
         </div>
+        // </div>
     );
 }
 

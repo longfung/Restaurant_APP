@@ -61,6 +61,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Rating from '@material-ui/lab/Rating';
 import DisplayDesc from './DisplayDesc';
+import FiberNewIcon from '@material-ui/icons/FiberNew';
 
 import {
 
@@ -147,6 +148,17 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
+    fontSize: "1.2rem",
+    fontWeight: 500,
+    padding: 3,
+    textAlign: 'right',
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  discountContent: {
+    // backgroundColor: 'primary',
+    color: theme.palette.neutral.black,
+    // fontStyle: 'oblique',
     fontSize: "0.8rem",
     fontWeight: 500,
     padding: 3,
@@ -168,7 +180,7 @@ const useStyles = makeStyles(theme => ({
   priceIcon: {
     verticalAlign: 'top',
     display: 'inline-flex',
-    fontSize: '1.3rem'
+    fontSize: '1.8rem'
   },
   catTitleContent: {
     color: theme.palette.neutral.white,
@@ -196,7 +208,8 @@ const useStyles = makeStyles(theme => ({
   },
   toppingContent: {
     color: theme.palette.neutral.black,
-    fontSize: "0.6rem",
+    // fontSize: "0.6rem",
+    fontSize: props => 0.1 * props.wordSize + 'rem',
     fontWeight: 500,
     // verticalAlign: 'center',
     // textAlign: 'right',
@@ -221,12 +234,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function ShowDesc(props) {
-  debugger;
+  // debugger;
   const classes = useStyles(props);
   const item = props.item;
   return (
     <Typography component="p" className={classes.descContent} wrap="true" >
-      <DisplayDesc menu={item} />
+      {/* <DisplayNote menu={item} /> */}
+      {item.note_t == null ? item.note : item.note_t}
 
     </Typography>
   );
@@ -235,9 +249,31 @@ function ShowDesc(props) {
 function ShowName(props) {
   const classes = useStyles(props);
   return (
-    <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
-      {props.name}
-    </Typography>
+    <div>
+      {
+        props.is_new ?
+          <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+            <FiberNewIcon fontSize="large" /> {props.name}
+          </Typography>
+          :
+          <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+            {props.name}
+          </Typography>
+      }
+    </div>
+  );
+}
+
+function ShowTopping(props) {
+  const classes = useStyles(props);
+  return (
+    <div>
+      {
+        <Typography variant="h6" component="h2" className={classes.toppingContent} noWrap>
+          {props.fetchToppingNameList(props.name)}
+        </Typography>
+      }
+    </div>
   );
 }
 
@@ -305,7 +341,7 @@ function OrderHome(props) {
     // axios
     //   .get("/api/category", { params: { restaurant_id: restaurantId } })
     let isMounted = true;
-    const promise1 = access.fetchCategoryByRestaurantId(restaurantId);
+    const promise1 = access.fetchCategoryByRestaurantId(restaurantId, shareContext.state.locale);
     Promise.resolve(promise1)
       .then((res) => {
         if (isMounted) {
@@ -318,9 +354,14 @@ function OrderHome(props) {
               tmpMList.push(tmpCat);
             else
               tmpCList.push(tmpCat);
+            // update category label is exist
+            if (category && category.id == tmpCat.id) {
+              setCategory({ ...category, label: tmpCat.label });
+            }
           })
           setCategoryList(tmpCList);
           setTopCategoryList(tmpMList);
+
           // debugger;
           // res.data.map((item) =>
           //   setCategoryList((prevState) => [
@@ -335,7 +376,7 @@ function OrderHome(props) {
       }).finally(() => {
         isMounted = false;
       });
-
+    // debugger;
     getToppingList();
     return () => isMounted = false;
   }, [shareContext.state.locale]);
@@ -394,6 +435,16 @@ function OrderHome(props) {
             item['isMultiple'] = cnt > 1 ? true : false;
             item['toppingArray'] = item.topping != null ? item.topping.split(',').map(e => parseInt(e)) : [];
             const tList = item.topping && item.topping.length ? setupToppingApplyMenu(item) : [];
+            if (item.discount > 0) {
+              item['final_price_s'] =
+                item.discount_method === 2 ? item.price_s - (item.price_s * item.discount / 100) : item.price_s - item.discount;
+              item['final_price_m'] =
+                item.discount_method === 2 ? item.price_m - (item.price_m * item.discount / 100) : item.price_m - item.discount;
+              item['final_price_l'] =
+                item.discount_method === 2 ? item.price_s - (item.price_l * item.discount / 100) : item.price_l - item.discount;
+              item['final_price_x'] =
+                item.discount_method === 2 ? item.price_x - (item.price_x * item.discount / 100) : item.price_x - item.discount;
+            }
             // debugger;
             item['hasTopping'] = tList && tList.length ? true : false;
             item['toppingResult'] = tList && tList.length ? tList[0] : null;
@@ -583,7 +634,7 @@ function OrderHome(props) {
     return rList ? rList.join(', ') : null;
   }
 
-  const addToOrder = (event, item, price, size) => {
+  const addToOrder = (event, item, price, final_price, size) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -608,6 +659,9 @@ function OrderHome(props) {
         toppingResult: item.toppingResult,
         isMultiple: item.isMultiple,
         price: price,
+        final_price: final_price && final_price != 0 ? final_price : price,
+        discount_method: item.discount_method,
+        discount: item.discount,
         size: size,
         quantity: 1,
         status: 1,
@@ -638,7 +692,7 @@ function OrderHome(props) {
     let sum = 0;
     for (let i = 0; i < cartList.length; i++) {
       if (cartList[i].quantity !== 0) {
-        sum += cartList[i].quantity * cartList[i].price;
+        sum += cartList[i].quantity * cartList[i].final_price;
       }
       // calculate topping is added and priced
       const resultArr = cartList[i].toppingResult;
@@ -909,15 +963,31 @@ function OrderHome(props) {
       });;
   }
 
-
-  const dishPrice = (item, price, size, symbol) => {
+  const dishPrice = (item, price, final_price, size, symbol) => {
     return (
       <Grid container spacing={0} >
-        <Grid item xs={6} className={classes.textLeft}>
+        <Grid item xs={9} className={classes.textLeft}>
           {/* <Box className={classes.priceBox}> */}
-          <Typography display="inline" className={classes.priceContent}>
+          {item.discount && item.discount != 0 ?
+            <div>
+              <Typography display="inline" className={classes.priceContent} style={{ textDecorationLine: 'line-through' }}>
+                ${price}
+              </Typography>
+              <Typography display="inline" className={classes.discountContent} >
+                <b>[</b>&nbsp;{item.discount}{item.discount_method === 2 ? '% ' : null}off<b>&nbsp;]</b>
+              </Typography>
+              <Typography display="inline" className={classes.priceContent} >
+                ${final_price.toFixed(2)}
+              </Typography>
+            </div>
+            :
+            <Typography display="inline" className={classes.priceContent}>
+              ${price}
+            </Typography>
+          }
+          {/* <Typography display="inline" className={classes.priceContent}>
             ${price}
-          </Typography>
+          </Typography> */}
           {/* </Box> */}
           <Typography display="inline" className={classes.sizeContent}>
 
@@ -926,11 +996,11 @@ function OrderHome(props) {
           </Typography >
         </Grid>
         {/* &nbsp; */}
-        <Grid item xs={6} className={classes.textLeft}>
+        <Grid item xs={3} className={classes.textLeft}>
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
-          <Link to='#!' onClick={(e) => addToOrder(e, item, price, size)} >
+          <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
             <Box component='span' mt={-1}>
               <AddCircleOutlineIcon className={classes.priceIcon} />
             </Box>
@@ -943,7 +1013,7 @@ function OrderHome(props) {
             </Tooltip>
           </IconButton> */}
           <Typography className={classes.priceContent} display="inline">
-            {getQuantity(item, size)}
+            &nbsp;{getQuantity(item, size)}&nbsp;
           </Typography>
 
           {isQuantity(item, size) ? (
@@ -1015,7 +1085,7 @@ function OrderHome(props) {
               <Grid container spacing={0}>
                 <Grid item xs={7}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
-                    <ShowName wordSize={wordSize} name={item.name} />
+                    <ShowName wordSize={wordSize} name={item.name} is_new={item.is_new} />
                     {/* <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
                       {item.name}
                     </Typography> */}
@@ -1043,9 +1113,10 @@ function OrderHome(props) {
 
                       <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textRight}>
                         <Link to='#!' onClick={(e) => setToComment({ isComment: true, menu: item })} >
-                          <Tooltip title="Be first one to commnet" aria-label="Toppings">
+                          <Tooltip title={t("FirstComment")} aria-label="Toppings">
                             <Typography variant="caption" component="h2" className={classes.content} noWrap>
-                              No Commnet yet</Typography>
+                              {t("NoComment")}
+                            </Typography>
                           </Tooltip>
 
                         </Link>
@@ -1053,7 +1124,7 @@ function OrderHome(props) {
                   }
 
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={10}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
                     {/* <Typography component="p" className={classes.descContent} wrap="true">
                       // This is a description of menu and length is limited to 128 chars.
@@ -1074,30 +1145,33 @@ function OrderHome(props) {
                         }
                       })
                       :
-                      <Typography variant="caption" className={classes.toppingContent}>
+                      <Typography variant="h6" className={classes.toppingContent}>
                         {item.defaultTopping && item.defaultTopping.length ?
-                          fetchToppingNameList(item.defaultTopping)
+                          // fetchToppingNameList(item.defaultTopping)
+                          <ShowTopping wordSize={wordSize} name={item.defaultTopping} fetchToppingNameList={fetchToppingNameList} />
                           :
                           null}
+
+
                       </Typography>
                     }
                   </Box>
 
 
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={10}>
                   {!category ?
-                    <Typography variant="body2" color="textSecondary" component="p" className={classes.textLeft}>
-                      $ {item.price_s}
+                    <Typography variant="body2" color="textSecondary" component="p" >
+                      {item.price_s > 0 ? dishPrice(item, item.price_s, item.final_price_s, 1, 'S') : null}
                     </Typography>
                     :
 
 
-                    <Typography variant="body2" color="textSecondary" component="div" className={classes.textLeft}>
-                      {item.price_s > 0 ? dishPrice(item, item.price_s, 1, 'S') : null}
-                      {item.price_m > 0 ? dishPrice(item, item.price_m, 2, 'M') : null}
-                      {item.price_l > 0 ? dishPrice(item, item.price_l, 3, 'L') : null}
-                      {item.price_x > 0 ? dishPrice(item, item.price_x, 4, 'X') : null}
+                    <Typography variant="body2" color="textSecondary" component="div" >
+                      {item.price_s > 0 ? dishPrice(item, item.price_s, item.final_price_s, 1, 'S') : null}
+                      {item.price_m > 0 ? dishPrice(item, item.price_m, item.final_price_m, 2, 'M') : null}
+                      {item.price_l > 0 ? dishPrice(item, item.price_l, item.final_price_l, 3, 'L') : null}
+                      {item.price_x > 0 ? dishPrice(item, item.price_x, item.final_price_x, 4, 'X') : null}
                     </Typography>
                   }
 
@@ -1246,6 +1320,7 @@ function OrderHome(props) {
   };
 
   const fetchCategoryName = (id) => {
+    // debugger;
     if (id !== catId) {
       catId = id;
       let catName;

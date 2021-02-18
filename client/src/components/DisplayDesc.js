@@ -11,8 +11,11 @@ function DisplayDesc({ menu }) {
 
     useEffect(() => {
         var tmpText = editorState.getCurrentContent().getPlainText('\u0001');
-        tmpText = tmpText.replace(/[^\x20-\x7E]/g, '. ');
-        setPlainText(tmpText.substring(1, 124) + '....');
+        // tmpText = tmpText.replace(/[^\x20-\x7E]/g, '. ');
+        tmpText = tmpText.replace(/[\u0001-\u0002]/g, '. ');
+        if (tmpText.charAt(0) == '.')
+            tmpText = tmpText.substring(2);
+        setPlainText(tmpText.substring(0, 124) + '....');
     }, [editorState]);
 
     useEffect(() => {

@@ -41,6 +41,7 @@
     "CreateUser": "Create User",
     "DishName": "Item Name",
     "MenuList": "Menu List",
+    "MenuNote": "Menu Note",
     "SelectCategory": "Select a Category",
     "UploadPicture": "Upload Picture",
     "Edit": "Edit",
@@ -98,5 +99,7 @@
     "E202": "State code must be 2 characters",
     "NoTopping": "No Topping options",
     "ChooseTopping": "Please choose topping options",
+    "NoComment": "No Commnet yet",
+    "FirstComment": "Be first one to commnet",
     "dummy": ""
 }
