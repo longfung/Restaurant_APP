@@ -150,7 +150,7 @@ const useStyles = makeStyles(theme => ({
     // fontStyle: 'oblique',
     fontSize: "1.0rem",
     fontWeight: 500,
-    padding: 3,
+    padding: 1,
     textAlign: 'right',
     // textAlign: "left",
     // fontWeight: 'fontWeightBold',
@@ -1012,9 +1012,9 @@ function OrderHome(props) {
               <AddCircleOutlineIcon />
             </Tooltip>
           </IconButton> */}
-
-          {getQuantity(item, size)}
-
+          <Typography className={classes.priceContent} display="inline">
+            {getQuantity(item, size)}
+          </Typography>
 
           {isQuantity(item, size) ? (
             // <Link
