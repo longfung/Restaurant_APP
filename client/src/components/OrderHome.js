@@ -148,7 +148,18 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
-    fontSize: "1.5rem",
+    fontSize: "1.0rem",
+    fontWeight: 500,
+    padding: 3,
+    textAlign: 'right',
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  quantityContent: {
+    // backgroundColor: 'primary',
+    color: theme.palette.red.main,
+    // fontStyle: 'oblique',
+    fontSize: "1.2rem",
     fontWeight: 500,
     padding: 3,
     textAlign: 'right',
@@ -1012,7 +1023,7 @@ function OrderHome(props) {
               <AddCircleOutlineIcon />
             </Tooltip>
           </IconButton> */}
-          <Typography className={classes.priceContent} display="inline">
+          <Typography className={classes.quantityContent} display="inline">
             &nbsp;{getQuantity(item, size)}&nbsp;
           </Typography>
 
