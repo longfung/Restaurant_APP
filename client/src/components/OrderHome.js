@@ -1002,9 +1002,9 @@ function OrderHome(props) {
           {/* <Grid item xs={3} sm={3}> */}
           <Typography className={classes.priceContent} display="inline">
             <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-              <Box component='span' mt={-1}>
-                <AddCircleOutlineIcon className={classes.priceIcon} />
-              </Box>
+
+              <AddCircleOutlineIcon className={classes.priceIcon} />
+
             </Link>
             {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
