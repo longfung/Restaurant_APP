@@ -148,7 +148,7 @@ const useStyles = makeStyles(theme => ({
     // backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
-    fontSize: "1.0rem",
+    fontSize: "1.5rem",
     fontWeight: 500,
     padding: 3,
     textAlign: 'right',
@@ -1001,9 +1001,9 @@ function OrderHome(props) {
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
           <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-
-            <AddCircleOutlineIcon className={classes.priceIcon} />
-
+            <Box component='span' mt={-1}>
+              <AddCircleOutlineIcon className={classes.priceIcon} />
+            </Box>
           </Link>
           {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
@@ -1012,9 +1012,9 @@ function OrderHome(props) {
               <AddCircleOutlineIcon />
             </Tooltip>
           </IconButton> */}
-
-&nbsp;{getQuantity(item, size)}&nbsp;
-
+          <Typography className={classes.priceContent} display="inline">
+            &nbsp;{getQuantity(item, size)}&nbsp;
+          </Typography>
 
           {isQuantity(item, size) ? (
             // <Link
@@ -1030,7 +1030,7 @@ function OrderHome(props) {
             //   </Tooltip>
             // </IconButton>
 
-            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)}>
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
               <RemoveCircleOutlineIcon className={classes.priceIcon} />
             </Link>
           ) : null}
@@ -1124,7 +1124,7 @@ function OrderHome(props) {
                   }
 
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={12}>
                   <Box component="fieldset" mb={0} borderColor="transparent" className={classes.textLeft}>
                     {/* <Typography component="p" className={classes.descContent} wrap="true">
                       // This is a description of menu and length is limited to 128 chars.
@@ -1159,7 +1159,7 @@ function OrderHome(props) {
 
 
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={12}>
                   {!category ?
                     <Typography variant="body2" color="textSecondary" component="p" >
                       {item.price_s > 0 ? dishPrice(item, item.price_s, item.final_price_s, 1, 'S') : null}
