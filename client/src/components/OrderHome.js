@@ -1031,7 +1031,7 @@ function OrderHome(props) {
               //   </Tooltip>
               // </IconButton>
 
-              <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
+              <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
                 <RemoveCircleOutlineIcon className={classes.priceIcon} />
               </Link>
             ) : null}
