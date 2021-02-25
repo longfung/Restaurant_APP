@@ -1000,42 +1000,41 @@ function OrderHome(props) {
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
-          <Typography className={classes.priceContent} display="inline">
-            <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-
+          <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
+            <Box component='span' mt={-1}>
               <AddCircleOutlineIcon className={classes.priceIcon} />
+            </Box>
+          </Link>
+          {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
-            </Link>
-            {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
-
-            {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
+          {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
             <Tooltip title={t("Add")} arror>
               <AddCircleOutlineIcon />
             </Tooltip>
           </IconButton> */}
 
-            {getQuantity(item, size)}
+            &nbsp;{getQuantity(item, size)}&nbsp;
 
 
-            {isQuantity(item, size) ? (
-              // <Link
-              //   to="#!"
-              //   onClick={(e) => removeFromOrder(e, item, size)}
-              //   className=" flow-right"
-              // >
-              //   <MdRemoveCircle color="Primary" size="2rem" />
-              // </Link>
-              // <IconButton edge="end" aria-label="delete" onClick={(e) => removeFromOrder(e, item, price, size)} >
-              //   <Tooltip title={t("Subtract")} arror>
-              //     <RemoveCircleOutlineIcon />
-              //   </Tooltip>
-              // </IconButton>
+          {isQuantity(item, size) ? (
+            // <Link
+            //   to="#!"
+            //   onClick={(e) => removeFromOrder(e, item, size)}
+            //   className=" flow-right"
+            // >
+            //   <MdRemoveCircle color="Primary" size="2rem" />
+            // </Link>
+            // <IconButton edge="end" aria-label="delete" onClick={(e) => removeFromOrder(e, item, price, size)} >
+            //   <Tooltip title={t("Subtract")} arror>
+            //     <RemoveCircleOutlineIcon />
+            //   </Tooltip>
+            // </IconButton>
 
-              <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
-                <RemoveCircleOutlineIcon className={classes.priceIcon} />
-              </Link>
-            ) : null}
-          </Typography>
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
+              <RemoveCircleOutlineIcon className={classes.priceIcon} />
+            </Link>
+          ) : null}
+
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
           {/* <Typography className={classes.quantityBox}>
