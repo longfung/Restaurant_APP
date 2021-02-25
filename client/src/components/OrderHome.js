@@ -1001,9 +1001,9 @@ function OrderHome(props) {
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
           <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-            <Box component='span' mt={-1}>
-              <AddCircleOutlineIcon className={classes.priceIcon} />
-            </Box>
+
+            <AddCircleOutlineIcon className={classes.priceIcon} />
+
           </Link>
           {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
@@ -1013,7 +1013,7 @@ function OrderHome(props) {
             </Tooltip>
           </IconButton> */}
 
-            &nbsp;{getQuantity(item, size)}&nbsp;
+          {getQuantity(item, size)}
 
 
           {isQuantity(item, size) ? (
@@ -1030,7 +1030,7 @@ function OrderHome(props) {
             //   </Tooltip>
             // </IconButton>
 
-            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)}>
               <RemoveCircleOutlineIcon className={classes.priceIcon} />
             </Link>
           ) : null}
