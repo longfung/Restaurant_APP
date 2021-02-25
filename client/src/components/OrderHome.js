@@ -1024,7 +1024,7 @@ function OrderHome(props) {
             </Tooltip>
           </IconButton> */}
           <Typography className={classes.quantityContent} display="inline">
-            &nbsp;{getQuantity(item, size)}&nbsp;
+            {getQuantity(item, size)}
           </Typography>
 
           {isQuantity(item, size) ? (
