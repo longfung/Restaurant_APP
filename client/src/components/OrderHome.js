@@ -180,7 +180,7 @@ const useStyles = makeStyles(theme => ({
   priceIcon: {
     verticalAlign: 'top',
     display: 'inline-flex',
-    fontSize: '1.5rem'
+    fontSize: '1.8rem'
   },
   catTitleContent: {
     color: theme.palette.neutral.white,
@@ -1013,7 +1013,7 @@ function OrderHome(props) {
             </Tooltip>
           </IconButton> */}
 
-          {getQuantity(item, size)}
+&nbsp;{getQuantity(item, size)}&nbsp;
 
 
           {isQuantity(item, size) ? (
