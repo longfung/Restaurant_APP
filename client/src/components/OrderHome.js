@@ -161,8 +161,8 @@ const useStyles = makeStyles(theme => ({
     // fontStyle: 'oblique',
     fontSize: "1.2rem",
     fontWeight: 500,
-    padding: 3,
-    textAlign: 'right',
+    padding: 1,
+    textAlign: 'left',
     // textAlign: "left",
     // fontWeight: 'fontWeightBold',
   },
@@ -1012,9 +1012,9 @@ function OrderHome(props) {
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
           <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-            <Box component='span' mt={-1}>
-              <AddCircleOutlineIcon className={classes.priceIcon} />
-            </Box>
+
+            <AddCircleOutlineIcon className={classes.priceIcon} />
+
           </Link>
           {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
 
@@ -1041,7 +1041,7 @@ function OrderHome(props) {
             //   </Tooltip>
             // </IconButton>
 
-            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} className={classes.priceIcon}>
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
               <RemoveCircleOutlineIcon className={classes.priceIcon} />
             </Link>
           ) : null}
