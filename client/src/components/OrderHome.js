@@ -1011,22 +1011,6 @@ function OrderHome(props) {
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
-          <Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
-
-            <AddCircleOutlineIcon className={classes.priceIcon} />
-
-          </Link>
-          {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
-
-          {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
-            <Tooltip title={t("Add")} arror>
-              <AddCircleOutlineIcon />
-            </Tooltip>
-          </IconButton> */}
-          <Typography className={classes.quantityContent} display="inline">
-            {getQuantity(item, size)}
-          </Typography>
-
           {isQuantity(item, size) ? (
             // <Link
             //   to="#!"
@@ -1044,7 +1028,36 @@ function OrderHome(props) {
             <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
               <RemoveCircleOutlineIcon className={classes.priceIcon} />
             </Link>
-          ) : null}
+          ) :
+            <Link to='#!' onClick={(e) => removeFromOrder(e, item, size)} >
+              <RemoveCircleOutlineIcon className={classes.priceIcon} disabled />
+            </Link>
+          }
+
+          {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
+
+          {/* <IconButton aria-label="delete" onClick={(e) => addToOrder(e, item, price, size)} >
+            <Tooltip title={t("Add")} arror>
+              <AddCircleOutlineIcon />
+            </Tooltip>
+          </IconButton> */}
+          {isQuantity(item, size) ? (
+            <Typography className={classes.quantityContent} display="inline">
+              {getQuantity(item, size)}
+            </Typography>
+          ) : (
+
+              <Typography className={classes.quantityContent} display="inline">
+                0
+              </Typography>
+            )
+          }
+
+          < Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
+
+            <AddCircleOutlineIcon className={classes.priceIcon} />
+
+          </Link>
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
