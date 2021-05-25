@@ -62,6 +62,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Rating from '@material-ui/lab/Rating';
 import DisplayDesc from './DisplayDesc';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
+import { green, red } from '@material-ui/core/colors';
 
 import {
 
@@ -100,6 +101,24 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 0,
     paddingTop: 0,
     paddingBottom: 0,
+  },
+  FiContent: {
+    position: "relative",
+    backgroundColor: "transparent"
+  },
+  FiMedia: {
+    position: "absolute",
+    // top: 0,
+    // right: 0,
+    height: "6rem",
+    width: "100%",
+    // height: 100,
+    // maxHeight: 240,
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 0,
+    paddingBottom: 0,
+    align: "center",
   },
   textRight: {
     textAlign: 'right',
@@ -152,6 +171,21 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     padding: 3,
     textAlign: 'right',
+    // textAlign: "left",
+    // fontWeight: 'fontWeightBold',
+  },
+  mediaContent: {
+    backgroundColor: 'white',
+    // color: theme.palette.red.main,
+    color: 'red',
+    display: 'inline-block',
+    fontStyle: 'oblique',
+    fontSize: "0.8rem",
+    fontWeight: 'fontWeightBold',
+    padding: 0,
+    textAlign: 'left',
+    paddingRight: '0.2rem',
+    paddingLeft: '0.2rem',
     // textAlign: "left",
     // fontWeight: 'fontWeightBold',
   },
@@ -264,7 +298,7 @@ function ShowName(props) {
       {
         props.is_new ?
           <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
-            <FiberNewIcon fontSize="large" /> {props.name}
+            <FiberNewIcon fontSize="large" style={{ color: red[500], fontSize: '2rem' }} /> {props.name}
           </Typography>
           :
           <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
@@ -977,16 +1011,16 @@ function OrderHome(props) {
   const dishPrice = (item, price, final_price, size, symbol) => {
     return (
       <Grid container spacing={0} >
-        <Grid item xs={9} className={classes.textLeft}>
+        <Grid item xs={8} className={classes.textLeft}>
           {/* <Box className={classes.priceBox}> */}
           {item.discount && item.discount != 0 ?
             <div>
               <Typography display="inline" className={classes.priceContent} style={{ textDecorationLine: 'line-through' }}>
                 ${price}
               </Typography>
-              <Typography display="inline" className={classes.discountContent} >
+              {/* <Typography display="inline" className={classes.discountContent} >
                 <b>[</b>&nbsp;{item.discount}{item.discount_method === 2 ? '% ' : null}off<b>&nbsp;]</b>
-              </Typography>
+              </Typography> */}
               <Typography display="inline" className={classes.priceContent} >
                 ${final_price.toFixed(2)}
               </Typography>
@@ -1007,7 +1041,7 @@ function OrderHome(props) {
           </Typography >
         </Grid>
         {/* &nbsp; */}
-        <Grid item xs={3} className={classes.textLeft}>
+        <Grid item xs={4} className={classes.textLeft}>
 
           {/* </Grid> */}
           {/* <Grid item xs={3} sm={3}> */}
@@ -1043,14 +1077,14 @@ function OrderHome(props) {
           </IconButton> */}
           {isQuantity(item, size) ? (
             <Typography className={classes.quantityContent} display="inline">
-              {getQuantity(item, size)}
+              &nbsp;{getQuantity(item, size)}&nbsp;
             </Typography>
           ) : (
 
-              <Typography className={classes.quantityContent} display="inline">
-                0
-              </Typography>
-            )
+            <Typography className={classes.quantityContent} display="inline">
+              &nbsp;0&nbsp;
+            </Typography>
+          )
           }
 
           < Link to='#!' onClick={(e) => addToOrder(e, item, price, final_price, size)} >
@@ -1098,10 +1132,22 @@ function OrderHome(props) {
 
                 })} >
               <CardMedia
-                className={classes.media}
+                className={classes.FiMedia}
                 image={shareContext.state.username == 'demo' || shareContext.state.username == 'demo2' ? item.image_path : getImage(item.image_path)}
                 title={item.name}
               />
+              {item.discount != 0 ?
+                <CardContent className={classes.FiContent} >
+                  <Typography component="h4" display="block" className={classes.mediaContent} >
+                    <b>{item.discount}&nbsp;{item.discount_method === 2 ? '%' : null}&nbsp;off</b>
+
+                  </Typography>
+
+                  {/* <Typography variant="h6" component="h2" className={classes.nameContent} noWrap>
+                  <FiberNewIcon fontSize="large" style={{ color: red[500], fontSize: '3rem', fill: 'red', backgroundColor: 'white' }} /> {props.name}
+                </Typography> */}
+                </CardContent>
+                : null}
             </CardActionArea>
           </Grid>
           <Grid item xs={10}>
@@ -1601,20 +1647,20 @@ function OrderHome(props) {
               </div>
             )
         ) : (
-            <Cart
-              addToOrder={addToOrder}
-              removeFromOrder={removeFromOrder}
-              submitOrder={submitOrder}
-              taxRate={restaurant.tax_rate}
-              cartTotal={cartTotal}
-              isQuantity={isQuantity}
-              cartList={cartList}
-              setIsOrder={setIsOrder}
-              toppingApplyOrder={toppingApplyOrder}
-              toppingMap={toppingMap}
-              toppingOrderResult={toppingOrderResult}
-            />
-          )
+          <Cart
+            addToOrder={addToOrder}
+            removeFromOrder={removeFromOrder}
+            submitOrder={submitOrder}
+            taxRate={restaurant.tax_rate}
+            cartTotal={cartTotal}
+            isQuantity={isQuantity}
+            cartList={cartList}
+            setIsOrder={setIsOrder}
+            toppingApplyOrder={toppingApplyOrder}
+            toppingMap={toppingMap}
+            toppingOrderResult={toppingOrderResult}
+          />
+        )
       }
     </div >
   );
