@@ -104,7 +104,8 @@ const useStyles = makeStyles(theme => ({
   },
   FiContent: {
     position: "relative",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    padding: 0,
   },
   FiMedia: {
     position: "absolute",
@@ -164,7 +165,7 @@ const useStyles = makeStyles(theme => ({
     // fontWeight: 'fontWeightBold',
   },
   priceContent: {
-    // backgroundColor: 'primary',
+    backgroundColor: 'primary',
     color: theme.palette.red.main,
     // fontStyle: 'oblique',
     fontSize: "1.0rem",
@@ -175,9 +176,9 @@ const useStyles = makeStyles(theme => ({
     // fontWeight: 'fontWeightBold',
   },
   mediaContent: {
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     // color: theme.palette.red.main,
-    color: 'red',
+    color: 'white',
     display: 'inline-block',
     fontStyle: 'oblique',
     fontSize: "0.8rem",
